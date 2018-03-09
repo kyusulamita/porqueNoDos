@@ -36,4 +36,4 @@ const Stub = db.define('employee', {
   }
 })
 
-module.exports = Employee;
+module.exports = Stub;

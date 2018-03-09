@@ -1,6 +1,8 @@
 const User = require('./user');
-const Employee = require('./Employee');
-const Stub = require('./stubs');
+const Employee = require('./employee');
+const Stub = require('./stub');
+const Vendor = require('./vendor');
+const Bill = require('./bill')
 /**
  * If we had any associations to make, this would be a great place to put them!
  * ex. if we had another model called BlogPost, we might say:
@@ -24,5 +26,7 @@ const Stub = require('./stubs');
 module.exports = {
   User,
   Employee,
-  Stub
+  Stub,
+  Vendor,
+  Bill
 }
