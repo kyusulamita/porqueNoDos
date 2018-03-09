@@ -1,6 +1,6 @@
 const User = require('./user');
 const Employee = require('./Employee');
-const Stub = require('stubs');
+const Stub = require('./stubs');
 /**
  * If we had any associations to make, this would be a great place to put them!
  * ex. if we had another model called BlogPost, we might say:
@@ -10,6 +10,8 @@ const Stub = require('stubs');
 
  Stub.belongsTo(Employee);
  Employee.hasMany(Stub);
+
+
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,
