@@ -13,6 +13,8 @@ const Bill = require('./bill')
  Stub.belongsTo(Employee);
  Employee.hasMany(Stub);
 
+Bill.belongsTo(Vendor);
+Vendor.hasMany(Bill);
 
 
 /**

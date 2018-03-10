@@ -2,14 +2,14 @@ const crypto = require('crypto')
 const Sequelize = require('sequelize')
 const db = require('../db')
 
-const Stub = db.define('employee', {
+const Stub = db.define('stub', {
   rate: {
     type: Sequelize.STRING,
-    default: 12,
+    default: '12',
     allowNull: false
   },
   rateType: {
-    type: Sequelize.ENUM('HOURLY, WEEKLY'),
+    type: Sequelize.ENUM('HOURLY', 'WEEKLY'),
     default: 'HOURLY'
   },
   hours: {
