@@ -35,7 +35,7 @@ router.delete('/:billId', (req, res, next) => {
   const billsDeleted = Bill.destroy({
     where: { id: req.params.billId }
   }).catch(next);
-  res.send(`Succesfully deleted ${billsDeleted.length} bills [${req.params.billId}`])))
+  res.send(`Succesfully deleted ${billsDeleted.length} bills => ${req.params.billId}`)
 })
 
 module.exports = router;
