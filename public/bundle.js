@@ -9996,7 +9996,7 @@ Main.propTypes = {
  * COMPONENT
  */
 const UserHome = props => {
-  const { email } = props;
+  const { email, name } = props;
 
   return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     'div',
@@ -10005,7 +10005,12 @@ const UserHome = props => {
       'h3',
       null,
       'Welcome, ',
-      email
+      name
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+      'h4',
+      null,
+      'This is going to be a very simple version of quickbooks! Woohoo, it\'s going to be an online app'
     )
   );
 };
@@ -10015,9 +10020,10 @@ const UserHome = props => {
 /**
  * CONTAINER
  */
-const mapState = state => {
+const mapState = ({ user }) => {
   return {
-    email: state.user.email
+    email: user.email,
+    name: user.name
   };
 };
 
@@ -10027,7 +10033,8 @@ const mapState = state => {
  * PROP TYPES
  */
 UserHome.propTypes = {
-  email: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
+  email: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string,
+  name: __WEBPACK_IMPORTED_MODULE_1_prop_types___default.a.string
 };
 
 /***/ }),

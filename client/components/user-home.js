@@ -6,11 +6,12 @@ import {connect} from 'react-redux'
  * COMPONENT
  */
 export const UserHome = (props) => {
-  const {email} = props
+  const {email, name} = props
 
   return (
     <div>
-      <h3>Welcome, {email}</h3>
+      <h3>Welcome, {name}</h3>
+      <h4>This is going to be a very simple version of quickbooks! Woohoo, it's going to be an online app</h4>
     </div>
   )
 }
@@ -18,9 +19,10 @@ export const UserHome = (props) => {
 /**
  * CONTAINER
  */
-const mapState = (state) => {
+const mapState = ({user}) => {
   return {
-    email: state.user.email
+    email: user.email,
+    name: user.name
   }
 }
 
@@ -30,5 +32,6 @@ export default connect(mapState)(UserHome)
  * PROP TYPES
  */
 UserHome.propTypes = {
-  email: PropTypes.string
+  email: PropTypes.string,
+  name: PropTypes.string,
 }
