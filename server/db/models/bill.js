@@ -1,6 +1,5 @@
-const crypto = require('crypto')
-const Sequelize = require('sequelize')
-const db = require('../db')
+const Sequelize = require('sequelize');
+const db = require('../db');
 
 const Bill = db.define('bill', {
   total: {
@@ -11,6 +10,6 @@ const Bill = db.define('bill', {
     allowNull: false,
 
   },
-})
+});
 
 module.exports = Bill;

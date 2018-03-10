@@ -62,16 +62,14 @@ class Main extends Component {
     return (
 
       <div>
-        <h1>Porque no los dos?</h1>
-        <nav>
-          {
-            isLoggedIn
-              ?
-                this.loggedInMenu()
-              :
-                this.loggedOutMenu()
-          }
-        </nav>
+        <div><h1>Porque no los dos?</h1></div>
+        {
+          isLoggedIn
+            ?
+              this.loggedInMenu()
+            :
+              this.loggedOutMenu()
+        }
         <hr />
         {children}
       </div>

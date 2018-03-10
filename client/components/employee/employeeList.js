@@ -22,7 +22,7 @@ class EmployeeList extends Component{
         </Header>
         <Card.Group>
         {
-          employees.map(employee => <EmployeeTile {...employee} />)
+          employees.map(employee => <EmployeeTile key={employee.id} {...employee} />)
         }
         </Card.Group>
         {
