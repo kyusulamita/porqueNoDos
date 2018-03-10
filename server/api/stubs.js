@@ -4,14 +4,14 @@ const { Stub, Employee } = require('../db/models');
 
 router.get('/', async (req, res, next) => {
   const stubs = await Stub.findAll({
-    include: [ model: Employee, attributes: ['firstName', 'lastName', 'id']]
+    include: { model: Employee, attributes: ['firstName', 'lastName', 'id']}
   }).catch(next);
   res.json(stubs);
 })
 
 router.post('/', async (req, res, next) => {
   const newStub = await Stub.create(req.body, {
-    include: [ model: Employee, attributes: ['firstName', 'lastName', 'id']]
+    include: { model: Employee, attributes: ['firstName', 'lastName', 'id']}
   }).catch(next);
   res.json(stubs);
 })
@@ -32,7 +32,7 @@ router.put('/:stubId', async(req, res, next) => {
   res.json(updatedStub);
 })
 
-router.destroy('/:stubId', async (req, res, next) => {
+router.delete('/:stubId', async (req, res, next) => {
   const stubsDestroyed = await Stub.destroy({
     where: { id: req.params.stubId }
   }).catch(next);

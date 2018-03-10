@@ -2,37 +2,47 @@ const router = require('express').Router();
 const { Bill, Vendor } = require('../db/models');
 
 
+router.param('vendorId', async (req, res, next, id) => {
+  const vendor = await Vendor.findById(id, {include: [ Bill ]}).catch(next)
+  if (!vendor) {
+    const err = Error('User not found');
+    err.status = 404;
+    throw err;
+  }
+  req.vendor = vendor;
+  next();
+  return null;
+})
+
 router.get('/', async (req, res, next) => {
   const vendors = await Vendor.findAll({
-    include: [ model: Bill, attributes: ['total', 'date']]
+    attributes: ['name', 'id'],
+    include: { model: Bill, attributes: ['total', 'date']}
   }).catch(next);
   res.json(vendors);
 })
 
 router.post('/', async (req, res, next) => {
   const newVendor = Vendor.create(req.body, {
-    include: [ model: Bill, attributes: ['total', 'date']]
+    include: { model: Bill, attributes: ['total', 'date']}
   }).catch(next);
   res.json(newVendor);
 })
 
 router.get('/:vendorId', async (req, res, next) => {
-  const vendorWithBills = await Vendor.findById(req.params.vendorId, {
-    include: [Bill]
-  }).catch(next);
+  const vendorWithBills = req.vendor;
   res.json(vendorWithBills);
 })
 
 router.put('/:vendorId', async (req, res, next) => {
-  const updatedVendor = await Vendor.update(req.body, {
-    where: { id: req.params.vendorId },
+  const updatedVendor = await req.vendor(req.body, {
     returning: true,
   }).catch(next);
-  res.json(updatedVendor);
+  res.status(200).json(updatedVendor);
 })
 
 router.delete('/:vendorId', async (req, res, next) => {
-  const vendorsDeleted = await Vendor.destroy({ where: { id: req.params.vendorId}}).catch(next);
+  const vendorsDeleted = await req.vendor.catch(next);
   res.json(vendorsDeleted);
 })
 
