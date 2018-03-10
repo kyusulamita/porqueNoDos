@@ -8,7 +8,7 @@ import {Main, Login, Signup, UserHome, employeeList, employeeDetail,
         vendorList, vendorDetail } from './components'
 
 // going to want to grab all vendors and employees right from the getGo
-import {me} from './store'
+import {me, getEmployees} from './store'
 
 
 
@@ -49,9 +49,7 @@ class Routes extends Component {
  */
 const mapState = (state) => {
   return {
-    // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
-    // Otherwise, state.user will be an empty object, and state.user.id will be falsey
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.currentUser.id
   }
 }
 
@@ -59,6 +57,7 @@ const mapDispatch = (dispatch) => {
   return {
     loadInitialData () {
       dispatch(me())
+      dispatch(getEmployees())
     }
   }
 }

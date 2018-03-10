@@ -19,10 +19,10 @@ export const UserHome = (props) => {
 /**
  * CONTAINER
  */
-const mapState = ({user}) => {
+const mapState = ({currentUser}) => {
   return {
-    email: user.email,
-    name: user.name
+    email: currentUser.email,
+    name: currentUser.name
   }
 }
 
