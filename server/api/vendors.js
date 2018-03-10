@@ -35,9 +35,7 @@ router.get('/:vendorId', async (req, res, next) => {
 })
 
 router.put('/:vendorId', async (req, res, next) => {
-  const updatedVendor = await req.vendor(req.body, {
-    returning: true,
-  }).catch(next);
+  const updatedVendor = await req.vendor(req.body).catch(next);
   res.status(200).json(updatedVendor);
 })
 
