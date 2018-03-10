@@ -16,11 +16,11 @@ module.exports = {
         loader: 'babel-loader',
         // dont't forget the presets or you'll end up running into an error
         options: {
-          presets: ['react'],
+          presets: ['react', 'es2015'],
         },
       },
       {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         use: [
           'style-loader',
           'css-loader',

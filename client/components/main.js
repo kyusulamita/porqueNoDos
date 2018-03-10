@@ -1,54 +1,93 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {logout} from '../store'
-
+import { Menu } from 'semantic-ui-react'
+// import { Item } from Menu
 /**
  * COMPONENT
  *  The Main component is our 'picture frame' - it displays the navbar and anything
  *  else common to our entire app. The 'picture' inside the frame is the space
  *  rendered out by the component's `children`.
  */
-const Main = (props) => {
-  const {children, handleClick, isLoggedIn} = props
+class Main extends Component {
+  constructor(props){
+    super(props);
+    this.state = { activeTab: 'home' };
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.loggedOutMenu = this.loggedOutMenu.bind(this);
+    this.loggedInMenu = this.loggedInMenu.bind(this);
+  }
 
-  return (
-    <div>
-      <h1>BOILERMAKER</h1>
-      <nav>
+  componentDidMount(){
+    let currentLocation = this.props.location.pathname;
+    currentLocation = currentLocation.split('/');
+    console.log(currentLocation[1])
+    this.setState({ activeTab: currentLocation[1]})
+  }
+
+  handleMenuClick(event, {name}){
+    this.setState({ activeTab: name })
+  }
+  loggedInMenu(){
+    const { activeTab } = this.state;
+    const { onLogout } = this.props;
+    return (
+    <Menu pointing secondary>
+      <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
+      <Menu.Item name='empleados' active={activeTab === 'empleados'} onClick={this.handleMenuClick} as={Link} to='/empleados'/>
+      <Menu.Item name='vendedores' active={activeTab === 'vendedores'} onClick={this.handleMenuClick} as={Link} to='/vendedores'/>
+      <Menu.Menu position='right'>
+        <Menu.Item name='salir' active={activeTab === 'salir'} onClick={onLogout} />
+      </Menu.Menu>
+    </Menu>)
+  }
+
+  loggedOutMenu(){
+    const { activeTab } = this.state;
+    return(
+      <Menu pointing secondary>
+        <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
+        <Menu.Item name='entrar' active={activeTab === 'entrar'} onClick={this.handleMenuClick} as={Link} to='/entrar' />
+        <Menu.Item name='registrar' active={activeTab === 'registrar'} onClick={this.handleMenuClick} as={Link} to='/registrar' />
+      </Menu>
+    )
+  }
+
+ // handleMenuClick = this.handleMenuClick.bind(this);
+
+  render(){
+    const {children, isLoggedIn} = this.props;
+    return (
+
+      <div>
+        <div><h1>Porque no los dos?</h1></div>
         {
           isLoggedIn
-            ? <div>
-              {/* The navbar will show these links after you log in */}
-              <Link to='/home'>Home</Link>
-              <a href='#' onClick={handleClick}>Logout</a>
-            </div>
-            : <div>
-              {/* The navbar will show these links before you log in */}
-              <Link to='/login'>Login</Link>
-              <Link to='/signup'>Sign Up</Link>
-            </div>
+            ?
+              this.loggedInMenu()
+            :
+              this.loggedOutMenu()
         }
-      </nav>
-      <hr />
-      {children}
-    </div>
-  )
+        <hr />
+        {children}
+      </div>
+    )
+  }
 }
-
 /**
  * CONTAINER
  */
 const mapState = (state) => {
   return {
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.currentUser.id
   }
 }
 
 const mapDispatch = (dispatch) => {
   return {
-    handleClick () {
+    onLogout () {
       dispatch(logout())
     }
   }
@@ -63,6 +102,6 @@ export default withRouter(connect(mapState, mapDispatch)(Main))
  */
 Main.propTypes = {
   children: PropTypes.object,
-  handleClick: PropTypes.func.isRequired,
+  onLogout: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired
 }

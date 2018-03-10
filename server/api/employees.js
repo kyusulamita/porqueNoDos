@@ -1,16 +1,29 @@
 const router = require('express').Router();
 const { Employee, Stub} = require('../db/models');
 
+// router.param('employeeId', async (req, res, next, id) => {
+//   const employee = Employee.findById(req.params.employeeId, {
+//     include: [ Stub ],
+//   }).catch(next);
+//   if (!employee){
+
+//   }
+//   req.employee = employee;
+// })
+
 
 router.get('/', async (req, res, next) => {
   const employees = await Employee.findAll({
-    include: [ { model: Stub, attributes: ['start', 'end', 'pay']} ],
+    include: [ { model: Stub, attributes: ['start', 'end', 'rateType']} ],
+    attributes: ['firstName', 'lastName', 'phoneNumber', 'id'],
   }).catch(next);
   res.json(employees)
 })
 
 router.post('/', async (req, res, next) => {
-  const createdEmployee = await Employee.create(req.body).catch(next);
+  const createdEmployee = await Employee.create(req.body, {
+    attributes: ['firstName', 'lastName', 'phoneNumber'],
+  }).catch(next);
   res.json(createdEmployee)
 })
 

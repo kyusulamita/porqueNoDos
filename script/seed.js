@@ -25,17 +25,20 @@ async function seed () {
   // executed until that promise resolves!
 
   const users = await Promise.all([
-    User.create({email: 'cody@email.com', name:'Cody', password: '123', admin: true}),
+    User.create({email: 'cody@email.com', name:'Cody', password: '123', isAdmin: true}),
     User.create({email: 'murphy@email.com', name:'Murphy', password: '123'}),
-    User.create({email: 'admin@me.com', name: 'Alvaro', password: 'hellohi', admin: true })
+    User.create({email: 'admin@me.com', name: 'Alvaro', password: 'hellohi', isAdmin: true })
   ])
   const vendors = await Promise.all([
     Vendor.create({name: 'La Michacoana', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49509', phoneNumber: '9999999'}),
     Vendor.create({name: 'Vendor 2', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49509', phoneNumber: '9999999'}),
   ])
   const employees = await Promise.all([
-    Employee.create({firstName: 'Izai', lastName: 'Morales', address: '2119 Horton Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49507', phoneNumber: '6167068577'}),
-    Employee.create({firstName: 'Alvaro', lastName: 'Morales', address: '2119 Horton Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49507', phoneNumber: '6167068577'}),
+    Employee.create({firstName: 'Izzy', lastName: 'Morr', address: '1234 Horton Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49507', phoneNumber: '9999999999'}),
+    Employee.create({firstName: 'Alvaro', lastName: 'Morales', address: '1234 Horton St', city: 'Grand Rapids', state: 'MI', zipcode: '49505', phoneNumber: '999999999'}),
+    Employee.create({firstName: 'Woof', lastName: 'Bark', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49505', phoneNumber: '999999999'}),
+    Employee.create({firstName: 'Meow', lastName: 'Sir', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49505', phoneNumber: '999999999'}),
+    Employee.create({firstName: 'Woofers', lastName: 'Barksman', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49505', phoneNumber: '999999999'}),
   ])
 
   // Wowzers! We can even `await` on the right-hand side of the assignment operator
