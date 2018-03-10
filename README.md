@@ -56,4 +56,4 @@ In order to change the name of your employees and other seeded info just meander
 
 ## License
 
-
+MIT

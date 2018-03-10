@@ -12,3 +12,5 @@ class employeeDetail extends Component{
     )
   }
 }
+
+export default employeeDetail;
