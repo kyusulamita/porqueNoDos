@@ -2,44 +2,40 @@ const router = require('express').Router();
 const { Bill, Vendor } = require('../db/models');
 
 
-router.get('/', (req, res, next) => {
-  Bill.findAll({
-    // explicitly select only the id and email fields - even though
-    // users' passwords are encrypted, it won't help if we just
-    // send everything to anyone who asks!
+router.get('/', async (req, res, next) => {
+  const bills = await Bill.findAll({
     include: [ { model: Vendor, attributes: ['name', 'id'] }],
   })
-    .then(bills => res.json(bills))
-    .catch(next);
+  .catch(next);
+  res.json(bills);
 })
 
-router.post('/', (req, res, next) => {
-  Bill.create(req.body)
-    .then(createdBill => res.json(createdBill))
+router.post('/', async (req, res, next) => {
+  const createdBill = await Bill.create(req.body)
     .catch(next);
+  res.json(createdBill)
 })
 
-router.get('/:billId', (req, res, next) => {
-  Bill.findById(req.params.billId, { include: [ Vendor ]})
-    .then(billWithVendor => res.json(billWithVendor))
+router.get('/:billId', async (req, res, next) => {
+ const billWithVendor = await Bill.findById(req.params.billId, { include: [ Vendor ]})
     .catch(next);
+  res.json(billWithVendor)
 })
 
-router.put('/:billId', (req, res, next) => {
-  Bill.update(req.body, {
+router.put('/:billId', async (req, res, next) => {
+  const [numOfBills, billsAffected ] = await Bill.update(req.body, {
     where: { id: req.params.billId },
     returning: true,
   })
-    .then(({nums, rows}) => res.json(rows[0]))
     .catch(next);
+   res.json(billsAffected[0]);
 })
 
 router.delete('/:billId', (req, res, next) => {
-  Bill.delete({
+  const billsDeleted = Bill.destroy({
     where: { id: req.params.billId }
-  })
-    .then((() => res.send(`Succesfully deleted bill ${req.params.billId}`)))
-    .catch(next);
+  }).catch(next);
+  res.send(`Succesfully deleted ${billsDeleted.length} bills [${req.params.billId}`])))
 })
 
 module.exports = router;
