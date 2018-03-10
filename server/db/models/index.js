@@ -10,10 +10,10 @@ const Bill = require('./bill')
  *    BlogPost.belongsTo(User)
  */
 
- Stub.belongsTo(Employee);
+ Stub.belongsTo(Employee, { onDelete: 'CASCADE' });
  Employee.hasMany(Stub);
 
-Bill.belongsTo(Vendor);
+Bill.belongsTo(Vendor, { onDelete: 'CASCADE' });
 Vendor.hasMany(Bill);
 
 

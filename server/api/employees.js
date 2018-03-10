@@ -2,22 +2,33 @@ const router = require('express').Router();
 const { Employee, Stub} = require('../db/models');
 
 
-router.get('/', (req, res, next) => {
-  Employee.findAll({
-    // explicitly select only the id and email fields - even though
-    // users' passwords are encrypted, it won't help if we just
-    // send everything to anyone who asks!
-    include: [ Stub ],
+router.get('/', async (req, res, next) => {
+  const employees = await Employee.findAll({
+    include: [ { model: Stub, attributes: ['start', 'end', 'pay']} ],
   })
-    .then(employees => res.json(employees))
-    .catch(next)
+  res.json(employees)
 })
 
-
-router.get('/:employeeId', (req, res, next) => {
-  Employee.findById(req.params.employeeId, {
-
-  })
+router.post('/', async (req, res, next) => {
+  const createdEmployee = await Employee.create(req.body)
+  res.json(createdEmployee)
 })
+
+router.get('/:employeeId', async (req, res, next) => {
+  const employeeWithStubs = await Employee.findById(req.params.employeeId, {
+    include: [ Stub ]
+  })
+  res.json(employeeWithStubs)
+})
+
+router.put('/:employeeId', async (req, res, next) => {
+  const [rowAffected, employeesAffected ] = await Employee.update(req.body, {
+    where: { id : req.params.employeeId },
+    returning: true
+  })
+  // const employeeWeWant
+  res.json(employeesAffected[0]);
+})
+
 
 module.exports = router;
