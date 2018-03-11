@@ -37,7 +37,7 @@ class employeeDetail extends Component{
           <Button basic size='small' secondary color='teal' content={addBool ? 'Cancelar' : 'Anadir pago'} onClick={() => this.setState(({addBool}) => ({ addBool:! addBool}))} />
         }
         {
-          addBool && <StubForm />
+          addBool && <StubForm employeeId={this.props.employee.id}/>
         }
         </div>
       </div>

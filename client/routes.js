@@ -8,7 +8,7 @@ import {Main, Login, Signup, UserHome, employeeList, employeeDetail,
         vendorList, vendorDetail } from './components'
 
 // going to want to grab all vendors and employees right from the getGo
-import {me, getEmployees} from './store'
+import {me, getEmployees, getPaystubs } from './store'
 
 
 
@@ -58,6 +58,7 @@ const mapDispatch = (dispatch) => {
     loadInitialData () {
       dispatch(me())
       dispatch(getEmployees())
+      dispatch(getPaystubs())
     }
   }
 }
