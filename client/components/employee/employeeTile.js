@@ -13,9 +13,8 @@ const EmployeeTile = ({firstName, lastName, id}) => (
       <Description>Desde aqui puede editar la informacion del empleado.</Description>
     </Content>
     <Content extra>
-      <div className='ui two buttons'>
-        <Button basic color='teal'>Editar</Button>
-        <Button basic color='teal' secondary as={Link} to={`/empleados/${id}`}>Ver Mas Detalles</Button>
+      <div className='ui one buttons'>
+        <Button basic color='teal'  as={Link} to={`/empleados/${id}`}>Ver Mas Detalles</Button>
       </div>
     </Content>
   </Card>
