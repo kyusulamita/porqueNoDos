@@ -5,12 +5,16 @@ import EmployeeForm from './employeeForm'
 import EmployeeTile from './employeeTile'
 
 class EmployeeList extends Component{
-  super(props){
-    constructor(props);
+  constructor(props){
+    super(props);
+    this.state = {
+      editBool: false,
+    }
   }
 
   render(){
     const {employees, isAdmin} = this.props;
+    const { editBool } = this.state;
     return (
       <div>
         <Header as='h2' icon textAlign='center'>
@@ -26,7 +30,10 @@ class EmployeeList extends Component{
         }
         </Card.Group>
         {
-          isAdmin && <EmployeeForm type='new'/>
+          isAdmin && <Button basic color='teal' content={editBool ? 'Cancelar' : 'Crear Nuevo'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
+        }
+        {
+          editBool && <EmployeeForm />
         }
       </div>
     )

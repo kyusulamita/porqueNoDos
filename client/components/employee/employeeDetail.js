@@ -2,13 +2,18 @@ import React, { Component } from 'react';
 import { getEmployee } from '../../store';
 import { StubRow } from '../paystub/paystubRow'
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types'
-import { Header, Image, List } from 'semantic-ui-react';
-import EmployeeForm from './employeeForm'
+import PropTypes from 'prop-types';
+import { Header, Image, List, Button } from 'semantic-ui-react';
+import EmployeeForm from './employeeForm';
+import StubForm from '../paystub/payStubForm';
 
 class employeeDetail extends Component{
   constructor (props){
     super(props);
+    this.state = {
+      editBool: false,
+      addBool: false,
+    }
     this.adminDisplay = this.adminDisplay.bind(this);
   }
   componentDidMount(){
@@ -16,10 +21,25 @@ class employeeDetail extends Component{
   }
 
   adminDisplay(){
+    const { editBool, addBool } = this.state;
     return (
       <div>
-        <div>Add a new stub</div>
-        <EmployeeForm employee={this.props.employee} />
+        <div>
+        {
+          <Button basic size='small' color='teal' content={editBool ? 'Cancelar' : 'Editar Empleado'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
+        }
+        {
+          editBool && <EmployeeForm employee={this.props.employee} />
+        }
+        </div>
+        <div>
+        {
+          <Button basic size='small' secondary color='teal' content={addBool ? 'Cancelar' : 'Anadir pago'} onClick={() => this.setState(({addBool}) => ({ addBool:! addBool}))} />
+        }
+        {
+          addBool && <StubForm />
+        }
+        </div>
       </div>
     )
   }
@@ -28,6 +48,7 @@ class employeeDetail extends Component{
     const { employee, isAdmin } = this.props;
     if (!employee) return <div />
     const { firstName, lastName, stubs } = employee;
+    // stubs = stubs || [];
     return (
       <div>
         <Header as={'h2'}>
@@ -37,10 +58,15 @@ class employeeDetail extends Component{
             {' '} Trabaja en el departamento
           </Header.Subheader>
         </Header>
+        <div>
+          <div>{employee.address}</div>
+          <div>{employee.city}, {employee.state} {employee.zipcode}</div>
+          <div>{employee.phoneNumber}</div>
+        </div>
         <div>Past pay check stubs</div>
         <List>
         {
-          stubs.length && stubs.map(stub => <StubRow key={stub.id} {...stub} />)
+          stubs && stubs.map(stub => <StubRow key={stub.id} {...stub} />)
         }
         </List>
         {
