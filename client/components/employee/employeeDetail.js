@@ -3,7 +3,7 @@ import { getEmployee } from '../../store';
 import { StubRow } from '../paystub/paystubRow'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Header, Image, List, Button } from 'semantic-ui-react';
+import { Header, Image, List, Button, Comment } from 'semantic-ui-react';
 import EmployeeForm from './employeeForm';
 import StubForm from '../paystub/payStubForm';
 
@@ -23,8 +23,8 @@ class employeeDetail extends Component{
   adminDisplay(){
     const { editBool, addBool } = this.state;
     return (
-      <div>
-        <div>
+      <div className='adminBox'>
+        <div className='adminBoxForm'>
         {
           <Button basic size='small' color='teal' content={editBool ? 'Cancelar' : 'Editar Empleado'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
         }
@@ -32,12 +32,12 @@ class employeeDetail extends Component{
           editBool && <EmployeeForm employee={this.props.employee} />
         }
         </div>
-        <div>
+        <div className='adminBoxForm'>
         {
           <Button basic size='small' secondary color='teal' content={addBool ? 'Cancelar' : 'Anadir pago'} onClick={() => this.setState(({addBool}) => ({ addBool:! addBool}))} />
         }
         {
-          addBool && <StubForm />
+          addBool && <StubForm employeeId={this.props.employee.id}/>
         }
         </div>
       </div>
@@ -47,31 +47,36 @@ class employeeDetail extends Component{
   render() {
     const { employee, isAdmin } = this.props;
     if (!employee) return <div />
-    const { firstName, lastName, stubs } = employee;
+    const { firstName, lastName, stubs, address, city, state, zipcode, phoneNumber, id } = employee;
     // stubs = stubs || [];
+    const stubExtra = { firstName, lastName, employeeId: id }
     return (
       <div>
-        <Header as={'h2'}>
+        <Header as='h2' textAlign='center'>
           <Image circular />
           {'  '}{firstName} {lastName}
           <Header.Subheader>
             {' '} Trabaja en el departamento
           </Header.Subheader>
         </Header>
-        <div>
-          <div>{employee.address}</div>
-          <div>{employee.city}, {employee.state} {employee.zipcode}</div>
-          <div>{employee.phoneNumber}</div>
+        <div className ='Aligner'>
+          <div className='Aligner-item--top' />
+          <div className='Aligner-item'>
+            <div>{address}</div>
+            <div>{city}, {state} {zipcode}</div>
+            <div>{phoneNumber}</div>
+          </div>
+          <div className='Aligner-item--bottom' />
         </div>
-        <div>Past pay check stubs</div>
-        <List>
-        {
-          stubs && stubs.map(stub => <StubRow key={stub.id} {...stub} />)
-        }
-        </List>
         {
           isAdmin && this.adminDisplay()
         }
+        <Comment.Group>
+          <Header as='h3' dividing> Paystubs </Header>
+          {
+            stubs && stubs.map(stub => <StubRow {...stub} {...stubExtra} />)
+          }
+        </Comment.Group>
       </div>
     )
   }

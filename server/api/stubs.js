@@ -13,7 +13,7 @@ router.post('/', async (req, res, next) => {
   const newStub = await Stub.create(req.body, {
     include: { model: Employee, attributes: ['firstName', 'lastName', 'id']}
   }).catch(next);
-  res.json(stubs);
+  res.json(newStub);
 })
 
 router.get('/:stubId', async (req, res, next) => {

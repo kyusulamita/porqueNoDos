@@ -1,12 +1,11 @@
 import axios from 'axios';
 import history from '../history';
 
-
 /** ACTION TYPES **/
 const GET_ALL = 'GET_EMPLOYEES';
 const ADD = 'ADD_EMPLOYEE';
 const UPDATE = 'UPDATE_EMPLOYEE';
-const REMOVE= 'REMOVE_EMPLOYEES';
+const REMOVE= 'REMOVE_EMPLOYEE';
 
 /** INITIAL STATE **/
 const defaultEmployees = [];

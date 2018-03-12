@@ -39,7 +39,10 @@ router.put('/:employeeId', async (req, res, next) => {
     where: { id : req.params.employeeId },
     returning: true
   }).catch(next);
-  res.json(employeesAffected[0]);
+  const updatedEmployee = await employeesAffected[0].reload({
+    include: [ Stub ],
+  })
+  res.json(updatedEmployee);
 })
 
 router.delete('/:employeeId', async(req, res, next) => {

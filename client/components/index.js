@@ -6,7 +6,8 @@
 export {default as Main} from './main';
 export {default as UserHome} from './user-home';
 export {Login, Signup} from './auth-form';
-export {default as employeeList } from './employee/employeeList';
-export {default as employeeDetail } from './employee/employeeDetail';
-export {default as vendorList } from './vendor/vendorList';
-export {default as vendorDetail } from './vendor/vendorDetail';
+export {default as EmployeeList } from './employee/employeeList';
+export {default as EmployeeDetail } from './employee/employeeDetail';
+export {default as VendorList } from './vendor/vendorList';
+export {default as VendorDetail } from './vendor/vendorDetail';
+export {default as PaystubDetail } from './paystub/paystubDetail';

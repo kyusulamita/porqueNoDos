@@ -4,11 +4,11 @@ import {Router} from 'react-router'
 import {Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import history from './history'
-import {Main, Login, Signup, UserHome, employeeList, employeeDetail,
-        vendorList, vendorDetail } from './components'
+import {Main, Login, Signup, UserHome, EmployeeList, EmployeeDetail,
+        VendorList, VendorDetail, PaystubDetail } from './components'
 
 // going to want to grab all vendors and employees right from the getGo
-import {me, getEmployees} from './store'
+import {me, getEmployees, getPaystubs } from './store'
 
 
 
@@ -30,10 +30,12 @@ class Routes extends Component {
               isLoggedIn &&
                 <Switch>
                   <Route path='/home' component={UserHome} />
-                  <Route exact path='/empleados' component={employeeList} />
-                  <Route path='/empleados/:employeeId' component={employeeDetail} />
-                  <Route exact path ='/vendedores' component={vendorList} />
-                  <Route path ='/vendedores/:vendorId' component={vendorDetail} />
+                  <Route exact path='/empleados' component={EmployeeList} />
+                  <Route path='/empleados/:employeeId' component={EmployeeDetail} />
+                  <Route exact path ='/stubs' />
+                  <Route path = '/stubs/:stubId' component={PaystubDetail} />
+                  <Route exact path ='/vendedores' component={VendorList} />
+                  <Route path ='/vendedores/:vendorId' component={VendorDetail} />
                 </Switch>
             }
             <Route component={Login} />
@@ -58,6 +60,7 @@ const mapDispatch = (dispatch) => {
     loadInitialData () {
       dispatch(me())
       dispatch(getEmployees())
+      dispatch(getPaystubs())
     }
   }
 }
