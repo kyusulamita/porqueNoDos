@@ -1,7 +1,6 @@
 import axios from 'axios';
 import history from '../history';
 
-
 /** ACTION TYPES **/
 const GET_ALL = 'GET_EMPLOYEES';
 const ADD = 'ADD_EMPLOYEE';

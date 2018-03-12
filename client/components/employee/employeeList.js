@@ -16,25 +16,36 @@ class EmployeeList extends Component{
     const {employees, isAdmin} = this.props;
     const { editBool } = this.state;
     return (
-      <div>
-        <Header as='h2' icon textAlign='center'>
-          <Icon name='users' circular />
-          <Header.Content>
-            Empleados
-          </Header.Content>
-          Aqui estan sus hermosos empleados! Mira esas sonrisas :)
-        </Header>
-        <Card.Group>
-        {
-          employees.map(employee => <EmployeeTile key={employee.id} {...employee} />)
-        }
-        </Card.Group>
-        {
-          isAdmin && <Button basic color='teal' content={editBool ? 'Cancelar' : 'Crear Nuevo'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
-        }
-        {
-          editBool && <EmployeeForm />
-        }
+      <div className='Aligner'>
+        <div className='Aligner-item--top' />
+        <div className='Aligner-item-wide'>
+          <Header as='h2' icon textAlign='center'>
+            <Icon name='users' circular />
+            <Header.Content>
+              Empleados
+            </Header.Content>
+            Aqui estan sus hermosos empleados! Mira esas sonrisas :)
+          </Header>
+          <Card.Group centered >
+          {
+            employees.map(employee => <EmployeeTile key={employee.id} {...employee} />)
+          }
+          </Card.Group>
+          <div className='Aligner'>
+            <div className='Aligner-item--top' />
+
+              {
+                isAdmin && (<div className='Aligner-item'>
+                              <Button basic color='teal' content={editBool ? 'Cancelar' : 'Crear Nuevo'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
+                            </div>)
+              }
+              {
+                editBool && <div className='Aligner-item'><EmployeeForm /></div>
+              }
+            <div className='Aligner-item--bottom' />
+          </div>
+        </div>
+        <div className='Aligner-item--bottom' />
       </div>
     )
   }

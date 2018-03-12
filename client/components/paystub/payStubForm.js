@@ -23,11 +23,10 @@ class StubForm extends Component{
     this.setState({[name]: value});
   }
 
-  handleOnSubmit(event, secondThing){
+  handleOnSubmit(event) {
     event.preventDefault();
     const newForm = !this.props.stub;
     if (newForm){
-      console.log('HELLO HI', this.state)
       this.props.add(this.state);
     } else {
       const updatedInfo = {};
@@ -36,7 +35,7 @@ class StubForm extends Component{
       }
       this.props.update(this.props.stub.id, updatedInfo);
     }
-    this.setState({rate: '', rateType: '', hours: '', start: '', end: ''})
+    this.setState({rate: '', rateType: 'HOURLY', hours: '', start: '', end: ''})
   }
   componentDidMount(){
     if (this.props.employeeId){

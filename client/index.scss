@@ -19,3 +19,34 @@ body {
     display: inline-block;
   }
 }
+
+.Aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Aligner-item {
+  max-width: 75%;
+  padding-top: 20px;
+  text-align: center;
+}
+.Aligner-item-wide {
+  max-width: 95%;
+}
+.Aligner-item--top {
+  align-self:flex-start;
+}
+
+.Aligner-item--bottom {
+  align-self:flex-end;
+}
+
+.adminBox {
+  margin-left: 1%;
+}
+
+.adminBoxForm {
+  margin-top: 1%;
+  margin-bottom: 1%;
+}

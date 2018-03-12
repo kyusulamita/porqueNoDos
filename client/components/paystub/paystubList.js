@@ -1,1 +1,1 @@
-paystubList.js
+import react, { Component } from 'react';

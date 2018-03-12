@@ -23,35 +23,35 @@ export const getPaystubs = () =>
     axios.get('/api/stubs')
       .then(res => res.data)
       .then(allPaystubs => dispatch(getAll(allPaystubs || defaultPaystubs)))
-      .catch(err => console.err(err))
+      .catch(err => console.log(err))
 
 export const getPaystub = (paystubId) =>
   dispatch =>
     axios.get(`/api/stubs/${paystubId}`)
       .then(res => res.data)
       .then(singlePaystub => dispatch(update(singlePaystub)))
-      .catch(err => console.err(`${err}. UNABLE TO GET PAYSTUB ${paystubId}`))
+      .catch(err => console.log(`${err}. UNABLE TO GET PAYSTUB ${paystubId}`))
 
 export const addPaystub = (paystub) =>
   dispatch =>
     axios.post('/api/stubs', paystub)
       .then(res => res.data)
       .then(newPaystub => dispatch(add(newPaystub)))
-      .catch(err => console.err(`${err}. UNABLE TO ADD PAYSTUB ${paystub.firstName}`))
+      .catch(err => console.log(`${err}. UNABLE TO ADD PAYSTUB ${paystub.employeeId}`))
 
 export const updatePaystub = (id, paystub) =>
   dispatch =>
     axios.put(`/api/stubs/${id}`, paystub)
       .then(res => res.data)
       .then(updatedPaystub => dispatch(update(updatedPaystub)))
-      .catch(err => console.err(`${err} UNABLE TO UPDATE PAYSTUB ${id}`))
+      .catch(err => console.log(`${err} UNABLE TO UPDATE PAYSTUB ${id}`))
 
 
 export const deletePaystub = (id) =>
   dispatch =>
     axios.delete(`/api/stubs/${id}`)
     .then(() => dispatch(remove(id)))
-    .catch(err => console.err(`${err} UNABLE TO DELETE PAYSTUB ${id}`))
+    .catch(err => console.log(`${err} UNABLE TO DELETE PAYSTUB ${id}`))
 
 
 /** REDUCER**/
