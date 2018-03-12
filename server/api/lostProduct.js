@@ -1,6 +1,19 @@
 const router = require('express').Router();
 const { LostProduct , User } = require('../db/models');
 
+router.param(':lostProductId', async (req, res, next, id) => {
+  const lostProduct = await lostProduct.findById(id, {
+    include: [ { model: User , attributes: ['name', 'id']}]
+  }).catch(next);
+  if (!lostProduct){
+    const err = Error('Lost product not found')
+    err.status = 404;
+    throw err;
+  }
+  req.lostProduct = lostProduct;
+  next();
+})
+
 
 router.get('/', async (req, res, next) => {
   const lostProducts = await LostProduct.findAll({
@@ -17,25 +30,21 @@ router.post('/', async (req, res, next) => {
 })
 
 router.get('/:lostProductId', async (req, res, next) => {
- const productWithUser = await LostProduct.findById(req.params.lostProductId, { include: [ User ]})
-    .catch(next);
-  res.json(productWithUser)
+  res.json(req.lostProduct);
 })
 
 router.put('/:lostProductId', async (req, res, next) => {
-  const [numOfProducts, productsAffected ] = await LostProduct.update(req.body, {
-    where: { id: req.params.lostProductId },
-    returning: true,
-  })
+  const updatedStub = await req.lostProduct.update(req.body)
     .catch(next);
-   res.json(productsAffected[0]);
+  const reloadedStub = await updatedStub.reload({
+    include: [ { model: User , attributes: ['name', 'id']}]
+  }).catch(next)
+  res.json(reloadedStub);
 })
 
-router.delete('/:lostProductId', (req, res, next) => {
-  const productsDeleted = LostProduct.destroy({
-    where: { id: req.params.lostProductId}
-  }).catch(next);
-  res.send(`Succesfully deleted ${productsDeleted.length} product => ${req.params.lostProductId}`)
+router.delete('/:lostProductId', async (req, res, next) => {
+  const productsDeleted = await req.lostProduct.destroy().catch(next);
+  res.send(`Destroyed ${productsDeleted}`)
 })
 
 module.exports = router;
