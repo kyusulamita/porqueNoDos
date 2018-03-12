@@ -40,7 +40,7 @@ router.put('/:vendorId', async (req, res, next) => {
 })
 
 router.delete('/:vendorId', async (req, res, next) => {
-  const vendorsDeleted = await req.vendor.catch(next);
+  const vendorsDeleted = await req.vendor.destroy().catch(next);
   res.json(vendorsDeleted);
 })
 

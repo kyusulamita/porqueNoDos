@@ -1,6 +1,18 @@
 const router = require('express').Router();
 const { Stub, Employee } = require('../db/models');
 
+router.param('stubId', async (req, res, next, id) => {
+  const paystub = await Stub.findById(id, {
+    include:[ Employee ],
+  }).catch(next);
+  if (!paystub){
+    const err = Error('Employee not found');
+    err.status = 404;
+    throw err;
+  }
+  req.paystub = paystub;
+  next()
+})
 
 router.get('/', async (req, res, next) => {
   const stubs = await Stub.findAll({
@@ -17,25 +29,17 @@ router.post('/', async (req, res, next) => {
 })
 
 router.get('/:stubId', async (req, res, next) => {
-  const stubWithEmployee = await Stub.findById(req.params.stubId, {
-    include: [ Employee ],
-  }).catch(next);
-  res.json(stubWithEmployee);
+  res.json(req.paystub);
 })
 
 router.put('/:stubId', async(req, res, next) => {
-  const updatedStub = await Stub.update(req.body, {
-    include: [ Employee ],
-    where: { id: req.params.stubId },
-    returning: true,
-  }).catch(next);
-  res.json(updatedStub);
+  const updatedStub = await req.paystub.update(req.body).catch(next);
+  const reloadedStub = await updatedStub.reload({include: [ Employee ]})
+  res.json(reloadedStub);
 })
 
 router.delete('/:stubId', async (req, res, next) => {
-  const stubsDestroyed = await Stub.destroy({
-    where: { id: req.params.stubId }
-  }).catch(next);
-  res.json(stubsDestroyed);
+  const arr = await req.paystub.destroy().catch(next);
+  res.json(`Destroyed ${arr}`);
 })
 module.exports = router;
