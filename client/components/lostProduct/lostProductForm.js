@@ -8,7 +8,7 @@ class lostProductForm extends Component{
   constructor(props){
     super(props)
     this.state = {
-      html: '<tr class><td class>Tue Mar 13</td><td class>Takis</td><td class>10</td><td class>% 11.90</td><td class><button class="ui button" role="button">Edit</button></td></class>'
+      html: '<tr><td>Tue Mar 13</td><td>Takis</td><td>10</td><td> 11.90</td><td><button class="ui button" role="button">Edit</button></td></tr>'
     };
     this.onChangeHandler = this.onChangeHandler.bind(this);
 
