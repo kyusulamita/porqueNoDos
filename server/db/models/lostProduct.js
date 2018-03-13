@@ -9,8 +9,8 @@ const lostProduct = db.define('lostProduct', {
     }
   },
   date: {
-    type: Sequelize.STRING,
-
+    type: Sequelize.DATE,
+    defaultValue: Date.now()
   },
   product: {
     type: Sequelize.STRING,

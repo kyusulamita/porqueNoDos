@@ -65,7 +65,7 @@ export default (employees = defaultEmployees, action) => {
         employee.id === action.employee.id ? action.employee : employee
       ));
     case REMOVE:
-      return employees.filter(employee => employee.id !== action.employee.id);
+      return employees.filter(employee => employee.id !== action.id);
     default:
       return employees;
   }
