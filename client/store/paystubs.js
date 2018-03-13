@@ -25,12 +25,15 @@ export const getPaystubs = () =>
       .then(allPaystubs => dispatch(getAll(allPaystubs || defaultPaystubs)))
       .catch(err => console.log(err))
 
-export const getPaystub = (paystubId) =>
-  dispatch =>
-    axios.get(`/api/stubs/${paystubId}`)
-      .then(res => res.data)
-      .then(singlePaystub => dispatch(update(singlePaystub)))
-      .catch(err => console.log(`${err}. UNABLE TO GET PAYSTUB ${paystubId}`))
+export const getPaystub = (paystubId) => {
+  return async (dispatch) => {
+      let singlePaystub = await axios.get(`/api/stubs/${paystubId}`);
+      let YTD = await axios.get(`/api/stubs/${paystubId}/YTD`);
+      singlePaystub = singlePaystub.data;
+      singlePaystub.YTD = YTD.data;
+      return dispatch(update(singlePaystub))
+  }
+}
 
 export const addPaystub = (paystub) =>
   dispatch =>

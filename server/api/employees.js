@@ -14,8 +14,9 @@ const { Employee, Stub} = require('../db/models');
 
 router.get('/', async (req, res, next) => {
   const employees = await Employee.findAll({
-    include: [ { model: Stub, attributes: ['start', 'end', 'rateType']} ],
+    include: [ { model: Stub, attributes: ['start', 'end', 'rateType'], order: ['start'] } ],
     attributes: ['firstName', 'lastName', 'phoneNumber', 'id'],
+    order: ['firstName']
   }).catch(next);
   res.json(employees)
 })
@@ -29,7 +30,7 @@ router.post('/', async (req, res, next) => {
 
 router.get('/:employeeId', async (req, res, next) => {
   const employeeWithStubs = await Employee.findById(req.params.employeeId, {
-    include: [ Stub ]
+    include: [ { model: Stub, order: ['start'] }]
   }).catch(next);
   res.json(employeeWithStubs)
 })
@@ -40,7 +41,7 @@ router.put('/:employeeId', async (req, res, next) => {
     returning: true
   }).catch(next);
   const updatedEmployee = await employeesAffected[0].reload({
-    include: [ Stub ],
+    include: [ { model: Stub, order: ['start'] }]
   })
   res.json(updatedEmployee);
 })
