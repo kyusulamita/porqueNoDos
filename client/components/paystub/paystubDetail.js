@@ -30,6 +30,7 @@ class PaystubDetail extends Component{
     if (!this.props.currentStub || !this.props.currentStub.YTD) return <div/>
     const { employee, YTD } = this.props.currentStub;
     const { hours, rate, gross, taxSocial, taxFederal, taxState,pay } = this.props.currentStub;
+    const { toggleEdit } = this.state;
     return (
       <div>
         <div className='Aligner'>
@@ -128,10 +129,14 @@ class PaystubDetail extends Component{
             </Row>
           </Footer>
         </Table>
+        <Table>
+          <Row>
+          </Row>
+        </Table>
         {
-          this.state.toggleEdit && <StubForm stub={this.props.currentStub} employeeId={employee.id} />
+          toggleEdit && <StubForm stub={this.props.currentStub} employeeId={employee.id} />
         }
-        <Button onClick={this.handleToggle}>Editar pago</Button>
+        <Button onClick={this.handleToggle} color={toggleEdit ? 'red' : 'green'} >{toggleEdit ? 'Cancelar' : 'Editar'}</Button>
       </div>
     )
   }

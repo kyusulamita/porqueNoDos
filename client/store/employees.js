@@ -52,18 +52,29 @@ export const deleteEmployee = (id) =>
     .then(() => dispatch(remove(id)))
     .catch(err => console.err(`${err} UNABLE TO DELETE EMPLOYEE ${id}`))
 
+function addPrevNext(arr){
+  return arr.map((stub, index) => {
+    if (index !== 0) stub.prev = arr[index - 1].id;
+    if (index + 1 !== arr.length) stub.next = arr[index + 1].id;
+    return stub;
+  })
+}
 
 /** REDUCER**/
 export default (employees = defaultEmployees, action) => {
   switch (action.type){
     case GET_ALL:
-      return action.employees;
+      return action.employees.map(employee => {
+        employee.stubs = addPrevNext(employee.stubs);
+        return employee;
+      });
     case ADD:
+      action.employee.stubs = addPrevNext(action.employee.stubs);
       return [...employees, action.employee];
     case UPDATE:
+      action.employee.stubs = addPrevNext(action.employee.stubs);
       return employees.map(employee => (
-        employee.id === action.employee.id ? action.employee : employee
-      ));
+         (employee.id !== action.employee.id) ? employee : action.employee));
     case REMOVE:
       return employees.filter(employee => employee.id !== action.id);
     default:

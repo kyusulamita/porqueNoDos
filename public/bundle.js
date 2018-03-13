@@ -30462,19 +30462,73 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(25);
 
+var _lostProductRow = __webpack_require__(937);
+
+var _lostProductRow2 = _interopRequireDefault(_lostProductRow);
+
+var _semanticUiReact = __webpack_require__(43);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var Header = _semanticUiReact.Table.Header,
+    Row = _semanticUiReact.Table.Row,
+    HeaderCell = _semanticUiReact.Table.HeaderCell,
+    Body = _semanticUiReact.Table.Body,
+    Footer = _semanticUiReact.Table.Footer,
+    Cell = _semanticUiReact.Table.Cell;
+
+
 var lostProductList = function lostProductList(props) {
+  var lostProducts = props.lostProducts;
+
   return _react2.default.createElement(
-    'div',
-    null,
-    'A list will be rendered here'
+    _semanticUiReact.Table,
+    { celled: true, striped: true },
+    _react2.default.createElement(
+      Header,
+      null,
+      _react2.default.createElement(
+        Row,
+        null,
+        _react2.default.createElement(
+          HeaderCell,
+          { textAlign: 'center' },
+          'Date'
+        ),
+        _react2.default.createElement(
+          HeaderCell,
+          null,
+          'Product'
+        ),
+        _react2.default.createElement(
+          HeaderCell,
+          null,
+          'Amount'
+        ),
+        _react2.default.createElement(
+          HeaderCell,
+          null,
+          'Price'
+        ),
+        _react2.default.createElement(
+          HeaderCell,
+          null,
+          'Total'
+        ),
+        _react2.default.createElement(HeaderCell, null)
+      )
+    ),
+    lostProducts.map(function (itemInfo) {
+      return _react2.default.createElement(_lostProductRow2.default, _extends({ key: itemInfo.id }, itemInfo));
+    })
   );
 };
 
@@ -30918,6 +30972,7 @@ var PaystubDetail = function (_Component) {
           taxFederal = _props$currentStub2.taxFederal,
           taxState = _props$currentStub2.taxState,
           pay = _props$currentStub2.pay;
+      var toggleEdit = this.state.toggleEdit;
 
       return _react2.default.createElement(
         'div',
@@ -31196,11 +31251,16 @@ var PaystubDetail = function (_Component) {
             )
           )
         ),
-        this.state.toggleEdit && _react2.default.createElement(_paystubForm2.default, { stub: this.props.currentStub, employeeId: employee.id }),
+        _react2.default.createElement(
+          _semanticUiReact.Table,
+          null,
+          _react2.default.createElement(Row, null)
+        ),
+        toggleEdit && _react2.default.createElement(_paystubForm2.default, { stub: this.props.currentStub, employeeId: employee.id }),
         _react2.default.createElement(
           _semanticUiReact.Button,
-          { onClick: this.handleToggle },
-          'Editar pago'
+          { onClick: this.handleToggle, color: toggleEdit ? 'red' : 'green' },
+          toggleEdit ? 'Cancelar' : 'Editar'
         )
       );
     }
@@ -31899,6 +31959,14 @@ var deleteEmployee = exports.deleteEmployee = function deleteEmployee(id) {
   };
 };
 
+function addPrevNext(arr) {
+  return arr.map(function (stub, index) {
+    if (index !== 0) stub.prev = arr[index - 1].id;
+    if (index + 1 !== arr.length) stub.next = arr[index + 1].id;
+    return stub;
+  });
+}
+
 /** REDUCER**/
 
 exports.default = function () {
@@ -31907,12 +31975,17 @@ exports.default = function () {
 
   switch (action.type) {
     case GET_ALL:
-      return action.employees;
+      return action.employees.map(function (employee) {
+        employee.stubs = addPrevNext(employee.stubs);
+        return employee;
+      });
     case ADD:
+      action.employee.stubs = addPrevNext(action.employee.stubs);
       return [].concat(_toConsumableArray(employees), [action.employee]);
     case UPDATE:
+      action.employee.stubs = addPrevNext(action.employee.stubs);
       return employees.map(function (employee) {
-        return employee.id === action.employee.id ? action.employee : employee;
+        return employee.id !== action.employee.id ? employee : action.employee;
       });
     case REMOVE:
       return employees.filter(function (employee) {
@@ -80247,6 +80320,133 @@ function toArray(list, index) {
 /***/ (function(module, exports) {
 
 /* (ignored) */
+
+/***/ }),
+/* 937 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _semanticUiReact = __webpack_require__(43);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Row = _semanticUiReact.Table.Row,
+    Cell = _semanticUiReact.Table.Cell,
+    Body = _semanticUiReact.Table.Body;
+
+var lostProductRow = function (_Component) {
+  _inherits(lostProductRow, _Component);
+
+  function lostProductRow(props) {
+    _classCallCheck(this, lostProductRow);
+
+    var _this = _possibleConstructorReturn(this, (lostProductRow.__proto__ || Object.getPrototypeOf(lostProductRow)).call(this, props));
+
+    _this.state = {
+      toggleEdit: false
+    };
+    _this.onButtonClick = _this.onButtonClick.bind(_this);
+    return _this;
+  }
+
+  _createClass(lostProductRow, [{
+    key: 'onButtonClick',
+    value: function onButtonClick(event) {
+      this.setState(function (_ref) {
+        var toggleEdit = _ref.toggleEdit;
+        return { toggleEdit: !toggleEdit };
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          total = _props.total,
+          date = _props.date,
+          product = _props.product,
+          amount = _props.amount,
+          price = _props.price,
+          id = _props.id;
+      var toggleEdit = this.state.toggleEdit;
+
+      return _react2.default.createElement(
+        Body,
+        null,
+        _react2.default.createElement(
+          Row,
+          { key: id },
+          _react2.default.createElement(
+            Cell,
+            null,
+            date
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            product
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            amount
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            '$ ',
+            price
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            '$ ',
+            total
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            _react2.default.createElement(
+              _semanticUiReact.Button,
+              { onClick: this.onButtonClick },
+              'Edit'
+            )
+          )
+        ),
+        toggleEdit && _react2.default.createElement(
+          Row,
+          null,
+          _react2.default.createElement(
+            Cell,
+            null,
+            'OH HELLO HI'
+          )
+        )
+      );
+    }
+  }]);
+
+  return lostProductRow;
+}(_react.Component);
+
+exports.default = lostProductRow;
 
 /***/ })
 /******/ ]);
