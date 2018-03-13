@@ -39,7 +39,7 @@ class StubForm extends Component{
   }
   componentDidMount(){
     if (this.props.employeeId){
-      this.setState({ employeeId: this.props.employeeId});
+      this.setState({ employeeId: this.props.employeeId, rateType: this.props.stub.rateType || 'HOURLY'});
     }
   }
   render (){
@@ -52,12 +52,12 @@ class StubForm extends Component{
           <Select placeholder='Escoge el empleado' options={this.props.employees} value={employeeId} name='employeeId' onChange={this.handleChange} disabled={!!this.props.employeeId}/>
           <Group widths='equal'>
             <Input label='Rate' placeholder={stub.rate || 'Rate'} name='rate' onChange={this.handleChange} required={newForm} value={rate}/>
-            <Select label='Tipo' placeholder={stub.rate || 'Escoge el tipo'} name='rateType' onChange={this.handleChange} required={newForm} value={rateType} options={rateOptions}/>
+            <Select label='Tipo' placeholder={stub.rateType || 'Escoge el tipo'} name='rateType' onChange={this.handleChange} required={newForm} value={rateType} options={rateOptions}/>
           </Group>
           <Group>
             {
-              (this.state.rateType ==='HOURLY' || stub.rateType === 'HOURLY') &&
-                <Input label='Horas' placeholder={stub.hours || 'Horas'} name='hours' onChange={this.handleChange} required={newForm} value={hours}/>
+              (this.state.rateType ==='HOURLY') &&
+                <Input label='Horas' placeholder={stub.hours || 'Horas'} name='hours' onChange={this.handleChange} required value={hours}/>
             }
             <Input label='Comienzo' placeholder={stub.start || 'Comienzo'} name='start' onChange={this.handleChange} required={newForm} value={start} />
             <Input label='Final' placeholder={stub.end || 'Final'} name='end' onChange={this.handleChange} required={newForm} value={end} />

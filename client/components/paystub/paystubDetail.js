@@ -5,18 +5,26 @@ import { connect } from 'react-redux';
 import EmployeeTile from '../employee/employeeTile'
 import StubForm from '../paystub/paystubForm';
 
-import { Icon, Label, Menu, Table } from 'semantic-ui-react'
+import { Button, Table } from 'semantic-ui-react'
 const { Header, Row, HeaderCell, Cell, Footer, Body } = Table;
 
 class PaystubDetail extends Component{
   constructor(props){
     super(props);
-    this.state = { taxFederal: 0, taxSocial: 0, taxState: 0, pay: 0, gross: 0 };
+    this.state = { toggleEdit:false };
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
   componentDidMount(){
     this.props.getStub();
   }
+
+  handleToggle(event){
+    event.preventDefault();
+    console.log('Hello', this.state.toggleEdit)
+    this.setState(({toggleEdit}) => ({toggleEdit: !toggleEdit}))
+  }
+
 
   render(){
     if (!this.props.currentStub || !this.props.currentStub.YTD) return <div/>
@@ -120,6 +128,10 @@ class PaystubDetail extends Component{
             </Row>
           </Footer>
         </Table>
+        {
+          this.state.toggleEdit && <StubForm stub={this.props.currentStub} employeeId={employee.id} />
+        }
+        <Button onClick={this.handleToggle}>Editar pago</Button>
       </div>
     )
   }
