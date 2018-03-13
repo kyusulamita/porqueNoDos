@@ -29,7 +29,14 @@ router.post('/', async (req, res, next) => {
 })
 
 router.get('/:stubId', async (req, res, next) => {
+  const yearTo = await req.paystub.YTD();
+  console.log(yearTo)
+  req.paystub.yearTo = yearTo;
   res.json(req.paystub);
+})
+
+router.get('/:stubId/YTD', async (req, res, next) => {
+  res.json(await req.paystub.YTD());
 })
 
 router.put('/:stubId', async(req, res, next) => {

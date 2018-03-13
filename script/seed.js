@@ -10,8 +10,8 @@
  * Now that you've got the main idea, check it out in practice below!
  */
 
-const stubTemplates = [{ rate: '13', rateType: 'HOURLY', hours: '40', start: '12/24/15', end: '12/31/15'},
-                  { rate: '400', rateType: 'WEEKLY', start: '12/12/15', end: '12/19/15'}];
+const stubTemplates = [{ rate: '13', rateType: 'HOURLY', hours: '40'},
+                        { rate: '400', rateType: 'WEEKLY'}];
 const billTemplates = [{ total: '213.45', date: '11/13/16' }, { total: '413.12', date: '10/12/15' }];
 
 const Promise = require('bluebird')

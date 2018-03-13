@@ -10,13 +10,37 @@ const Stub = db.define('stub', {
   },
   rateType: {
     type: Sequelize.ENUM('HOURLY', 'WEEKLY'),
-    default: 'HOURLY'
+    defaultValue: 'HOURLY'
   },
   hours: {
     type: Sequelize.STRING,
-
   },
-  pay: {
+  married: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
+  taxSocial: {
+    type: Sequelize.VIRTUAL,
+    get(){
+      const gross = +this.get('gross');
+      return gross * ((this.get('married')) ? 0.075 : 0.075);
+    },
+  },
+  taxFederal: {
+    type: Sequelize.VIRTUAL,
+    get(){
+      const gross = +this.get('gross');
+      return gross * ((this.get('married')) ? 0.04 : 0.04);
+    },
+  },
+  taxState: {
+    type: Sequelize.VIRTUAL,
+    get(){
+      const gross = +this.get('gross');
+      return gross * ((this.get('married')) ? 0.0425 : 0.0425);
+    },
+  },
+  gross: {
     type: Sequelize.VIRTUAL,
     get(){
       const hourlyPay = this.get('rateType') === 'HOURLY';
@@ -26,15 +50,42 @@ const Stub = db.define('stub', {
       return +this.get('rate');
     }
   },
+  pay: {
+    type: Sequelize.VIRTUAL,
+    get(){
+      const [gross, taxState, taxFederal, taxSocial] = [this.get('gross'), this.get('taxState'), this.get('taxFederal'), this.get('taxSocial')];
+      return gross - (taxState + taxFederal + taxSocial);
+    }
+  },
   start: {
-    type: Sequelize.STRING,
+    type: Sequelize.DATE,
+    defaultValue: Date.now(),
     allowNull: false,
 
   },
   end: {
-    type: Sequelize.STRING,
-    allowNull: false
+    type: Sequelize.DATE,
+    defaultValue: Date.now(),
+    allowNull: false,
   }
 })
+
+
+Stub.prototype.YTD = async function(){
+  const allStubs = await Stub.findAll({
+    where: {
+      start: { [Sequelize.Op.lte]: this.start },
+      employeeId: this.employeeId,
+    }
+  });
+  let initialState = { taxFederal: 0, taxSocial:0, taxState:0, pay:0, gross:0 };
+  const finalInfo = allStubs.reduce((acc, cur) => {
+      for (let key in acc){
+        acc[key] += cur[key];
+      }
+      return acc;
+    }, initialState);
+  return finalInfo;
+};
 
 module.exports = Stub;

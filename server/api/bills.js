@@ -22,6 +22,7 @@ router.get('/:billId', async (req, res, next) => {
   res.json(billWithVendor)
 })
 
+
 router.put('/:billId', async (req, res, next) => {
   const [numOfBills, billsAffected ] = await Bill.update(req.body, {
     where: { id: req.params.billId },

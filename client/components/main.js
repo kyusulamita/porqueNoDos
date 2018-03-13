@@ -37,7 +37,9 @@ class Main extends Component {
     <Menu pointing secondary>
       <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
       <Menu.Item name='empleados' active={activeTab === 'empleados'} onClick={this.handleMenuClick} as={Link} to='/empleados'/>
+      <Menu.Item name='stubs' active={activeTab === 'stub'} onClick={this.handleMenuClick} as={Link} to='/stubs'/>
       <Menu.Item name='vendedores' active={activeTab === 'vendedores'} onClick={this.handleMenuClick} as={Link} to='/vendedores'/>
+      <Menu.Item name='productos perdidos' active={activeTab === 'productos perdidos'} onClick={this.handleMenuClick} as={Link} to='/perdidas'/>
       <Menu.Menu position='right'>
         <Menu.Item name='salir' active={activeTab === 'salir'} onClick={onLogout} />
       </Menu.Menu>
