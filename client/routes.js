@@ -5,10 +5,10 @@ import {Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import history from './history'
 import {Main, Login, Signup, UserHome, EmployeeList, EmployeeDetail,
-        VendorList, VendorDetail, PaystubDetail } from './components'
+        VendorList, VendorDetail, PaystubDetail, LostProductList } from './components'
 
 // going to want to grab all vendors and employees right from the getGo
-import {me, getEmployees, getPaystubs } from './store'
+import {me, getEmployees, getPaystubs, getProducts } from './store'
 
 
 
@@ -36,6 +36,8 @@ class Routes extends Component {
                   <Route path = '/stubs/:stubId' component={PaystubDetail} />
                   <Route exact path ='/vendedores' component={VendorList} />
                   <Route path ='/vendedores/:vendorId' component={VendorDetail} />
+                  <Route exact path = '/perdidas' component={LostProductList} />
+                  <Route component={UserHome}/>
                 </Switch>
             }
             <Route component={Login} />
@@ -61,6 +63,7 @@ const mapDispatch = (dispatch) => {
       dispatch(me())
       dispatch(getEmployees())
       dispatch(getPaystubs())
+      dispatch(getProducts())
     }
   }
 }

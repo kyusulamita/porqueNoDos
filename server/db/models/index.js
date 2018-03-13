@@ -3,6 +3,7 @@ const Employee = require('./employee');
 const Stub = require('./stub');
 const Vendor = require('./vendor');
 const Bill = require('./bill')
+const LostProduct = require('./lostProduct');
 /**
  * If we had any associations to make, this would be a great place to put them!
  * ex. if we had another model called BlogPost, we might say:
@@ -16,6 +17,7 @@ const Bill = require('./bill')
 Bill.belongsTo(Vendor, { onDelete: 'CASCADE' });
 Vendor.hasMany(Bill);
 
+LostProduct.belongsTo(User, { onDelete: 'CASCADE'})
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,
@@ -30,5 +32,6 @@ module.exports = {
   Employee,
   Stub,
   Vendor,
-  Bill
+  Bill,
+  LostProduct
 }

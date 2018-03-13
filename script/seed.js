@@ -14,9 +14,10 @@ const stubTemplates = [{ rate: '13', rateType: 'HOURLY', hours: '40'},
                         { rate: '400', rateType: 'WEEKLY'}];
 const billTemplates = [{ total: '213.45', date: '11/13/16' }, { total: '413.12', date: '10/12/15' }];
 
+
 const Promise = require('bluebird')
 const db = require('../server/db')
-const {User, Vendor, Employee, Stub, Bill } = require('../server/db/models')
+const {User, Vendor, Employee, Stub, Bill, LostProduct } = require('../server/db/models')
 
 async function seed () {
   await db.sync({force: true})
@@ -29,6 +30,12 @@ async function seed () {
     User.create({email: 'murphy@email.com', name:'Murphy', password: '123'}),
     User.create({email: 'admin@me.com', name: 'Alvaro', password: 'hellohi', isAdmin: true })
   ])
+
+  const perdidadas = await Promise.all([
+    LostProduct.create({product: 'Takis', amount: 10, price: '1.19', userId:1}),
+    LostProduct.create({product: 'Tortix', amount: 23, price: '.79', userId: 1}),
+    LostProduct.create({product: 'Tomato', amount: 1, price: '13.34', userId:1}),
+  ]);
   const vendors = await Promise.all([
     Vendor.create({name: 'La Michacoana', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49509', phoneNumber: '9999999'}),
     Vendor.create({name: 'Vendor 2', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49509', phoneNumber: '9999999'}),
@@ -67,8 +74,6 @@ async function seed () {
   console.log(`seeded ${employees.length} employees`)
   console.log(`seeded ${stubs.length} stubs`)
   console.log(`seeded ${bills.length} bills`)
-
-  // console.log(`${employees[0]}`)
   console.log(`seeded successfully`)
 }
 

@@ -4,8 +4,9 @@ import thunkMiddleware from 'redux-thunk';
 import currentUser from './currentUser';
 import employees from './employees';
 import paystubs from './paystubs';
+import lostProducts from './lostProducts';
 
-const reducer = combineReducers({ currentUser, employees, paystubs })
+const reducer = combineReducers({ currentUser, employees, paystubs, lostProducts })
 const middleware = applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
 const store = createStore(reducer, middleware)
 
@@ -13,3 +14,4 @@ export default store
 export * from './currentUser'
 export * from './employees'
 export * from './paystubs'
+export * from './lostProducts'
