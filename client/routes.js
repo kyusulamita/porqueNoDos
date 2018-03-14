@@ -5,7 +5,7 @@ import {Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import history from './history'
 import {Main, Login, Signup, UserHome, EmployeeList, EmployeeDetail,
-        VendorList, VendorDetail, PaystubDetail, LostProductList } from './components'
+        VendorList, VendorDetail, PaystubDetail, LostProductList, PaystubList } from './components'
 
 // going to want to grab all vendors and employees right from the getGo
 import {me, getEmployees, getPaystubs, getProducts } from './store'
@@ -32,7 +32,7 @@ class Routes extends Component {
                   <Route path='/home' component={UserHome} />
                   <Route exact path='/empleados' component={EmployeeList} />
                   <Route path='/empleados/:employeeId' component={EmployeeDetail} />
-                  <Route exact path ='/stubs' />
+                  <Route exact path ='/stubs' component={PaystubList}/>
                   <Route path = '/stubs/:stubId' component={PaystubDetail} />
                   <Route exact path ='/vendedores' component={VendorList} />
                   <Route path ='/vendedores/:vendorId' component={VendorDetail} />

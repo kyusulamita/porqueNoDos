@@ -58,7 +58,7 @@ class EmployeeForm extends Component{
             <Input label='Codigo Postal' placeholder={employee.zipcode || 'Codigo Postal'} name='zipcode' onChange={this.handleChange} required={newForm} value={zipcode} />
             <Input label='Numero De Telefono' placeholder={employee.phoneNumber || '(999)999-9999'} name='phoneNumber' onChange={this.handleChange} required={newForm} value={phoneNumber} />
           </Group>
-          <Button type='submit'>{newForm ? 'Crear' : 'Confirmar'}</Button>
+          <Button color='green' type='submit'>{newForm ? 'Crear' : 'Confirmar'}</Button>
         </Form>
     )
   }

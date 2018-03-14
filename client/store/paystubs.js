@@ -43,12 +43,13 @@ export const addPaystub = (paystub) =>
       .catch(err => console.log(`${err}. UNABLE TO ADD PAYSTUB ${paystub.employeeId}`))
 
 export const updatePaystub = (id, paystub) =>
-  dispatch =>
-    axios.put(`/api/stubs/${id}`, paystub)
-      .then(res => res.data)
-      .then(updatedPaystub => dispatch(update(updatedPaystub)))
-      .catch(err => console.log(`${err} UNABLE TO UPDATE PAYSTUB ${id}`))
-
+  async (dispatch) => {
+    let updatedStub = await axios.put(`/api/stubs/${id}`, paystub).catch(console.log);
+    let YTD = await axios.get(`/api/stubs/${id}/YTD`).catch(console.log);
+    updatedStub = updatedStub.data;
+    updatedStub.YTD = YTD.data;
+    return dispatch(update(updatedStub));
+}
 
 export const deletePaystub = (id) =>
   dispatch =>

@@ -22,35 +22,35 @@ export const getEmployees = () =>
     axios.get('/api/employees')
       .then(res => res.data)
       .then(allEmployees => dispatch(getAll(allEmployees || defaultEmployees)))
-      .catch(err => console.err(err))
+      .catch(err => console.log(err))
 
 export const getEmployee = (employeeId) =>
   dispatch =>
     axios.get(`/api/employees/${employeeId}`)
       .then(res => res.data)
       .then(singleEmployee => dispatch(update(singleEmployee)))
-      .catch(err => console.err(`${err}. UNABLE TO GET EMPLOYEE ${employeeId}`))
+      .catch(err => console.log(`${err}. UNABLE TO GET EMPLOYEE ${employeeId}`))
 
 export const addEmployee = (employee) =>
   dispatch =>
     axios.post('/api/employees', employee)
       .then(res => res.data)
       .then(newEmployee => dispatch(add(newEmployee)))
-      .catch(err => console.err(`${err}. UNABLE TO ADD EMPLOYEE ${employee.firstName}`))
+      .catch(err => console.log(`${err}. UNABLE TO ADD EMPLOYEE ${employee.firstName}`))
 
 export const updateEmployee = (id, employee) =>
   dispatch =>
     axios.put(`/api/employees/${id}`, employee)
       .then(res => res.data)
       .then(updatedEmployee => dispatch(update(updatedEmployee)))
-      .catch(err => console.err(`${err} UNABLE TO UPDATE EMPLOYEE ${id}`))
+      .catch(err => console.log(`${err} UNABLE TO UPDATE EMPLOYEE ${id}`))
 
 
 export const deleteEmployee = (id) =>
   dispatch =>
     axios.delete(`/api/employees/${id}`)
     .then(() => dispatch(remove(id)))
-    .catch(err => console.err(`${err} UNABLE TO DELETE EMPLOYEE ${id}`))
+    .catch(err => console.log(`${err} UNABLE TO DELETE EMPLOYEE ${id}`))
 
 function addPrevNext(arr){
   return arr.map((stub, index) => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getPaystub } from '../../store';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import EmployeeTile from '../employee/employeeTile'
 import StubForm from '../paystub/paystubForm';
@@ -16,21 +17,32 @@ class PaystubDetail extends Component{
   }
 
   componentDidMount(){
-    this.props.getStub();
+    const stubId = +this.props.match.params.stubId;
+    this.props.getStub(stubId);
   }
 
   handleToggle(event){
     event.preventDefault();
-    console.log('Hello', this.state.toggleEdit)
     this.setState(({toggleEdit}) => ({toggleEdit: !toggleEdit}))
+  }
+
+  componentWillReceiveProps(nextProps){
+    const nextStubId = +nextProps.match.params.stubId;
+    const stubId = +this.props.match.params.stubId;
+    if (nextStubId !== stubId){
+      this.props.getStub(nextStubId);
+    }
   }
 
 
   render(){
     if (!this.props.currentStub || !this.props.currentStub.YTD) return <div/>
     const { employee, YTD } = this.props.currentStub;
-    const { hours, rate, gross, taxSocial, taxFederal, taxState,pay } = this.props.currentStub;
+    const { hours, rate, gross, taxSocial, taxFederal, taxState, pay, id,rateType, start, end, payDate } = this.props.currentStub;
+    const { stubs } = this.props.stubEmployee;
+    const { next, prev } = stubs.find(stub => stub.id === id);
     const { toggleEdit } = this.state;
+    const hourlyPay = rateType === 'HOURLY'
     return (
       <div>
         <div className='Aligner'>
@@ -49,8 +61,8 @@ class PaystubDetail extends Component{
           <Header>
             <Row>
               <HeaderCell>Description</HeaderCell>
-              <HeaderCell>Weekly Hours</HeaderCell>
-              <HeaderCell>Hourly Rate</HeaderCell>
+              <HeaderCell>{hourlyPay ? 'Week Hours' : 'Weeks Worked'}</HeaderCell>
+              <HeaderCell>{hourlyPay ? 'Hourly Rate' : 'Weekly Rate'}</HeaderCell>
               <HeaderCell>Amount</HeaderCell>
               <HeaderCell>Total</HeaderCell>
               <HeaderCell>Description</HeaderCell>
@@ -61,7 +73,7 @@ class PaystubDetail extends Component{
           <Body>
             <Row>
               <Cell>Regular Time</Cell>
-              <Cell>{hours ? hours : ''}</Cell>
+              <Cell>{hourlyPay ? hours : '1'}</Cell>
               <Cell>{rate}</Cell>
               <Cell>{gross}</Cell>
               <Cell>{YTD.gross}</Cell>
@@ -116,23 +128,30 @@ class PaystubDetail extends Component{
               <Cell></Cell>
               <Cell></Cell>
               <Cell>Deduction Total</Cell>
-              <Cell>{gross - pay}</Cell>
-              <Cell>{YTD.gross - YTD.pay}</Cell>
+              <Cell>{Number(gross - pay).toFixed(2)}</Cell>
+              <Cell>{Number(YTD.gross - YTD.pay).toFixed(2)}</Cell>
             </Row>
           </Body>
           <Footer>
             <Row>
               <HeaderCell colSpan='2'>Reporting Period</HeaderCell>
-              <HeaderCell colSpan='2'></HeaderCell>
+              <HeaderCell colSpan='2'>{start} - {end}</HeaderCell>
               <HeaderCell colSpan='2'>Pay Date</HeaderCell>
-              <HeaderCell colSpan='2'></HeaderCell>
+              <HeaderCell colSpan='2'>{payDate}</HeaderCell>
             </Row>
           </Footer>
         </Table>
-        <Table>
-          <Row>
-          </Row>
-        </Table>
+        <div className='Aligner'>
+          <div className='Aligner-item--top' />
+          <div className='Aligner-item'>
+            <Button.Group>
+              <Button disabled={!prev} as={Link} to={`/stubs/${prev}`}>Prev</Button>
+              <Button.Or />
+              <Button disabled={!next} as={Link} to={`/stubs/${next}`}>Next</Button>
+            </Button.Group>
+          </div>
+          <div className='Aligner-item--bottom' />
+        </div>
         {
           toggleEdit && <StubForm stub={this.props.currentStub} employeeId={employee.id} />
         }
@@ -142,16 +161,18 @@ class PaystubDetail extends Component{
   }
 }
 
-const mapState = (state, ownProps) => {
+const mapState = ({paystubs, employees}, ownProps) => {
   const stubId = +ownProps.match.params.stubId;
+  const currentStub = paystubs.find(stub => stub.id === stubId);
+  const stubEmployee = employees.length && currentStub && employees.find(employee => employee.id === currentStub.employeeId);
   return ({
-    currentStub: state.paystubs.find(stub => stub.id === stubId)
+    currentStub,
+    stubEmployee
   })
 }
 
 const mapDispatch = (dispatch, ownProps) => ({
-    getStub(){
-      const stubId = +ownProps.match.params.stubId;
+    getStub(stubId){
       dispatch(getPaystub(stubId));
     }
 })
