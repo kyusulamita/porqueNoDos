@@ -14,7 +14,7 @@ const { Employee, Stub} = require('../db/models');
 
 router.get('/', async (req, res, next) => {
   const employees = await Employee.findAll({
-    include: [ { model: Stub, attributes: ['start', 'end', 'rateType', 'id'], order: ['start'] } ],
+    include: [ { model: Stub, attributes: ['rateType', 'id'] } ],
     attributes: ['firstName', 'lastName', 'phoneNumber', 'id'],
     order: ['firstName']
   }).catch(next);

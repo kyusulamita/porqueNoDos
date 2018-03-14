@@ -7,18 +7,15 @@ import { Link } from 'react-router-dom';
 const { Content, Avatar, Author, Metadata, Text, Actions, Action } = Comment;
 
 export const StubRow = (props) => {
-  // const {rate, hours} = props
   console.log(props);
-  let {rate, hours, pay, id, paid } = props;
-  const { employeeId, firstName, lastName } = props;
-  if (!paid) paid = 'some day'
-  return (
+  const { rate, hours, pay, id, paid, payDate } = props;
+  const { employeeId, firstName, lastName } = props;  return (
     <Comment key={id}>
       <Avatar  />
       <Content>
-        <Author as={Link} to={`/empleadoes/${employeeId}`}>{`${firstName} ${lastName}`}</Author>
-        <Metadata> Ver mas detalles sobre empleado</Metadata>
-        <Text>Worked {hours} hours. Amount paid: ${pay}</Text>
+        <Author as={Link} to={`/empleados/${employeeId}`}>{`${firstName} ${lastName}`}</Author>
+        <Metadata> Pagado {payDate}</Metadata>
+        <Text>Trabajado: {hours ? `${hours} horas` : `1 semana`}. Pagado: ${pay}</Text>
         <Actions>
           <Action as={Link} to={`/stubs/${id}`}>Ver stub in detalle</Action>
         </Actions>
@@ -30,7 +27,7 @@ export const StubRow = (props) => {
 StubRow.propTypes = {
   hours: PropTypes.string,
   rate: PropTypes.string,
-  pay: PropTypes.number,
+  gross: PropTypes.number,
 }
 
 export default StubRow;

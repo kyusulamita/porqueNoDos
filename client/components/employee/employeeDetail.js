@@ -26,7 +26,7 @@ class employeeDetail extends Component{
       <div className='adminBox'>
         <div className='adminBoxForm'>
         {
-          <Button basic size='small' color='teal' content={editBool ? 'Cancelar' : 'Editar Empleado'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
+          <Button size='small' color='teal' negative={editBool} content={editBool ? 'Cancelar' : 'Editar Empleado'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
         }
         {
           editBool && <EmployeeForm employee={this.props.employee} />
@@ -34,7 +34,7 @@ class employeeDetail extends Component{
         </div>
         <div className='adminBoxForm'>
         {
-          <Button basic size='small' secondary color='teal' content={addBool ? 'Cancelar' : 'Anadir pago'} onClick={() => this.setState(({addBool}) => ({ addBool:! addBool}))} />
+          <Button size='small' secondary={!addBool} color='teal' negative={addBool} content={addBool ? 'Cancelar' : 'Anadir pago'} onClick={() => this.setState(({addBool}) => ({ addBool:! addBool}))} />
         }
         {
           addBool && <StubForm employeeId={this.props.employee.id}/>

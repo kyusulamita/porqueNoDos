@@ -6,7 +6,10 @@ const Stub = db.define('stub', {
   rate: {
     type: Sequelize.STRING,
     defaultValue: '12',
-    allowNull: false
+    allowNull: false,
+    get(){
+      return Number(this.getDataValue('rate')).toFixed(2)
+    }
   },
   rateType: {
     type: Sequelize.ENUM('HOURLY', 'WEEKLY'),
@@ -23,21 +26,24 @@ const Stub = db.define('stub', {
     type: Sequelize.VIRTUAL,
     get(){
       const gross = +this.get('gross');
-      return gross * ((this.get('married')) ? 0.075 : 0.075);
+      const deduction =  (gross * ((this.get('married')) ? 0.075 : 0.075));
+      return Number(deduction).toFixed(2);
     },
   },
   taxFederal: {
     type: Sequelize.VIRTUAL,
     get(){
       const gross = +this.get('gross');
-      return gross * ((this.get('married')) ? 0.04 : 0.04);
+      const deduction = gross * ((this.get('married')) ? 0.04 : 0.04);
+      return Number(deduction).toFixed(2);
     },
   },
   taxState: {
     type: Sequelize.VIRTUAL,
     get(){
       const gross = +this.get('gross');
-      return gross * ((this.get('married')) ? 0.0425 : 0.0425);
+      const deduction = gross * ((this.get('married')) ? 0.0425 : 0.0425);
+      return Number(deduction).toFixed(2);
     },
   },
   gross: {
@@ -45,46 +51,57 @@ const Stub = db.define('stub', {
     get(){
       const hourlyPay = this.get('rateType') === 'HOURLY';
       if (hourlyPay){
-        return +this.get('rate') * +this.get('hours');
+        const pay =  +this.get('rate') * +this.get('hours');
+        return Number(pay).toFixed(2);
       }
-      return +this.get('rate');
+      return this.rate;
     }
   },
   pay: {
     type: Sequelize.VIRTUAL,
     get(){
-      const [gross, taxState, taxFederal, taxSocial] = [this.get('gross'), this.get('taxState'), this.get('taxFederal'), this.get('taxSocial')];
-      return gross - (taxState + taxFederal + taxSocial);
+      const [gross, taxState, taxFederal, taxSocial] = [+this.get('gross'), +this.get('taxState'), +this.get('taxFederal'), +this.get('taxSocial')];
+      const totalPay =  gross - (taxState + taxFederal + taxSocial);
+      return Number(totalPay).toFixed(2);
+
     }
   },
   start: {
-    type: Sequelize.DATE,
-    defaultValue: Date.now(),
+    type: Sequelize.DATEONLY,
+    defaultValue: Sequelize.NOW,
     allowNull: false,
 
   },
   end: {
-    type: Sequelize.DATE,
-    defaultValue: Date.now(),
+    type: Sequelize.DATEONLY,
+    defaultValue: Sequelize.NOW,
     allowNull: false,
-  }
+  },
+  payDate: {
+    type: Sequelize.DATEONLY,
+    defaultValue:  Sequelize.NOW,
+    allowNull: false,
+  },
 })
 
 
 Stub.prototype.YTD = async function(){
   const allStubs = await Stub.findAll({
     where: {
-      start: { [Sequelize.Op.lte]: this.start },
+      start: { [Sequelize.Op.lte]: this.getDataValue('start') },
       employeeId: this.employeeId,
     }
   });
   let initialState = { taxFederal: 0, taxSocial:0, taxState:0, pay:0, gross:0 };
   const finalInfo = allStubs.reduce((acc, cur) => {
       for (let key in acc){
-        acc[key] += cur[key];
+        acc[key] += +cur[key];
       }
       return acc;
     }, initialState);
+  for (let key in finalInfo){
+    finalInfo[key] = Number(finalInfo[key]).toFixed(2);
+  }
   return finalInfo;
 };
 
