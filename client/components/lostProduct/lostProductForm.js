@@ -14,7 +14,7 @@ class LostProductForm extends Component{
       <Row>
         <Cell colSpan='6'>
           <Form>
-            <Form.Group inline widths='equal' >
+            <Form.Group  widths='equal' >
               <Form.Input label='Date' placeholder='Date' type='date'/>
               <Form.Input label='Product' placeholder='Product' />
               <Form.Input label='Amount' placeholder='Amount' />

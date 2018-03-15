@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'semantic-ui-react';
 
-import { LostProductForm } from '../index';
+import LostProductForm from './LostProductForm';
 const { Row, Cell, Body } = Table;
 
 class lostProductRow extends Component{
@@ -30,7 +30,7 @@ class lostProductRow extends Component{
           <Cell><Button onClick={this.onButtonClick}>Edit</Button></Cell>
          </Row>
          {
-          toggleEdit && <LostProductForm {...this.props}/>
+          toggleEdit && <LostProductForm {...this.props} />
          }
        </Body>
     )
