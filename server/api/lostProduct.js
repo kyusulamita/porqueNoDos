@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { LostProduct , User } = require('../db/models');
 
-router.param(':lostProductId', async (req, res, next, id) => {
+router.param('lostProductId', async (req, res, next, id) => {
   const lostProduct = await lostProduct.findById(id, {
     include: [ { model: User , attributes: ['name', 'id']}]
   }).catch(next);

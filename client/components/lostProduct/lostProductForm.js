@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
-import { Form, Button, Table } from 'semantic-ui-react'
-import ContentEditable from 'react-contenteditable'
-const {Row, Cell} = Table
-const { Group, Input } = Form
+import { Form, Table } from 'semantic-ui-react'
 
-class lostProductForm extends Component{
+const { Row, Cell } = Table;
+
+class LostProductForm extends Component{
   constructor(props){
-    super(props)
-    this.state = {
-      html: '<tr><td>Tue Mar 13</td><td>Takis</td><td>10</td><td> 11.90</td><td><button class="ui button" role="button">Edit</button></td></tr>'
-    };
-    this.onChangeHandler = this.onChangeHandler.bind(this);
+    super(props);
 
-  }
-  onChangeHandler(event){
-    console.log(event);
-    this.setState({html: event.target.value})
   }
 
   render(){
-    const info = this.props.info || {}
     return (
-        <ContentEditable
-        html={this.state.html}
-        disabled={false}
-        onChange={this.onChangeHandler}
-        />
+      <Row>
+        <Cell colSpan='6'>
+          <Form>
+            <Form.Group inline widths='equal' >
+              <Form.Input label='Date' placeholder='Date' type='date'/>
+              <Form.Input label='Product' placeholder='Product' />
+              <Form.Input label='Amount' placeholder='Amount' />
+              <Form.Input label='Price' placeholder='Price' />
+              <Form.Input label='Total' placeholder='Total' />
+              <Form.Button color='green'>Confirmar</Form.Button>
+            </Form.Group>
+          </Form>
+        </Cell>
+      </Row>
     )
   }
 }
 
-export default lostProductForm;
+
+export default LostProductForm;
