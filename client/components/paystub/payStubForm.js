@@ -43,7 +43,7 @@ class StubForm extends Component{
       this.setState({ employeeId: this.props.employeeId});
     }
     if(this.props.stub){
-      this.setState({ rateType: this.props.stub.rateType || 'HOURLY', married: this.props.stub.married || false});
+      this.setState({ married: this.props.stub.married || false});
     }
   }
   render (){
@@ -58,7 +58,7 @@ class StubForm extends Component{
           <Group widths='equal'>
             <Input label='Rate' placeholder={stub.rate || 'Rate'} name='rate' onChange={this.handleChange} required={newForm} value={rate}/>
             <Select label='Tipo' placeholder={stub.rateType || 'Escoge el tipo'} name='rateType' onChange={this.handleChange} required={newForm} value={rateType} options={rateOptions}/>
-            <Select label='Casado?' placeholder={stub.married || 'No'} name='married' onChange={this.handleChange} required={newForm} value={married} options={marriedOptions}/>
+            <Select label='Casado?' placeholder={stub.married ? 'Si' : 'No'} name='married' onChange={this.handleChange} required={newForm} value={married} options={marriedOptions}/>
           </Group>
           <Group>
             {

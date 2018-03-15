@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Header, Icon, Button, Card, Image } from 'semantic-ui-react'
-import EmployeeForm from './employeeForm'
-import EmployeeTile from './employeeTile'
 
+
+import { EmployeeForm, EmployeeTile } from '../index'
 class EmployeeList extends Component{
   constructor(props){
     super(props);

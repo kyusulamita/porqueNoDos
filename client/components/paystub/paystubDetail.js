@@ -3,8 +3,7 @@ import { getPaystub } from '../../store';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import EmployeeTile from '../employee/employeeTile'
-import StubForm from '../paystub/paystubForm';
+import { PaystubForm, EmployeeTile } from '../index';
 
 import { Button, Table } from 'semantic-ui-react'
 const { Header, Row, HeaderCell, Cell, Footer, Body } = Table;
@@ -12,7 +11,7 @@ const { Header, Row, HeaderCell, Cell, Footer, Body } = Table;
 class PaystubDetail extends Component{
   constructor(props){
     super(props);
-    this.state = { toggleEdit:false };
+    this.state = { toggleEdit: false };
     this.handleToggle = this.handleToggle.bind(this);
   }
 
@@ -153,7 +152,7 @@ class PaystubDetail extends Component{
           <div className='Aligner-item--bottom' />
         </div>
         {
-          toggleEdit && <StubForm stub={this.props.currentStub} employeeId={employee.id} />
+          toggleEdit && <PaystubForm stub={this.props.currentStub} employeeId={employee.id} />
         }
         <Button onClick={this.handleToggle} color={toggleEdit ? 'red' : 'green'} >{toggleEdit ? 'Cancelar' : 'Editar'}</Button>
       </div>

@@ -6,10 +6,10 @@
 export {default as Main} from './main';
 export {default as UserHome} from './user-home';
 export {Login, Signup} from './auth-form';
-export {default as EmployeeList } from './employee/employeeList';
-export {default as EmployeeDetail } from './employee/employeeDetail';
-export {default as VendorList } from './vendor/vendorList';
-export {default as VendorDetail } from './vendor/vendorDetail';
-export {default as PaystubDetail } from './paystub/paystubDetail';
-export {default as LostProductList } from './lostProduct/lostProductList';
-export {default as PaystubList } from './paystub/paystubList';
+
+
+export * from './Paystub'
+export * from './Bill';
+export * from './Employee';
+export * from './LostProduct'
+export * from './Vendor'

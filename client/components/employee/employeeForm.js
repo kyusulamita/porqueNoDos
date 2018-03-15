@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { addEmployee, updateEmployee } from '../../store';
 import { connect } from 'react-redux'
-const { Group, Select, Input, Field } = Form;
+const { Group, Input } = Form;
 
 class EmployeeForm extends Component{
   constructor(props){
@@ -23,9 +23,8 @@ class EmployeeForm extends Component{
     this.setState({[name]: value});
   }
 
-  handleOnSubmit(event, secondThing){
+  handleOnSubmit(event){
     event.preventDefault();
-    console.log('made it here!')
     const newForm = !this.props.employee;
     if (newForm){
       this.props.add(this.state);;
@@ -63,11 +62,11 @@ class EmployeeForm extends Component{
     )
   }
 }
-const mapState = (state, ownProps) => ({
+const mapState = (state) => ({
 
 })
 
-const mapDispatch = (dispatch, ownProps) => ({
+const mapDispatch = (dispatch) => ({
   add(newEmployee){
     dispatch(addEmployee(newEmployee))
   },
