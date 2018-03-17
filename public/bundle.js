@@ -30504,7 +30504,7 @@ var LostProductForm = function (_Component) {
             null,
             _react2.default.createElement(
               _semanticUiReact.Form.Group,
-              { inline: true, widths: 'equal' },
+              { widths: 'equal' },
               _react2.default.createElement(_semanticUiReact.Form.Input, { label: 'Date', placeholder: 'Date', type: 'date' }),
               _react2.default.createElement(_semanticUiReact.Form.Input, { label: 'Product', placeholder: 'Product' }),
               _react2.default.createElement(_semanticUiReact.Form.Input, { label: 'Amount', placeholder: 'Amount' }),
