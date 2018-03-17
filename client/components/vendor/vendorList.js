@@ -18,8 +18,11 @@ class VendorList extends Component{
     const {editBool} = this.state;
     return (
       <div className='Aligner-item'>
-        <Button basic
-          color='teal'
+        {
+          editBool &&  <VendorForm />
+        }
+        <Button
+          color={editBool ? 'red' : 'teal'}
           content={editBool ? 'Cancelar' : 'Crear Nuevo'}
           onClick={this.onButtonClick}
         />
@@ -53,9 +56,6 @@ class VendorList extends Component{
 
               {
                 isAdmin && this.buttonRender()
-              }
-              {
-                isAdmin && editBool && <VendorForm />
               }
             <div className='Aligner-item--bottom' />
           </div>
