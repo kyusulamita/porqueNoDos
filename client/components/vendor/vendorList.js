@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Header, Icon, Button, Card, Image } from 'semantic-ui-react'
 // import EmployeeForm from './employeeForm'
-import { VendorTile } from '../index'
+import { VendorTile, VendorForm } from '../index'
+
 
 class VendorList extends Component{
   constructor(props){
@@ -52,6 +53,9 @@ class VendorList extends Component{
 
               {
                 isAdmin && this.buttonRender()
+              }
+              {
+                isAdmin && editBool && <VendorForm />
               }
             <div className='Aligner-item--bottom' />
           </div>
