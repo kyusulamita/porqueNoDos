@@ -30450,9 +30450,13 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(21);
+
 var _semanticUiReact = __webpack_require__(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -30460,8 +30464,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var Row = _semanticUiReact.Table.Row,
+    Cell = _semanticUiReact.Table.Cell;
 var Group = _semanticUiReact.Form.Group,
-    Input = _semanticUiReact.Form.Input;
+    Input = _semanticUiReact.Form.Input,
+    Button = _semanticUiReact.Form.Button;
 
 var LostProductForm = function (_Component) {
   _inherits(LostProductForm, _Component);
@@ -30471,28 +30478,107 @@ var LostProductForm = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (LostProductForm.__proto__ || Object.getPrototypeOf(LostProductForm)).call(this, props));
 
-    _this.state = {};
+    _this.state = {
+      date: '',
+      product: '',
+      amount: '',
+      price: ''
+    };
+    _this.handleOnSubmit = _this.handleOnSubmit.bind(_this);
+    _this.handleOnChange = _this.handleOnChange.bind(_this);
     return _this;
   }
 
   _createClass(LostProductForm, [{
+    key: 'handleOnChange',
+    value: function handleOnChange(event, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'handleOnSubmit',
+    value: function handleOnSubmit(event) {
+      event.preventDefault();
+      console.log(this.state);
+      // if(!this.pt)
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _state = this.state,
+          date = _state.date,
+          product = _state.product,
+          amount = _state.amount,
+          price = _state.price;
+      var _props = this.props,
+          placeholder = _props.placeholder,
+          newForm = _props.newForm,
+          buttonText = _props.buttonText;
+      var handleOnSubmit = this.handleOnSubmit,
+          handleOnChange = this.handleOnChange;
 
+      var newAmount = newForm ? +amount : +amount || +placeholder.amount;
+      var newPrice = newForm ? +price : +price || +placeholder.price;
+      var total = Number(newAmount * newPrice).toFixed(2);
       return _react2.default.createElement(
-        _semanticUiReact.Form,
-        { onSubmit: this.handleOnSubmit },
+        Row,
+        null,
         _react2.default.createElement(
-          Group,
-          { widths: 'equal' },
-          _react2.default.createElement(Input, { label: 'Nombre', placeholder: employee.firstName || 'Nombre', name: 'firstName', onChange: this.handleChange, required: newForm, value: firstName }),
-          _react2.default.createElement(Input, { label: 'Apellido', placeholder: employee.lastName || 'Apellido', name: 'lastName', onChange: this.handleChange, required: newForm, value: lastName }),
-          _react2.default.createElement(Input, { label: 'Apellido', placeholder: employee.lastName || 'Apellido', name: 'lastName', onChange: this.handleChange, required: newForm, value: lastName })
-        ),
-        _react2.default.createElement(
-          _semanticUiReact.Button,
-          { color: 'green', type: 'submit' },
-          newForm ? 'Crear' : 'Confirmar'
+          Cell,
+          { colSpan: '6' },
+          _react2.default.createElement(
+            _semanticUiReact.Form,
+            { onSubmit: handleOnSubmit },
+            _react2.default.createElement(
+              Group,
+              { widths: 'equal' },
+              _react2.default.createElement(Input, {
+                label: 'Date',
+                placeholder: placeholder.date,
+                name: 'date',
+                value: date,
+                required: newForm,
+                onChange: handleOnChange
+              }),
+              _react2.default.createElement(Input, {
+                label: 'Product',
+                placeholder: placeholder.product,
+                name: 'product',
+                value: product,
+                required: newForm,
+                onChange: handleOnChange
+              }),
+              _react2.default.createElement(Input, {
+                label: 'Amount',
+                placeholder: placeholder.amount,
+                name: 'amount',
+                value: amount,
+                required: newForm,
+                onChange: handleOnChange
+              }),
+              _react2.default.createElement(Input, {
+                label: 'Price',
+                placeholder: placeholder.price,
+                name: 'price',
+                value: price,
+                required: newForm,
+                onChange: handleOnChange
+              }),
+              _react2.default.createElement(Input, {
+                label: 'Total',
+                placeholder: placeholder.total,
+                value: total,
+                disabled: true
+              }),
+              _react2.default.createElement(Button, {
+                color: 'green',
+                type: 'submit',
+                content: buttonText
+              })
+            )
+          )
         )
       );
     }
@@ -30501,7 +30587,18 @@ var LostProductForm = function (_Component) {
   return LostProductForm;
 }(_react.Component);
 
-exports.default = LostProductForm;
+var mapState = function mapState(state, ownProps) {
+  var placeholder = { date: 'MM/DD/YY', product: 'Enter Name', amount: 'Amount', price: 'Don\'t include $', total: 'Total' };
+
+  return {
+    placeholder: ownProps.product || placeholder,
+    newForm: !ownProps.product,
+    buttonText: !ownProps.product ? 'Crear' : 'Cambiar'
+  };
+};
+
+var mapDispatch = function mapDispatch(dispatch, ownProps) {};
+exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(LostProductForm);
 
 /***/ }),
 /* 489 */
@@ -30576,6 +30673,11 @@ var lostProductList = function lostProductList(props) {
         _react2.default.createElement(HeaderCell, null)
       )
     ),
+    _react2.default.createElement(
+      Body,
+      null,
+      _react2.default.createElement(_index.LostProductForm, null)
+    ),
     lostProducts.map(function (itemInfo) {
       return _react2.default.createElement(_index.LostProductRow, _extends({ key: itemInfo.id }, itemInfo));
     })
@@ -30614,6 +30716,8 @@ var _react2 = _interopRequireDefault(_react);
 
 var _semanticUiReact = __webpack_require__(20);
 
+var _index = __webpack_require__(50);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30626,13 +30730,13 @@ var Row = _semanticUiReact.Table.Row,
     Cell = _semanticUiReact.Table.Cell,
     Body = _semanticUiReact.Table.Body;
 
-var lostProductRow = function (_Component) {
-  _inherits(lostProductRow, _Component);
+var LostProductRow = function (_Component) {
+  _inherits(LostProductRow, _Component);
 
-  function lostProductRow(props) {
-    _classCallCheck(this, lostProductRow);
+  function LostProductRow(props) {
+    _classCallCheck(this, LostProductRow);
 
-    var _this = _possibleConstructorReturn(this, (lostProductRow.__proto__ || Object.getPrototypeOf(lostProductRow)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (LostProductRow.__proto__ || Object.getPrototypeOf(LostProductRow)).call(this, props));
 
     _this.state = {
       toggleEdit: false
@@ -30641,7 +30745,7 @@ var lostProductRow = function (_Component) {
     return _this;
   }
 
-  _createClass(lostProductRow, [{
+  _createClass(LostProductRow, [{
     key: 'onButtonClick',
     value: function onButtonClick(event) {
       this.setState(function (_ref) {
@@ -30704,23 +30808,15 @@ var lostProductRow = function (_Component) {
             )
           )
         ),
-        toggleEdit && _react2.default.createElement(
-          Row,
-          null,
-          _react2.default.createElement(
-            Cell,
-            null,
-            'OH HELLO HI'
-          )
-        )
+        toggleEdit && _react2.default.createElement(_index.LostProductForm, { product: this.props })
       );
     }
   }]);
 
-  return lostProductRow;
+  return LostProductRow;
 }(_react.Component);
 
-exports.default = lostProductRow;
+exports.default = LostProductRow;
 
 /***/ }),
 /* 491 */
@@ -30842,6 +30938,7 @@ var PaystubDetail = function (_Component) {
       if (nextStubId !== stubId) {
         this.props.getStub(nextStubId);
       }
+      this.setState({ toggleEdit: false });
     }
   }, {
     key: 'render',
@@ -31314,18 +31411,20 @@ var StubForm = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      if (this.props.employeeId) {
-        this.setState({ employeeId: this.props.employeeId });
-      }
-      if (this.props.stub) {
-        this.setState({ married: this.props.stub.married || false });
-      }
+      var _props = this.props,
+          employeeId = _props.employeeId,
+          stub = _props.stub;
+
+      this.setState(function (prevState) {
+        var newState = prevState;
+        if (employeeId) newState.employeeId = employeeId;
+        if (stub) newState.married = stub.married || false;
+        return newState;
+      });
     }
   }, {
     key: 'render',
     value: function render() {
-      var stub = this.props.stub || {};
-      var newForm = !this.props.stub;
       var _state = this.state,
           rate = _state.rate,
           rateType = _state.rateType,
@@ -31335,33 +31434,95 @@ var StubForm = function (_Component) {
           employeeId = _state.employeeId,
           married = _state.married,
           payDate = _state.payDate;
+      var handleChange = this.handleChange,
+          handleOnSubmit = this.handleOnSubmit;
+      var _props2 = this.props,
+          employees = _props2.employees,
+          placeholder = _props2.placeholder,
+          newForm = _props2.newForm,
+          rateOptions = _props2.rateOptions,
+          marriedOptions = _props2.marriedOptions,
+          buttonText = _props2.buttonText;
 
-      var rateOptions = [{ key: 'HOURLY', value: 'HOURLY', text: 'Por Hora' }, { key: 'WEEKLY', value: 'WEEKLY', text: 'Por Semana' }];
-      var marriedOptions = [{ key: 'si', value: true, text: 'si' }, { key: 'no', value: false, text: 'no' }];
       return _react2.default.createElement(
         _semanticUiReact.Form,
-        { onSubmit: this.handleOnSubmit },
-        _react2.default.createElement(Select, { placeholder: 'Escoge el empleado', options: this.props.employees, value: employeeId, name: 'employeeId', onChange: this.handleChange, disabled: !!this.props.employeeId }),
+        { onSubmit: handleOnSubmit },
+        _react2.default.createElement(Select, {
+          label: 'Empleado',
+          placeholder: 'Escoge el empleado',
+          options: employees,
+          value: employeeId,
+          name: 'employeeId',
+          onChange: handleChange,
+          disabled: newForm
+        }),
         _react2.default.createElement(
           Group,
           { widths: 'equal' },
-          _react2.default.createElement(Input, { label: 'Rate', placeholder: stub.rate || 'Rate', name: 'rate', onChange: this.handleChange, required: newForm, value: rate }),
-          _react2.default.createElement(Select, { label: 'Tipo', placeholder: stub.rateType || 'Escoge el tipo', name: 'rateType', onChange: this.handleChange, required: newForm, value: rateType, options: rateOptions }),
-          _react2.default.createElement(Select, { label: 'Casado?', placeholder: stub.married ? 'Si' : 'No', name: 'married', onChange: this.handleChange, required: newForm, value: married, options: marriedOptions })
+          _react2.default.createElement(Input, {
+            label: 'Rate',
+            placeholder: placeholder.rate,
+            name: 'rate',
+            onChange: handleChange,
+            required: newForm,
+            value: rate
+          }),
+          _react2.default.createElement(Select, {
+            label: 'Tipo',
+            placeholder: placeholder.rateType,
+            name: 'rateType',
+            onChange: handleChange,
+            required: newForm,
+            value: rateType,
+            options: rateOptions
+          }),
+          _react2.default.createElement(Select, {
+            label: 'Casado?',
+            placeholder: placeholder.married ? 'Si' : 'No',
+            name: 'married',
+            onChange: handleChange,
+            required: newForm,
+            value: married,
+            options: marriedOptions
+          })
         ),
         _react2.default.createElement(
           Group,
           null,
-          this.state.rateType === 'HOURLY' && _react2.default.createElement(Input, { label: 'Horas', placeholder: stub.hours || 'Horas', name: 'hours', onChange: this.handleChange, required: true, value: hours }),
-          _react2.default.createElement(Input, { label: 'Comienzo', placeholder: stub.start || 'MM/DD/AAAA', name: 'start', onChange: this.handleChange, required: newForm, value: start }),
-          _react2.default.createElement(Input, { label: 'Final', placeholder: stub.end || 'MM/DD/AAAA', name: 'end', onChange: this.handleChange, required: newForm, value: end }),
-          _react2.default.createElement(Input, { label: 'Pagado', placeholder: stub.payDate || 'MM/DD/AAAA', name: 'payDate', onChange: this.handleChange, required: newForm, value: payDate })
+          rateType === 'HOURLY' && _react2.default.createElement(Input, {
+            label: 'Horas',
+            placeholder: placeholder.hours,
+            name: 'hours',
+            onChange: handleChange,
+            required: true,
+            value: hours
+          }),
+          _react2.default.createElement(Input, {
+            label: 'Comienzo',
+            placeholder: placeholder.start,
+            name: 'start',
+            onChange: handleChange,
+            required: newForm,
+            value: start
+          }),
+          _react2.default.createElement(Input, {
+            label: 'Final',
+            placeholder: placeholder.end,
+            name: 'end',
+            onChange: handleChange,
+            required: newForm,
+            value: end
+          }),
+          _react2.default.createElement(Input, {
+            label: 'Pagado',
+            placeholder: placeholder.payDate,
+            name: 'payDate',
+            onChange: handleChange,
+            required: newForm,
+            value: payDate
+          })
         ),
-        _react2.default.createElement(
-          _semanticUiReact.Button,
-          { color: 'green', type: 'submit' },
-          newForm ? 'Crear' : 'Confirmar'
-        )
+        _react2.default.createElement(_semanticUiReact.Button, { color: 'green', type: 'submit', content: buttonText })
       );
     }
   }]);
@@ -31370,14 +31531,21 @@ var StubForm = function (_Component) {
 }(_react.Component);
 
 var mapState = function mapState(state, ownProps) {
-  return {
-    employees: state.employees.map(function (employee) {
-      var id = employee.id,
-          firstName = employee.firstName,
-          lastName = employee.lastName;
+  var placeholder = { rate: 'Rate', rateType: 'Escoge el Tipo', married: false, hours: 'Horas', start: 'MM/DD/AAAA', end: 'MM/DD/AAAA', payDate: 'MM/DD/AAAA' };
+  var employees = state.employees.map(function (employee) {
+    var id = employee.id,
+        firstName = employee.firstName,
+        lastName = employee.lastName;
 
-      return { key: id, value: id, text: firstName + ' ' + lastName };
-    })
+    return { key: id, value: id, text: firstName + ' ' + lastName };
+  });
+  return {
+    employees: employees,
+    placeholder: ownProps.stub || placeholder,
+    newForm: !ownProps.stub,
+    rateOptions: [{ key: 'HOURLY', value: 'HOURLY', text: 'Por Hora' }, { key: 'WEEKLY', value: 'WEEKLY', text: 'Por Semana' }],
+    marriedOptions: [{ key: 'si', value: true, text: 'si' }, { key: 'no', value: false, text: 'no' }],
+    buttonText: !ownProps.stub ? 'Crear' : 'Cambiar'
   };
 };
 
@@ -31690,6 +31858,8 @@ var _semanticUiReact = __webpack_require__(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -31707,30 +31877,98 @@ var VendorForm = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (VendorForm.__proto__ || Object.getPrototypeOf(VendorForm)).call(this, props));
 
-    _this.state = {};
+    _this.state = {
+      date: '',
+      product: '',
+      amount: '',
+      price: ''
+    };
+    _this.handleOnSubmit = _this.handleOnSubmit.bind(_this);
+    _this.handleOnChange = _this.handleOnChange.bind(_this);
     return _this;
   }
 
   _createClass(VendorForm, [{
+    key: 'handleOnChange',
+    value: function handleOnChange(event, _ref) {
+      var name = _ref.name,
+          value = _ref.value;
+
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: 'handleOnSubmit',
+    value: function handleOnSubmit(event) {
+      event.preventDefault();
+      console.log(this.state);
+      // if(!this.pt)
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _state = this.state,
+          date = _state.date,
+          product = _state.product,
+          amount = _state.amount,
+          price = _state.price;
+      var _props = this.props,
+          placeholder = _props.placeholder,
+          newForm = _props.newForm,
+          buttonText = _props.buttonText;
+      var handleOnSubmit = this.handleOnSubmit,
+          handleOnChange = this.handleOnChange;
 
+      var newAmount = newForm ? +amount : +amount || +placeholder.amount;
+      var newPrice = newForm ? +price : +price || +placeholder.price;
+      var total = newAmount * newPrice;
       return _react2.default.createElement(
         _semanticUiReact.Form,
-        null,
+        { onSubmit: handleOnSubmit },
         _react2.default.createElement(
           Group,
           { widths: 'equal' },
-          _react2.default.createElement(Input, { label: 'Date', placeholder: 'Date', name: 'date' }),
-          _react2.default.createElement(Input, { label: 'Product', placeholder: 'Product', name: 'product' }),
-          _react2.default.createElement(Input, { label: 'Amount', placeholder: 'Amount', name: 'amount' }),
-          _react2.default.createElement(Input, { label: 'Price', placeholder: 'Price', name: 'price' })
+          _react2.default.createElement(Input, {
+            label: 'Date',
+            placeholder: placeholder.date,
+            name: 'date',
+            value: date,
+            required: newForm,
+            onChange: handleOnChange
+          }),
+          _react2.default.createElement(Input, {
+            label: 'Product',
+            placeholder: placeholder.product,
+            name: 'product',
+            value: product,
+            required: newForm,
+            onChange: handleOnChange
+          }),
+          _react2.default.createElement(Input, {
+            label: 'Amount',
+            placeholder: placeholder.product,
+            name: 'amount',
+            value: amount,
+            required: newForm,
+            onChange: handleOnChange
+          }),
+          _react2.default.createElement(Input, {
+            label: 'Price',
+            placeholder: placeholder.price,
+            name: 'price',
+            value: price,
+            required: newForm,
+            onChange: handleOnChange
+          }),
+          _react2.default.createElement(Input, {
+            label: 'Total',
+            placeholder: placeholder.total,
+            value: total
+          })
         ),
-        _react2.default.createElement(
-          _semanticUiReact.Button,
-          { color: 'green', type: 'submit' },
-          'Crear'
-        )
+        _react2.default.createElement(_semanticUiReact.Button, {
+          color: 'green',
+          type: 'submit',
+          content: buttonText })
       );
     }
   }]);
@@ -31738,7 +31976,18 @@ var VendorForm = function (_Component) {
   return VendorForm;
 }(_react.Component);
 
-exports.default = VendorForm;
+var mapState = function mapState(state, ownProps) {
+  var placeholder = { date: 'MM/DD/YY', product: 'Enter Name', amount: 'Amount', price: 'Don\'t include $', total: 'Total' };
+
+  return {
+    placeholder: ownProps.product || placeholder,
+    newForm: !ownProps.product,
+    buttonText: !ownProps.product ? 'Crear' : 'Cambiar'
+  };
+};
+
+var mapDispatch = function mapDispatch(dispatch, ownProps) {};
+exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(VendorForm);
 
 /***/ }),
 /* 499 */
@@ -32831,13 +33080,14 @@ var getPaystubs = exports.getPaystubs = function getPaystubs() {
 };
 
 var getPaystub = exports.getPaystub = function getPaystub(paystubId) {
-  return async function (dispatch) {
+  var asyncDispatch = async function asyncDispatch(dispatch) {
     var singlePaystub = await _axios2.default.get('/api/stubs/' + paystubId);
     var YTD = await _axios2.default.get('/api/stubs/' + paystubId + '/YTD');
     singlePaystub = singlePaystub.data;
     singlePaystub.YTD = YTD.data;
     return dispatch(update(singlePaystub));
   };
+  return asyncDispatch;
 };
 
 var addPaystub = exports.addPaystub = function addPaystub(paystub) {
@@ -32853,15 +33103,15 @@ var addPaystub = exports.addPaystub = function addPaystub(paystub) {
 };
 
 var updatePaystub = exports.updatePaystub = function updatePaystub(id, paystub) {
-  return async function (dispatch) {
+  var asyncDispatch = async function asyncDispatch(dispatch) {
     var updatedStub = await _axios2.default.put('/api/stubs/' + id, paystub).catch(console.log);
     var YTD = await _axios2.default.get('/api/stubs/' + id + '/YTD').catch(console.log);
     updatedStub = updatedStub.data;
     updatedStub.YTD = YTD.data;
     return dispatch(update(updatedStub));
   };
+  return asyncDispatch;
 };
-
 var deletePaystub = exports.deletePaystub = function deletePaystub(id) {
   return function (dispatch) {
     return _axios2.default.delete('/api/stubs/' + id).then(function () {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { LostProductRow } from '../index';
+import { LostProductRow, LostProductForm } from '../index';
 import { Table } from 'semantic-ui-react'
 const { Header, Row, HeaderCell, Body, Footer, Cell } = Table;
 
@@ -20,6 +20,9 @@ const lostProductList = (props) => {
           <HeaderCell/>
         </Row>
         </Header>
+      <Body>
+        <LostProductForm />
+      </Body>
       {
         lostProducts.map((itemInfo) => <LostProductRow key={itemInfo.id} {...itemInfo} />)
       }

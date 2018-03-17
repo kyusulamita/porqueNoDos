@@ -39,47 +39,114 @@ class StubForm extends Component{
     this.setState({rate: '', rateType: 'HOURLY', hours: '', start: '', end: ''})
   }
   componentDidMount(){
-    if (this.props.employeeId){
-      this.setState({ employeeId: this.props.employeeId});
-    }
-    if(this.props.stub){
-      this.setState({ married: this.props.stub.married || false});
-    }
+    const {employeeId, stub } = this.props;
+    this.setState((prevState) => {
+      const newState = prevState;
+      if (employeeId) newState.employeeId = employeeId;
+      if (stub) newState.married = stub.married || false;
+      return newState;
+    });
   }
   render (){
-    const stub = this.props.stub || {};
-    const newForm = !this.props.stub;
     const { rate, rateType, hours, start, end, employeeId, married, payDate } = this.state;
-    const rateOptions = [{ key: 'HOURLY', value: 'HOURLY', text: 'Por Hora'}, { key: 'WEEKLY', value: 'WEEKLY', text: 'Por Semana'}]
-    const marriedOptions = [{key: 'si', value: true, text:'si'}, {key:'no', value: false, text:'no'}];
+    const { handleChange, handleOnSubmit } = this;
+    const { employees, placeholder, newForm, rateOptions, marriedOptions, buttonText } = this.props;
     return (
-        <Form onSubmit={this.handleOnSubmit}>
-          <Select placeholder='Escoge el empleado' options={this.props.employees} value={employeeId} name='employeeId' onChange={this.handleChange} disabled={!!this.props.employeeId}/>
+        <Form onSubmit={handleOnSubmit}>
+          <Select
+            label='Empleado'
+            placeholder='Escoge el empleado'
+            options={employees}
+            value={employeeId}
+            name='employeeId'
+            onChange={handleChange}
+            disabled={newForm}
+          />
           <Group widths='equal'>
-            <Input label='Rate' placeholder={stub.rate || 'Rate'} name='rate' onChange={this.handleChange} required={newForm} value={rate}/>
-            <Select label='Tipo' placeholder={stub.rateType || 'Escoge el tipo'} name='rateType' onChange={this.handleChange} required={newForm} value={rateType} options={rateOptions}/>
-            <Select label='Casado?' placeholder={stub.married ? 'Si' : 'No'} name='married' onChange={this.handleChange} required={newForm} value={married} options={marriedOptions}/>
+            <Input
+              label='Rate'
+              placeholder={placeholder.rate}
+              name='rate'
+              onChange={handleChange}
+              required={newForm}
+              value={rate}
+            />
+            <Select
+              label='Tipo'
+              placeholder={placeholder.rateType}
+              name='rateType'
+              onChange={handleChange}
+              required={newForm}
+              value={rateType}
+              options={rateOptions}
+            />
+            <Select
+              label='Casado?'
+              placeholder={placeholder.married ? 'Si' : 'No'}
+              name='married'
+              onChange={handleChange}
+              required={newForm}
+              value={married}
+              options={marriedOptions}
+            />
           </Group>
           <Group>
             {
-              (this.state.rateType ==='HOURLY') &&
-                <Input label='Horas' placeholder={stub.hours || 'Horas'} name='hours' onChange={this.handleChange} required value={hours}/>
+              (rateType ==='HOURLY') &&
+                <Input
+                  label='Horas'
+                  placeholder={placeholder.hours}
+                  name='hours'
+                  onChange={handleChange}
+                  required
+                  value={hours}
+                />
             }
-            <Input label='Comienzo' placeholder={stub.start || 'MM/DD/AAAA'} name='start' onChange={this.handleChange} required={newForm} value={start} />
-            <Input label='Final' placeholder={stub.end || 'MM/DD/AAAA'} name='end' onChange={this.handleChange} required={newForm} value={end} />
-            <Input label='Pagado' placeholder={stub.payDate || 'MM/DD/AAAA'} name='payDate' onChange={this.handleChange} required={newForm} value={payDate} />
+            <Input
+              label='Comienzo'
+              placeholder={placeholder.start}
+              name='start'
+              onChange={handleChange}
+              required={newForm}
+              value={start}
+            />
+            <Input
+              label='Final'
+              placeholder={placeholder.end}
+              name='end'
+              onChange={handleChange}
+              required={newForm}
+              value={end}
+            />
+            <Input
+              label='Pagado'
+              placeholder={placeholder.payDate}
+              name='payDate'
+              onChange={handleChange}
+              required={newForm}
+              value={payDate}
+            />
           </Group>
-          <Button color='green' type='submit'>{newForm ? 'Crear' : 'Confirmar'}</Button>
+          <Button color='green' type='submit' content={buttonText}/>
         </Form>
     )
   }
 }
-const mapState = (state, ownProps) => ({
-  employees: state.employees.map(employee => {
+const mapState = (state, ownProps) => {
+  const placeholder = { rate: 'Rate', rateType: 'Escoge el Tipo', married: false, hours: 'Horas', start:'MM/DD/AAAA', end: 'MM/DD/AAAA', payDate: 'MM/DD/AAAA'};
+  const employees = state.employees.map(employee => {
     const { id, firstName, lastName } = employee;
-    return ({ key: id, value: id, text: `${firstName} ${lastName}`})
+    return ({ key: id, value: id, text: `${firstName} ${lastName}`});
+  });
+  return ({
+    employees: employees,
+    placeholder: ownProps.stub || placeholder,
+    newForm: !ownProps.stub,
+    rateOptions: [{ key: 'HOURLY', value: 'HOURLY', text: 'Por Hora'}, { key: 'WEEKLY', value: 'WEEKLY', text: 'Por Semana'}],
+    marriedOptions: [{key: 'si', value: true, text:'si'}, {key:'no', value: false, text:'no'}],
+    buttonText: !ownProps.stub ? 'Crear' : 'Cambiar',
   })
-})
+}
 
 const mapDispatch = (dispatch, ownProps) => ({
   add(newStub){

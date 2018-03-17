@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'semantic-ui-react';
-
+import { LostProductForm } from '../index';
 const { Row, Cell, Body } = Table;
 
-class lostProductRow extends Component{
+class LostProductRow extends Component{
   constructor(props){
     super(props);
     this.state = {
@@ -29,11 +29,11 @@ class lostProductRow extends Component{
           <Cell><Button onClick={this.onButtonClick}>Edit</Button></Cell>
          </Row>
          {
-          toggleEdit && <Row><Cell>OH HELLO HI</Cell></Row>
+          toggleEdit && <LostProductForm product={this.props} />
          }
        </Body>
     )
   }
 }
 
-export default lostProductRow;
+export default LostProductRow;
