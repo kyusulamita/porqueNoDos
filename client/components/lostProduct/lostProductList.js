@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import LostProductRow from './lostProductRow';
+import { LostProductRow } from '../index';
 import { Table } from 'semantic-ui-react'
 const { Header, Row, HeaderCell, Body, Footer, Cell } = Table;
+
 
 const lostProductList = (props) => {
   const { lostProducts } = props;

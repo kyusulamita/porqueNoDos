@@ -12,6 +12,7 @@ router.param(':lostProductId', async (req, res, next, id) => {
   }
   req.lostProduct = lostProduct;
   next();
+  return null;
 })
 
 

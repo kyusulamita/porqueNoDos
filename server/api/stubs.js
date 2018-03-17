@@ -12,6 +12,7 @@ router.param('stubId', async (req, res, next, id) => {
   }
   req.paystub = paystub;
   next()
+  return null;
 })
 
 router.get('/', async (req, res, next) => {

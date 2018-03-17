@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 const { Content, Avatar, Author, Metadata, Text, Actions, Action } = Comment;
 
 export const StubRow = (props) => {
-  console.log(props);
   const { rate, hours, pay, id, paid, payDate } = props;
   const { employeeId, firstName, lastName } = props;  return (
     <Comment key={id}>
@@ -27,7 +26,7 @@ export const StubRow = (props) => {
 StubRow.propTypes = {
   hours: PropTypes.string,
   rate: PropTypes.string,
-  gross: PropTypes.number,
+  gross: PropTypes.string,
 }
 
 export default StubRow;

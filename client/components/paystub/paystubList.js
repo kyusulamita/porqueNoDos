@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import PaystubRow from './PaystubRow';
+import { PaystubRow } from '../index'
 import { Comment, Header } from 'semantic-ui-react'
 
 class PaystubList extends Component{
@@ -17,7 +17,7 @@ class PaystubList extends Component{
       <Comment.Group>
         <Header as='h2' dividing>All Paystubs</Header>
         {
-          paystubs && paystubs.map(stub => <PaystubRow {...stub} firstName={stub.employee.firstName} lastName={stub.employee.lastName}/>)
+          paystubs && paystubs.map(stub => <PaystubRow {...stub} firstName={stub.employee.firstName} lastName={stub.employee.lastName} key={stub.id}/>)
         }
       </Comment.Group>
     )

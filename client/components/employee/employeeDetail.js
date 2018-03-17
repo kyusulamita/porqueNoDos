@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { getEmployee } from '../../store';
-import { StubRow } from '../paystub/paystubRow'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Header, Image, List, Button, Comment } from 'semantic-ui-react';
-import EmployeeForm from './employeeForm';
-import StubForm from '../paystub/payStubForm';
+
+import { EmployeeForm, PaystubForm, PaystubRow } from '../index'
 
 class employeeDetail extends Component{
   constructor (props){
@@ -37,7 +36,7 @@ class employeeDetail extends Component{
           <Button size='small' secondary={!addBool} color='teal' negative={addBool} content={addBool ? 'Cancelar' : 'Anadir pago'} onClick={() => this.setState(({addBool}) => ({ addBool:! addBool}))} />
         }
         {
-          addBool && <StubForm employeeId={this.props.employee.id}/>
+          addBool && <PaystubForm employeeId={this.props.employee.id}/>
         }
         </div>
       </div>
@@ -74,7 +73,7 @@ class employeeDetail extends Component{
         <Comment.Group>
           <Header as='h3' dividing> Paystubs </Header>
           {
-            stubs && stubs.map(stub => <StubRow {...stub} {...stubExtra} />)
+            stubs && stubs.map(stub => <PaystubRow key={stub.id} {...stub} {...stubExtra} />)
           }
         </Comment.Group>
       </div>

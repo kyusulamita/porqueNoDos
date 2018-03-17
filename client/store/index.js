@@ -5,8 +5,9 @@ import currentUser from './currentUser';
 import employees from './employees';
 import paystubs from './paystubs';
 import lostProducts from './lostProducts';
+import vendors from './vendors';
 
-const reducer = combineReducers({ currentUser, employees, paystubs, lostProducts })
+const reducer = combineReducers({ currentUser, vendors, employees, paystubs, lostProducts })
 const middleware = applyMiddleware(thunkMiddleware, createLogger({collapsed: true}))
 const store = createStore(reducer, middleware)
 
@@ -15,3 +16,4 @@ export * from './currentUser'
 export * from './employees'
 export * from './paystubs'
 export * from './lostProducts'
+export * from './vendors'
