@@ -34653,6 +34653,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(0);
@@ -34692,8 +34694,12 @@ var PaystubDetail = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (PaystubDetail.__proto__ || Object.getPrototypeOf(PaystubDetail)).call(this, props));
 
-    _this.state = { toggleEdit: false };
+    _this.state = {
+      toggleEdit: false,
+      triggerDelete: 0
+    };
     _this.handleToggle = _this.handleToggle.bind(_this);
+    _this.handleDelete = _this.handleDelete.bind(_this);
     return _this;
   }
 
@@ -34705,11 +34711,28 @@ var PaystubDetail = function (_Component) {
     }
   }, {
     key: 'handleToggle',
-    value: function handleToggle(event) {
-      event.preventDefault();
-      this.setState(function (_ref) {
-        var toggleEdit = _ref.toggleEdit;
-        return { toggleEdit: !toggleEdit };
+    value: function handleToggle() {
+      if (this.state.triggerDelete) {
+        this.setState({ triggerDelete: 0 });
+      } else {
+        this.setState(function (_ref) {
+          var toggleEdit = _ref.toggleEdit;
+          return { toggleEdit: !toggleEdit };
+        });
+      }
+    }
+  }, {
+    key: 'handleDelete',
+    value: function handleDelete() {
+      if (this.state.triggerDelete === 3) {
+        var stubId = +this.props.match.params.stubId;
+        var employeeId = this.props.currentStub.employeeId;
+
+        this.props.delete(stubId, employeeId);
+      }
+      this.setState(function (_ref2) {
+        var triggerDelete = _ref2.triggerDelete;
+        return { triggerDelete: ++triggerDelete };
       });
     }
   }, {
@@ -34726,22 +34749,26 @@ var PaystubDetail = function (_Component) {
     key: 'render',
     value: function render() {
       if (!this.props.currentStub || !this.props.currentStub.YTD) return _react2.default.createElement('div', null);
-      var _props$currentStub = this.props.currentStub,
-          employee = _props$currentStub.employee,
-          YTD = _props$currentStub.YTD;
-      var _props$currentStub2 = this.props.currentStub,
-          hours = _props$currentStub2.hours,
-          rate = _props$currentStub2.rate,
-          gross = _props$currentStub2.gross,
-          taxSocial = _props$currentStub2.taxSocial,
-          taxFederal = _props$currentStub2.taxFederal,
-          taxState = _props$currentStub2.taxState,
-          pay = _props$currentStub2.pay,
-          id = _props$currentStub2.id,
-          rateType = _props$currentStub2.rateType,
-          start = _props$currentStub2.start,
-          end = _props$currentStub2.end,
-          payDate = _props$currentStub2.payDate;
+      // const { employee, YTD, employeeId } = this.props.currentStub;
+      // const { hours, rate, gross, taxSocial, taxFederal, taxState, pay, id, rateType, start, end, payDate } = this.props.currentStub;
+      var toggleEdit = this.state.toggleEdit;
+
+      var atWarning = this.state.triggerDelete;
+
+      var _ref3 = toggleEdit || atWarning ? ['red', 'Cancelar'] : ['green', 'Cambiar'],
+          _ref4 = _slicedToArray(_ref3, 2),
+          editColor = _ref4[0],
+          editContent = _ref4[1];
+
+      var warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
+      var deleteText = warnings[atWarning];
+
+      var currentStub = this.props.currentStub;
+      var employee = currentStub.employee,
+          YTD = currentStub.YTD,
+          employeeId = currentStub.employeeId,
+          rateType = currentStub.rateType,
+          id = currentStub.id;
       var stubs = this.props.stubEmployee.stubs;
 
       var _stubs$find = stubs.find(function (stub) {
@@ -34750,9 +34777,15 @@ var PaystubDetail = function (_Component) {
           next = _stubs$find.next,
           prev = _stubs$find.prev;
 
-      var toggleEdit = this.state.toggleEdit;
-
       var hourlyPay = rateType === 'HOURLY';
+
+      var _ref5 = hourlyPay ? ['Week Hours', 'Hourly Rate'] : ['Weeks Worked', 'Weekly Rate'],
+          _ref6 = _slicedToArray(_ref5, 2),
+          workedText = _ref6[0],
+          rateText = _ref6[1];
+
+      var deduction = Number(currentStub.gross - currentStub.pay).toFixed(2);
+      var deductionYTD = Number(YTD.gross - YTD.pay).toFixed(2);
       return _react2.default.createElement(
         'div',
         null,
@@ -34803,12 +34836,12 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 HeaderCell,
                 null,
-                hourlyPay ? 'Week Hours' : 'Weeks Worked'
+                workedText
               ),
               _react2.default.createElement(
                 HeaderCell,
                 null,
-                hourlyPay ? 'Hourly Rate' : 'Weekly Rate'
+                rateText
               ),
               _react2.default.createElement(
                 HeaderCell,
@@ -34851,17 +34884,17 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 Cell,
                 null,
-                hourlyPay ? hours : '1'
+                hourlyPay ? currentStub.hours : '1'
               ),
               _react2.default.createElement(
                 Cell,
                 null,
-                rate
+                currentStub.rate
               ),
               _react2.default.createElement(
                 Cell,
                 null,
-                gross
+                currentStub.gross
               ),
               _react2.default.createElement(
                 Cell,
@@ -34876,7 +34909,7 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 Cell,
                 null,
-                taxSocial
+                currentStub.taxSocial
               ),
               _react2.default.createElement(
                 Cell,
@@ -34904,7 +34937,7 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 Cell,
                 null,
-                taxFederal
+                currentStub.taxFederal
               ),
               _react2.default.createElement(
                 Cell,
@@ -34928,7 +34961,7 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 Cell,
                 null,
-                taxState
+                currentStub.taxState
               ),
               _react2.default.createElement(
                 Cell,
@@ -34949,7 +34982,7 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 Cell,
                 null,
-                gross
+                currentStub.gross
               ),
               _react2.default.createElement(
                 Cell,
@@ -34976,7 +35009,7 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 Cell,
                 null,
-                pay
+                currentStub.pay
               ),
               _react2.default.createElement(
                 Cell,
@@ -35000,12 +35033,12 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 Cell,
                 null,
-                Number(gross - pay).toFixed(2)
+                deduction
               ),
               _react2.default.createElement(
                 Cell,
                 null,
-                Number(YTD.gross - YTD.pay).toFixed(2)
+                deductionYTD
               )
             )
           ),
@@ -35023,9 +35056,9 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 HeaderCell,
                 { colSpan: '2' },
-                start,
+                currentStub.start,
                 ' - ',
-                end
+                currentStub.end
               ),
               _react2.default.createElement(
                 HeaderCell,
@@ -35035,7 +35068,7 @@ var PaystubDetail = function (_Component) {
               _react2.default.createElement(
                 HeaderCell,
                 { colSpan: '2' },
-                payDate
+                currentStub.payDate
               )
             )
           )
@@ -35065,12 +35098,17 @@ var PaystubDetail = function (_Component) {
           ),
           _react2.default.createElement('div', { className: 'Aligner-item--bottom' })
         ),
-        toggleEdit && _react2.default.createElement(_index.PaystubForm, { stub: this.props.currentStub, employeeId: employee.id }),
-        _react2.default.createElement(
-          _semanticUiReact.Button,
-          { onClick: this.handleToggle, color: toggleEdit ? 'red' : 'green' },
-          toggleEdit ? 'Cancelar' : 'Editar'
-        )
+        toggleEdit && _react2.default.createElement(_index.PaystubForm, { stub: this.props.currentStub, employeeId: employeeId }),
+        _react2.default.createElement(_semanticUiReact.Button, {
+          onClick: this.handleToggle,
+          color: editColor,
+          content: editContent
+        }),
+        _react2.default.createElement(_semanticUiReact.Button, {
+          onClick: this.handleDelete,
+          color: 'red',
+          content: deleteText
+        })
       );
     }
   }]);
@@ -35078,9 +35116,9 @@ var PaystubDetail = function (_Component) {
   return PaystubDetail;
 }(_react.Component);
 
-var mapState = function mapState(_ref2, ownProps) {
-  var paystubs = _ref2.paystubs,
-      employees = _ref2.employees;
+var mapState = function mapState(_ref7, ownProps) {
+  var paystubs = _ref7.paystubs,
+      employees = _ref7.employees;
 
   var stubId = +ownProps.match.params.stubId;
   var currentStub = paystubs.find(function (stub) {
@@ -35099,6 +35137,9 @@ var mapDispatch = function mapDispatch(dispatch, ownProps) {
   return {
     getStub: function getStub(stubId) {
       dispatch((0, _store.getPaystub)(stubId));
+    },
+    delete: function _delete(stubId, employeeId) {
+      dispatch((0, _store.deletePaystub)(stubId, employeeId));
     }
   };
 };
@@ -35153,7 +35194,7 @@ var StubForm = function (_Component) {
 
     _this.state = {
       rate: '',
-      rateType: 'HOURLY',
+      rateType: '',
       hours: '',
       start: '',
       end: '',
@@ -35188,7 +35229,7 @@ var StubForm = function (_Component) {
         }
         this.props.update(this.props.stub.id, updatedInfo);
       }
-      this.setState({ rate: '', rateType: 'HOURLY', hours: '', start: '', end: '' });
+      this.setState({ rate: '', rateType: '', hours: '', start: '', end: '' });
     }
   }, {
     key: 'componentDidMount',
@@ -35201,6 +35242,7 @@ var StubForm = function (_Component) {
         var newState = prevState;
         if (employeeId) newState.employeeId = employeeId;
         if (stub) newState.married = stub.married || false;
+
         return newState;
       });
     }
@@ -35236,7 +35278,7 @@ var StubForm = function (_Component) {
           value: employeeId,
           name: 'employeeId',
           onChange: handleChange,
-          disabled: newForm
+          disabled: !newForm
         }),
         _react2.default.createElement(
           Group,
@@ -37126,12 +37168,14 @@ var updatePaystub = exports.updatePaystub = function updatePaystub(id, paystub) 
   }();
   return asyncDispatch;
 };
-var deletePaystub = exports.deletePaystub = function deletePaystub(id) {
+var deletePaystub = exports.deletePaystub = function deletePaystub(stubId, employeeId) {
   return function (dispatch) {
-    return _axios2.default.delete('/api/stubs/' + id).then(function () {
-      return dispatch(remove(id));
+    return _axios2.default.delete('/api/stubs/' + stubId).then(function () {
+      return dispatch(remove(stubId));
+    }).then(function () {
+      return _history2.default.push('/empleados/' + employeeId);
     }).catch(function (err) {
-      return console.log(err + ' UNABLE TO DELETE PAYSTUB ' + id);
+      return console.log(err + ' UNABLE TO DELETE PAYSTUB ' + stubId);
     });
   };
 };
@@ -37153,7 +37197,7 @@ exports.default = function () {
       });
     case REMOVE:
       return paystubs.filter(function (paystub) {
-        return paystub.id !== action.paystub.id;
+        return paystub.id !== action.id;
       });
     default:
       return paystubs;

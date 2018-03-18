@@ -9,7 +9,7 @@ class StubForm extends Component{
     super(props);
     this.state = {
       rate: '',
-      rateType: 'HOURLY',
+      rateType: '',
       hours: '',
       start: '',
       end: '',
@@ -36,7 +36,7 @@ class StubForm extends Component{
       }
       this.props.update(this.props.stub.id, updatedInfo);
     }
-    this.setState({rate: '', rateType: 'HOURLY', hours: '', start: '', end: ''})
+    this.setState({rate: '', rateType: '', hours: '', start: '', end: ''})
   }
   componentDidMount(){
     const {employeeId, stub } = this.props;
@@ -44,6 +44,7 @@ class StubForm extends Component{
       const newState = prevState;
       if (employeeId) newState.employeeId = employeeId;
       if (stub) newState.married = stub.married || false;
+
       return newState;
     });
   }
@@ -60,7 +61,7 @@ class StubForm extends Component{
             value={employeeId}
             name='employeeId'
             onChange={handleChange}
-            disabled={newForm}
+            disabled={!newForm}
           />
           <Group widths='equal'>
             <Input

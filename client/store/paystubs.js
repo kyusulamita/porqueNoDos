@@ -53,11 +53,12 @@ export const updatePaystub = (id, paystub) => {
   }
   return asyncDispatch;
 }
-export const deletePaystub = (id) =>
+export const deletePaystub = (stubId, employeeId) =>
   dispatch =>
-    axios.delete(`/api/stubs/${id}`)
-    .then(() => dispatch(remove(id)))
-    .catch(err => console.log(`${err} UNABLE TO DELETE PAYSTUB ${id}`))
+    axios.delete(`/api/stubs/${stubId}`)
+    .then(() => dispatch(remove(stubId)))
+    .then(() => history.push(`/empleados/${employeeId}`))
+    .catch(err => console.log(`${err} UNABLE TO DELETE PAYSTUB ${stubId}`))
 
 
 /** REDUCER**/
@@ -72,7 +73,7 @@ export default (paystubs = defaultPaystubs, action) => {
         paystub.id === action.paystub.id ? action.paystub : paystub
       ));
     case REMOVE:
-      return paystubs.filter(paystub => paystub.id !== action.paystub.id);
+      return paystubs.filter(paystub => paystub.id !== action.id);
     default:
       return paystubs;
   }
