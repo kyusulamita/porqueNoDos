@@ -1,16 +1,17 @@
 const router = require('express').Router();
 const { LostProduct , User } = require('../db/models');
 
-router.param(':lostProductId', async (req, res, next, id) => {
-  const lostProduct = await lostProduct.findById(id, {
+router.param('lostProductId', async (req, res, next, id) => {
+  const lostProduct = await LostProduct.findById(id, {
     include: [ { model: User , attributes: ['name', 'id']}]
   }).catch(next);
   if (!lostProduct){
     const err = Error('Lost product not found')
     err.status = 404;
     throw err;
+  } else {
+    req.lostProduct = lostProduct;
   }
-  req.lostProduct = lostProduct;
   next();
   return null;
 })
@@ -35,6 +36,7 @@ router.get('/:lostProductId', async (req, res, next) => {
 })
 
 router.put('/:lostProductId', async (req, res, next) => {
+  // console.log
   const updatedStub = await req.lostProduct.update(req.body)
     .catch(next);
   const reloadedStub = await updatedStub.reload({

@@ -31,13 +31,14 @@ class PaystubDetail extends Component{
     if (nextStubId !== stubId){
       this.props.getStub(nextStubId);
     }
+    this.setState({ toggleEdit: false });
   }
 
 
   render(){
     if (!this.props.currentStub || !this.props.currentStub.YTD) return <div/>
     const { employee, YTD } = this.props.currentStub;
-    const { hours, rate, gross, taxSocial, taxFederal, taxState, pay, id,rateType, start, end, payDate } = this.props.currentStub;
+    const { hours, rate, gross, taxSocial, taxFederal, taxState, pay, id, rateType, start, end, payDate } = this.props.currentStub;
     const { stubs } = this.props.stubEmployee;
     const { next, prev } = stubs.find(stub => stub.id === id);
     const { toggleEdit } = this.state;
@@ -49,7 +50,7 @@ class PaystubDetail extends Component{
           <EmployeeTile key={employee.id} {...employee} className='Aligner-item' />
           <div className='Aligner-item--bottom' />
         </div>
-        <Table celled>
+        <Table celled unstackable>
           <Header>
             <Row>
               <HeaderCell  colSpan='4' textAlign='center'>Current Earnings</HeaderCell>

@@ -26,13 +26,14 @@ export const getPaystubs = () =>
       .catch(err => console.log(err))
 
 export const getPaystub = (paystubId) => {
-  return async (dispatch) => {
+  const asyncDispatch = async (dispatch) => {
       let singlePaystub = await axios.get(`/api/stubs/${paystubId}`);
       let YTD = await axios.get(`/api/stubs/${paystubId}/YTD`);
       singlePaystub = singlePaystub.data;
       singlePaystub.YTD = YTD.data;
       return dispatch(update(singlePaystub))
   }
+  return asyncDispatch;
 }
 
 export const addPaystub = (paystub) =>
@@ -42,15 +43,16 @@ export const addPaystub = (paystub) =>
       .then(newPaystub => dispatch(add(newPaystub)))
       .catch(err => console.log(`${err}. UNABLE TO ADD PAYSTUB ${paystub.employeeId}`))
 
-export const updatePaystub = (id, paystub) =>
-  async (dispatch) => {
+export const updatePaystub = (id, paystub) => {
+  const asyncDispatch = async (dispatch) => {
     let updatedStub = await axios.put(`/api/stubs/${id}`, paystub).catch(console.log);
     let YTD = await axios.get(`/api/stubs/${id}/YTD`).catch(console.log);
     updatedStub = updatedStub.data;
     updatedStub.YTD = YTD.data;
     return dispatch(update(updatedStub));
+  }
+  return asyncDispatch;
 }
-
 export const deletePaystub = (id) =>
   dispatch =>
     axios.delete(`/api/stubs/${id}`)
