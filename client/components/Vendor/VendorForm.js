@@ -30,14 +30,13 @@ class VendorForm extends Component{
       this.props.add(this.state);
     } else {
       const changedInfo = {};
-      for(let key in this.state){
-        if(this.state[key]) changedInfo[key] = this.state[key];
+      for (let key in this.state){
+        if (this.state[key]) changedInfo[key] = this.state[key];
       }
       const { id } = this.props.placeholder;
       this.props.update(id, changedInfo);
     }
     this.props.toggleView();
-    // if(!this.pt)
   }
   render(){
     const { name, address, city, state, zipcode, phoneNumber } = this.state;

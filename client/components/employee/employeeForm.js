@@ -35,7 +35,7 @@ class EmployeeForm extends Component{
       }
       this.props.update(this.props.employee.id, updatedInfo);
     }
-    this.setState({ firstName: '', lastName: '', address: '', city: '', state: '', zipcode: '', phoneNumber: ''})
+    this.props.triggerView();
   }
   render (){
     const { firstName, lastName, address, city, state, zipcode, phoneNumber} = this.state;

@@ -12,9 +12,9 @@ class VendorList extends Component{
       editBool: false,
     }
     this.onButtonClick = this.onButtonClick.bind(this);
-    this.buttonRender = this.buttonRender.bind(this);
+    this.adminBox = this.adminBox.bind(this);
   }
-  buttonRender(){
+  adminBox(){
     const { editBool } = this.state;
     const [ color, content ] = editBool ? ['red', 'Cancelar'] : ['teal', 'Crear Nuevo'];
     return (
@@ -56,7 +56,7 @@ class VendorList extends Component{
           }
           </Card.Group>
           {
-            isAdmin && this.buttonRender()
+            isAdmin && this.adminBox()
           }
         </div>
         <div className='Aligner-item--bottom' />

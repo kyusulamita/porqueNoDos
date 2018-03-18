@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getEmployee } from '../../store';
+import { getEmployee, deleteEmployee } from '../../store';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Header, Image, List, Button, Comment } from 'semantic-ui-react';
@@ -12,31 +12,73 @@ class employeeDetail extends Component{
     this.state = {
       editBool: false,
       addBool: false,
+      triggerDelete: 0,
     }
     this.adminDisplay = this.adminDisplay.bind(this);
+    this.toggleAdd = this.toggleAdd.bind(this);
+    this.toggleEdit = this.toggleEdit.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
   componentDidMount(){
     this.props.fetchEmployee();
   }
 
+  toggleAdd(){
+    this.setState(({addBool}) => ({ addBool: !addBool }));
+  }
+
+  toggleEdit(){
+    if (this.state.triggerDelete){
+      this.setState({triggerDelete: 0});
+    } else {
+      this.setState(({editBool}) => ({ editBool: !editBool }));
+    }
+  }
+  onDelete(){
+    if (this.state.triggerDelete === 3){
+      this.props.delete();
+    }
+    this.setState(({triggerDelete}) => ({ triggerDelete: (++triggerDelete)}));
+  }
   adminDisplay(){
     const { editBool, addBool } = this.state;
+    const { toggleEdit, toggleAdd, onDelete } = this;
+    const addText = addBool ? 'Cancelar' : 'Anadir pago';
+    const atWarning = this.state.triggerDelete;
+    const editText = (editBool || atWarning) ? 'Cancelar' : 'Editar Empleado';
+    const warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
+    const deleteText = warnings[atWarning];
     return (
-      <div className='adminBox'>
+      <div >
         <div className='adminBoxForm'>
+        <Button
+          size='small'
+          negative
+          content={deleteText}
+          onClick={onDelete}
+        />
+        <Button
+          size='small'
+          color='teal'
+          negative={editBool || !!atWarning }
+          content={editText}
+          onClick={toggleEdit}
+        />
         {
-          <Button size='small' color='teal' negative={editBool} content={editBool ? 'Cancelar' : 'Editar Empleado'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
-        }
-        {
-          editBool && <EmployeeForm employee={this.props.employee} />
+          editBool && <EmployeeForm employee={this.props.employee} triggerView={toggleEdit}/>
         }
         </div>
         <div className='adminBoxForm'>
+        <Button
+          size='small'
+          secondary={!addBool}
+          color='teal'
+          negative={addBool}
+          content={addText}
+          onClick={toggleAdd}
+        />
         {
-          <Button size='small' secondary={!addBool} color='teal' negative={addBool} content={addBool ? 'Cancelar' : 'Anadir pago'} onClick={() => this.setState(({addBool}) => ({ addBool:! addBool}))} />
-        }
-        {
-          addBool && <PaystubForm employeeId={this.props.employee.id}/>
+          addBool && <PaystubForm employeeId={this.props.employee.id} triggerView={toggleAdd}/>
         }
         </div>
       </div>
@@ -47,25 +89,20 @@ class employeeDetail extends Component{
     const { employee, isAdmin } = this.props;
     if (!employee) return <div />
     const { firstName, lastName, stubs, address, city, state, zipcode, phoneNumber, id } = employee;
-    // stubs = stubs || [];
     const stubExtra = { firstName, lastName, employeeId: id }
     return (
       <div>
-        <Header as='h2' textAlign='center'>
-          <Image circular />
+        <Header as='h2' className='adminBox' textalign='center'>
+          <Image circular src="https://placebear.com/200/200"/>
           {'  '}{firstName} {lastName}
           <Header.Subheader>
             {' '} Trabaja en el departamento
           </Header.Subheader>
         </Header>
-        <div className ='Aligner'>
-          <div className='Aligner-item--top' />
-          <div className='Aligner-item'>
-            <div>{address}</div>
-            <div>{city}, {state} {zipcode}</div>
-            <div>{phoneNumber}</div>
-          </div>
-          <div className='Aligner-item--bottom' />
+        <div >
+            <div textalign='left'>{address}</div>
+            <div textalign='left'>{city}, {state} {zipcode}</div>
+            <div textalign='left'>{phoneNumber}</div>
         </div>
         {
           isAdmin && this.adminDisplay()
@@ -93,10 +130,14 @@ const mapState = (state, ownProps) => {
 }
 
 const mapDispatch = (dispatch, ownProps) => ({
-    fetchEmployee: () => {
+    fetchEmployee(){
       const employeeId = +ownProps.match.params.employeeId;
       dispatch(getEmployee(employeeId));
     },
+    delete(){
+      const employeeId = +ownProps.match.params.employeeId;
+      dispatch(deleteEmployee(employeeId));
+    }
 });
 
 export default connect(mapState, mapDispatch)(employeeDetail);

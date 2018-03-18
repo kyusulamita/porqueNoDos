@@ -17,10 +17,15 @@ class LostProductRow extends Component{
     this.onDelete = this.onDelete.bind(this);
   }
   onButtonClick(){
-     this.setState(({toggleEdit}) => ({ toggleEdit: !toggleEdit}))
+    const { triggerDelete } = this.state;
+    if (!triggerDelete) {
+      this.setState(({toggleEdit}) => ({ toggleEdit: !toggleEdit }))
+    } else {
+      this.setState({ triggerDelete: 0 });
+    }
   }
   onDelete(){
-    if(this.state.triggerDelete === 3){
+    if (this.state.triggerDelete === 3){
       this.props.delete(this.props.id);
     }
     this.setState(({triggerDelete}) => ({ triggerDelete: (++triggerDelete%4)}));
@@ -28,8 +33,8 @@ class LostProductRow extends Component{
   render(){
     const {total, date, product, amount, price, id} = this.props;
     const {toggleEdit} = this.state;
-    const [ editColor, editContent ] = (toggleEdit) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
     const atWarning = this.state.triggerDelete;
+    const [ editColor, editContent ] = (toggleEdit || atWarning) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
     const warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
     const deleteText = warnings[atWarning];
 

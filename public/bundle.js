@@ -33369,9 +33369,13 @@ var employeeDetail = function (_Component) {
 
     _this.state = {
       editBool: false,
-      addBool: false
+      addBool: false,
+      triggerDelete: 0
     };
     _this.adminDisplay = _this.adminDisplay.bind(_this);
+    _this.toggleAdd = _this.toggleAdd.bind(_this);
+    _this.toggleEdit = _this.toggleEdit.bind(_this);
+    _this.onDelete = _this.onDelete.bind(_this);
     return _this;
   }
 
@@ -33381,38 +33385,84 @@ var employeeDetail = function (_Component) {
       this.props.fetchEmployee();
     }
   }, {
+    key: 'toggleAdd',
+    value: function toggleAdd() {
+      this.setState(function (_ref) {
+        var addBool = _ref.addBool;
+        return { addBool: !addBool };
+      });
+    }
+  }, {
+    key: 'toggleEdit',
+    value: function toggleEdit() {
+      if (this.state.triggerDelete) {
+        this.setState({ triggerDelete: 0 });
+      } else {
+        this.setState(function (_ref2) {
+          var editBool = _ref2.editBool;
+          return { editBool: !editBool };
+        });
+      }
+    }
+  }, {
+    key: 'onDelete',
+    value: function onDelete() {
+      if (this.state.triggerDelete === 3) {
+        this.props.delete();
+      }
+      this.setState(function (_ref3) {
+        var triggerDelete = _ref3.triggerDelete;
+        return { triggerDelete: ++triggerDelete };
+      });
+    }
+  }, {
     key: 'adminDisplay',
     value: function adminDisplay() {
-      var _this2 = this;
-
       var _state = this.state,
           editBool = _state.editBool,
           addBool = _state.addBool;
+      var toggleEdit = this.toggleEdit,
+          toggleAdd = this.toggleAdd,
+          onDelete = this.onDelete;
 
+      var addText = addBool ? 'Cancelar' : 'Anadir pago';
+      var atWarning = this.state.triggerDelete;
+      var editText = editBool || atWarning ? 'Cancelar' : 'Editar Empleado';
+      var warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
+      var deleteText = warnings[atWarning];
       return _react2.default.createElement(
         'div',
-        { className: 'adminBox' },
+        null,
         _react2.default.createElement(
           'div',
           { className: 'adminBoxForm' },
-          _react2.default.createElement(_semanticUiReact.Button, { size: 'small', color: 'teal', negative: editBool, content: editBool ? 'Cancelar' : 'Editar Empleado', onClick: function onClick() {
-              return _this2.setState(function (_ref) {
-                var editBool = _ref.editBool;
-                return { editBool: !editBool };
-              });
-            } }),
-          editBool && _react2.default.createElement(_index.EmployeeForm, { employee: this.props.employee })
+          _react2.default.createElement(_semanticUiReact.Button, {
+            size: 'small',
+            negative: true,
+            content: deleteText,
+            onClick: onDelete
+          }),
+          _react2.default.createElement(_semanticUiReact.Button, {
+            size: 'small',
+            color: 'teal',
+            negative: editBool || !!atWarning,
+            content: editText,
+            onClick: toggleEdit
+          }),
+          editBool && _react2.default.createElement(_index.EmployeeForm, { employee: this.props.employee, triggerView: toggleEdit })
         ),
         _react2.default.createElement(
           'div',
           { className: 'adminBoxForm' },
-          _react2.default.createElement(_semanticUiReact.Button, { size: 'small', secondary: !addBool, color: 'teal', negative: addBool, content: addBool ? 'Cancelar' : 'Anadir pago', onClick: function onClick() {
-              return _this2.setState(function (_ref2) {
-                var addBool = _ref2.addBool;
-                return { addBool: !addBool };
-              });
-            } }),
-          addBool && _react2.default.createElement(_index.PaystubForm, { employeeId: this.props.employee.id })
+          _react2.default.createElement(_semanticUiReact.Button, {
+            size: 'small',
+            secondary: !addBool,
+            color: 'teal',
+            negative: addBool,
+            content: addText,
+            onClick: toggleAdd
+          }),
+          addBool && _react2.default.createElement(_index.PaystubForm, { employeeId: this.props.employee.id, triggerView: toggleAdd })
         )
       );
     }
@@ -33433,7 +33483,6 @@ var employeeDetail = function (_Component) {
           zipcode = employee.zipcode,
           phoneNumber = employee.phoneNumber,
           id = employee.id;
-      // stubs = stubs || [];
 
       var stubExtra = { firstName: firstName, lastName: lastName, employeeId: id };
       return _react2.default.createElement(
@@ -33441,8 +33490,8 @@ var employeeDetail = function (_Component) {
         null,
         _react2.default.createElement(
           _semanticUiReact.Header,
-          { as: 'h2', textAlign: 'center' },
-          _react2.default.createElement(_semanticUiReact.Image, { circular: true }),
+          { as: 'h2', className: 'adminBox', textalign: 'center' },
+          _react2.default.createElement(_semanticUiReact.Image, { circular: true, src: 'https://placebear.com/200/200' }),
           '  ',
           firstName,
           ' ',
@@ -33456,32 +33505,26 @@ var employeeDetail = function (_Component) {
         ),
         _react2.default.createElement(
           'div',
-          { className: 'Aligner' },
-          _react2.default.createElement('div', { className: 'Aligner-item--top' }),
+          null,
           _react2.default.createElement(
             'div',
-            { className: 'Aligner-item' },
-            _react2.default.createElement(
-              'div',
-              null,
-              address
-            ),
-            _react2.default.createElement(
-              'div',
-              null,
-              city,
-              ', ',
-              state,
-              ' ',
-              zipcode
-            ),
-            _react2.default.createElement(
-              'div',
-              null,
-              phoneNumber
-            )
+            { textalign: 'left' },
+            address
           ),
-          _react2.default.createElement('div', { className: 'Aligner-item--bottom' })
+          _react2.default.createElement(
+            'div',
+            { textalign: 'left' },
+            city,
+            ', ',
+            state,
+            ' ',
+            zipcode
+          ),
+          _react2.default.createElement(
+            'div',
+            { textalign: 'left' },
+            phoneNumber
+          )
         ),
         isAdmin && this.adminDisplay(),
         _react2.default.createElement(
@@ -33523,6 +33566,10 @@ var mapDispatch = function mapDispatch(dispatch, ownProps) {
     fetchEmployee: function fetchEmployee() {
       var employeeId = +ownProps.match.params.employeeId;
       dispatch((0, _store.getEmployee)(employeeId));
+    },
+    delete: function _delete() {
+      var employeeId = +ownProps.match.params.employeeId;
+      dispatch((0, _store.deleteEmployee)(employeeId));
     }
   };
 };
@@ -33616,7 +33663,7 @@ var EmployeeForm = function (_Component) {
         }
         this.props.update(this.props.employee.id, updatedInfo);
       }
-      this.setState({ firstName: '', lastName: '', address: '', city: '', state: '', zipcode: '', phoneNumber: '' });
+      this.props.triggerView();
     }
   }, {
     key: 'render',
@@ -34433,10 +34480,16 @@ var LostProductRow = function (_Component) {
   _createClass(LostProductRow, [{
     key: 'onButtonClick',
     value: function onButtonClick() {
-      this.setState(function (_ref) {
-        var toggleEdit = _ref.toggleEdit;
-        return { toggleEdit: !toggleEdit };
-      });
+      var triggerDelete = this.state.triggerDelete;
+
+      if (!triggerDelete) {
+        this.setState(function (_ref) {
+          var toggleEdit = _ref.toggleEdit;
+          return { toggleEdit: !toggleEdit };
+        });
+      } else {
+        this.setState({ triggerDelete: 0 });
+      }
     }
   }, {
     key: 'onDelete',
@@ -34461,12 +34514,13 @@ var LostProductRow = function (_Component) {
           id = _props.id;
       var toggleEdit = this.state.toggleEdit;
 
-      var _ref3 = toggleEdit ? ['red', 'Cancelar'] : ['green', 'Cambiar'],
+      var atWarning = this.state.triggerDelete;
+
+      var _ref3 = toggleEdit || atWarning ? ['red', 'Cancelar'] : ['green', 'Cambiar'],
           _ref4 = _slicedToArray(_ref3, 2),
           editColor = _ref4[0],
           editContent = _ref4[1];
 
-      var atWarning = this.state.triggerDelete;
       var warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
       var deleteText = warnings[atWarning];
 
@@ -35407,19 +35461,20 @@ var Content = _semanticUiReact.Comment.Content,
     Actions = _semanticUiReact.Comment.Actions,
     Action = _semanticUiReact.Comment.Action;
 var StubRow = exports.StubRow = function StubRow(props) {
-  var rate = props.rate,
-      hours = props.hours,
+  var hours = props.hours,
       pay = props.pay,
       id = props.id,
-      paid = props.paid,
-      payDate = props.payDate;
+      payDate = props.payDate,
+      rateType = props.rateType;
   var employeeId = props.employeeId,
       firstName = props.firstName,
       lastName = props.lastName;
+
+  var stubPay = rateType === 'HOURLY' ? hours + ' horas' : '1 semana';
   return _react2.default.createElement(
     _semanticUiReact.Comment,
     { key: id },
-    _react2.default.createElement(Avatar, null),
+    _react2.default.createElement(Avatar, { src: 'https://placebear.com/200/200' }),
     _react2.default.createElement(
       Content,
       null,
@@ -35431,15 +35486,15 @@ var StubRow = exports.StubRow = function StubRow(props) {
       _react2.default.createElement(
         Metadata,
         null,
-        ' Pagado ',
+        ' Fecha: ',
         payDate
       ),
       _react2.default.createElement(
         Text,
         null,
-        'Trabajado: ',
-        hours ? hours + ' horas' : '1 semana',
-        '. Pagado: $',
+        'Trabajo: ',
+        stubPay,
+        '. Pago: $',
         pay
       ),
       _react2.default.createElement(
@@ -35447,7 +35502,7 @@ var StubRow = exports.StubRow = function StubRow(props) {
         null,
         _react2.default.createElement(
           Action,
-          { as: _reactRouterDom.Link, to: '/stubs/' + id },
+          { as: _reactRouterDom.Link, to: '/stubs/' + id, textAlign: 'left' },
           'Ver stub in detalle'
         )
       )
@@ -35647,7 +35702,6 @@ var VendorForm = function (_Component) {
         this.props.update(id, changedInfo);
       }
       this.props.toggleView();
-      // if(!this.pt)
     }
   }, {
     key: 'render',
@@ -35813,13 +35867,13 @@ var VendorList = function (_Component) {
       editBool: false
     };
     _this.onButtonClick = _this.onButtonClick.bind(_this);
-    _this.buttonRender = _this.buttonRender.bind(_this);
+    _this.adminBox = _this.adminBox.bind(_this);
     return _this;
   }
 
   _createClass(VendorList, [{
-    key: 'buttonRender',
-    value: function buttonRender() {
+    key: 'adminBox',
+    value: function adminBox() {
       var editBool = this.state.editBool;
 
       var _ref = editBool ? ['red', 'Cancelar'] : ['teal', 'Crear Nuevo'],
@@ -35884,7 +35938,7 @@ var VendorList = function (_Component) {
               return _react2.default.createElement(_index.VendorTile, _extends({ key: vendor.id }, vendor));
             })
           ),
-          isAdmin && this.buttonRender()
+          isAdmin && this.adminBox()
         ),
         _react2.default.createElement('div', { className: 'Aligner-item--bottom' })
       );
@@ -36754,6 +36808,8 @@ var deleteEmployee = exports.deleteEmployee = function deleteEmployee(id) {
   return function (dispatch) {
     return _axios2.default.delete('/api/employees/' + id).then(function () {
       return dispatch(remove(id));
+    }).then(function () {
+      return _history2.default.push('/empleados');
     }).catch(function (err) {
       return console.log(err + ' UNABLE TO DELETE EMPLOYEE ' + id);
     });
@@ -43810,7 +43866,7 @@ exports = module.exports = __webpack_require__(895)();
 
 
 // module
-exports.push([module.i, "body {\n  font-family: 'Roboto', sans-serif; }\n  body a {\n    text-decoration: none; }\n  body label {\n    display: block; }\n  body nav a {\n    display: inline-block;\n    margin: 1em; }\n  body form div {\n    display: inline-block; }\n\n.Aligner {\n  display: flex;\n  align-items: center;\n  justify-content: center; }\n\n.Aligner-item {\n  max-width: 75%;\n  padding-top: 20px;\n  text-align: center; }\n\n.Aligner-item-wide {\n  max-width: 95%; }\n\n.Aligner-item--top {\n  align-self: flex-start; }\n\n.Aligner-item--bottom {\n  align-self: flex-end; }\n\n.adminBox {\n  margin-left: 1%; }\n\n.adminBoxForm {\n  margin-top: 1%;\n  margin-bottom: 1%; }\n", ""]);
+exports.push([module.i, "body {\n  margin: 2%; }\n  body a {\n    text-decoration: none; }\n  body label {\n    display: block; }\n  body nav a {\n    display: inline-block;\n    margin: 1em; }\n  body form div {\n    display: inline-block; }\n\n.Aligner {\n  display: flex;\n  align-items: center;\n  justify-content: center; }\n\n.Aligner-item {\n  max-width: 75%;\n  padding-top: 20px;\n  text-align: center; }\n\n.Aligner-item-wide {\n  max-width: 95%; }\n\n.Aligner-item--top {\n  align-self: flex-start; }\n\n.Aligner-item--bottom {\n  align-self: flex-end; }\n\n.adminBox {\n  margin-left: 1%; }\n\n.adminBoxForm {\n  margin-top: 1%;\n  margin-bottom: 1%; }\n", ""]);
 
 // exports
 

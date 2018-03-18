@@ -50,6 +50,7 @@ export const deleteEmployee = (id) =>
   dispatch =>
     axios.delete(`/api/employees/${id}`)
     .then(() => dispatch(remove(id)))
+    .then(() => history.push(`/empleados`))
     .catch(err => console.log(`${err} UNABLE TO DELETE EMPLOYEE ${id}`))
 
 function addPrevNext(arr){

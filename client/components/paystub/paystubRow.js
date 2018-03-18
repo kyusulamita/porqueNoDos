@@ -7,16 +7,18 @@ import { Link } from 'react-router-dom';
 const { Content, Avatar, Author, Metadata, Text, Actions, Action } = Comment;
 
 export const StubRow = (props) => {
-  const { rate, hours, pay, id, paid, payDate } = props;
-  const { employeeId, firstName, lastName } = props;  return (
+  const { hours, pay, id, payDate, rateType } = props;
+  const { employeeId, firstName, lastName } = props;
+  const stubPay = (rateType === 'HOURLY') ? `${hours} horas` : `1 semana`;
+  return (
     <Comment key={id}>
-      <Avatar  />
+      <Avatar  src="https://placebear.com/200/200"/>
       <Content>
         <Author as={Link} to={`/empleados/${employeeId}`}>{`${firstName} ${lastName}`}</Author>
-        <Metadata> Pagado {payDate}</Metadata>
-        <Text>Trabajado: {hours ? `${hours} horas` : `1 semana`}. Pagado: ${pay}</Text>
+        <Metadata> Fecha: {payDate}</Metadata>
+        <Text>Trabajo: {stubPay}. Pago: ${pay}</Text>
         <Actions>
-          <Action as={Link} to={`/stubs/${id}`}>Ver stub in detalle</Action>
+          <Action as={Link} to={`/stubs/${id}`} textAlign='left'>Ver stub in detalle</Action>
         </Actions>
       </Content>
     </Comment>
