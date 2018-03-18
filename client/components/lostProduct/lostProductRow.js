@@ -1,28 +1,42 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import { Table, Button } from 'semantic-ui-react';
 import { LostProductForm } from '../index';
+import { deleteProduct } from '../../store'
 const { Row, Cell, Body } = Table;
 
 class LostProductRow extends Component{
   constructor(props){
     super(props);
     this.state = {
-      toggleEdit: false
+      toggleEdit: false,
+      triggerDelete: 0,
     }
     this.onButtonClick = this.onButtonClick.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
-  onButtonClick(event){
+  onButtonClick(){
      this.setState(({toggleEdit}) => ({ toggleEdit: !toggleEdit}))
   }
-
+  onDelete(){
+    if(this.state.triggerDelete === 3){
+      this.props.delete(this.props.id);
+    }
+    this.setState(({triggerDelete}) => ({ triggerDelete: (++triggerDelete%4)}));
+  }
   render(){
     const {total, date, product, amount, price, id} = this.props;
     const {toggleEdit} = this.state;
-    const buttonColor = (toggleEdit) ? 'red' : 'green';
-    const buttonContent = (toggleEdit) ? 'Cancelar' : 'Cambiar';
+    const [ editColor, editContent ] = (toggleEdit) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
+    const atWarning = this.state.triggerDelete;
+    const warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
+    const deleteText = warnings[atWarning];
+
     return (
       <Body>
         <Row key={id}>
+          <Cell/>
           <Cell>{date}</Cell>
           <Cell>{product}</Cell>
           <Cell>{amount}</Cell>
@@ -31,8 +45,16 @@ class LostProductRow extends Component{
           <Cell>
             <Button
               onClick={this.onButtonClick}
-              color={buttonColor}
-              content={buttonContent}
+              color={editColor}
+              content={editContent}
+              size='small'
+            />
+          </Cell>
+          <Cell>
+            <Button
+              onClick={this.onDelete}
+              color='red'
+              content={deleteText}
               size='small'
             />
           </Cell>
@@ -45,4 +67,11 @@ class LostProductRow extends Component{
   }
 }
 
-export default LostProductRow;
+const mapState = (state, ownProps) => ({})
+const mapDispatch = (dispatch, ownProps) => ({
+  delete(id){
+    dispatch(deleteProduct(id));
+  }
+})
+
+export default connect(mapState, mapDispatch)(LostProductRow);

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-
+import { connect } from 'react-redux';
+import { addVendor, updateVendor } from '../../store';
 import { Form, Button } from 'semantic-ui-react';
 const { Group, Input } = Form;
 
@@ -8,10 +8,12 @@ class VendorForm extends Component{
   constructor(props){
     super(props);
     this.state = {
-      date: '',
-      product: '',
-      amount: '',
-      price: '',
+      name: '',
+      address: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      phoneNumber: '',
     }
     this.handleOnSubmit= this.handleOnSubmit.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
@@ -23,60 +25,91 @@ class VendorForm extends Component{
   handleOnSubmit(event){
     event.preventDefault();
     console.log(this.state);
+    const { newForm } = this.props;
+    if (newForm) {
+      this.props.add(this.state);
+    } else {
+      const changedInfo = {};
+      for(let key in this.state){
+        if(this.state[key]) changedInfo[key] = this.state[key];
+      }
+      const { id } = this.props.placeholder;
+      this.props.update(id, changedInfo);
+    }
+    this.props.toggleView();
     // if(!this.pt)
   }
   render(){
-    const { date, product, amount, price} = this.state;
+    const { name, address, city, state, zipcode, phoneNumber } = this.state;
     const { placeholder, newForm, buttonText } = this.props;
     const { handleOnSubmit, handleOnChange } = this;
-    const newAmount = (newForm) ? (+amount)  : (+amount || +placeholder.amount);
-    const newPrice = (newForm) ? (+price) : (+price || +placeholder.price);
-    const total = newAmount * newPrice;
-    return(
+    return (
         <Form onSubmit={handleOnSubmit}>
-        <Group widths='equal'>
           <Input
-            label='Date'
-            placeholder={placeholder.date}
-            name='date'
-            value={date}
+            label='Nombre'
+            placeholder={placeholder.name}
+            name='name'
+            value={name}
             required={newForm}
             onChange={handleOnChange}
+            width={16}
+            inline
           />
           <Input
-            label='Product'
-            placeholder={placeholder.product}
-            name='product'
-            value={product}
+            label='Dirección'
+            placeholder={placeholder.address}
+            name='address'
+            value={address}
             required={newForm}
             onChange={handleOnChange}
+            width={16}
+            inline
           />
           <Input
-            label='Amount'
-            placeholder={placeholder.product}
-            name='amount'
-            value={amount}
+            label='Cuidad'
+            placeholder={placeholder.city}
+            name='city'
+            value={city}
             required={newForm}
             onChange={handleOnChange}
+            width={16}
+            inline
           />
           <Input
-            label='Price'
-            placeholder={placeholder.price}
-            name='price'
-            value={price}
+            label='Estado'
+            placeholder={placeholder.state}
+            name='state'
+            value={state}
             required={newForm}
             onChange={handleOnChange}
+            width={16}
+            inline
           />
           <Input
-            label='Total'
-            placeholder={placeholder.total}
-            value={total}
+            label='Codigo Postal'
+            placeholder={placeholder.zipcode}
+            name='zipcode'
+            value={zipcode}
+            required={newForm}
+            onChange={handleOnChange}
+            width={16}
+            inline
           />
-        </Group>
+          <Input
+            label='Numero de Telefono'
+            placeholder={placeholder.phoneNumber}
+            name='phoneNumber'
+            value={phoneNumber}
+            required={newForm}
+            onChange={handleOnChange}
+            width={16}
+            inline
+          />
         <Button
           color='green'
           type='submit'
-          content={buttonText}/>
+          content={buttonText}
+        />
       </Form>
     );
   }
@@ -84,16 +117,22 @@ class VendorForm extends Component{
 }
 
 const mapState = (state, ownProps) => {
-  const placeholder = { date: 'MM/DD/YY', product: 'Enter Name', amount: 'Amount', price: 'Don\'t include $', total: 'Total'};
+  const placeholder = { name: 'Nombre', address: 'Dirección', city: 'Cuidad', state: 'Estado', zipcode: 'Codigo Postal', phoneNumber: '(XXX) XXX-XXXX'};
 
   return ({
-    placeholder: ownProps.product || placeholder,
-    newForm: !ownProps.product,
+    placeholder: ownProps.vendor || placeholder,
+    newForm: !ownProps.vendor,
     buttonText: !ownProps.product ? 'Crear' : 'Cambiar'
   })
 }
 
-const mapDispatch = (dispatch, ownProps) => {
+const mapDispatch = (dispatch, ownProps) => ({
+  add(newVendor){
+    dispatch(addVendor(newVendor));
+  },
+  update(id, vendorInfo){
+    dispatch(updateVendor(id, vendorInfo));
+  }
+})
 
-}
 export default connect(mapState, mapDispatch)(VendorForm);

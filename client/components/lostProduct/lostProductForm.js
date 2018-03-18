@@ -24,8 +24,6 @@ class LostProductForm extends Component{
 
   handleOnSubmit(event){
     event.preventDefault();
-    // console.log(this.state);
-    // if(!this.pt)
     const { newForm } = this.props;
     if (newForm){
       this.props.add(this.state);
@@ -47,7 +45,7 @@ class LostProductForm extends Component{
     const newPrice = (newForm) ? (+price) : (+price || +placeholder.price);
     const total = Number(newAmount * newPrice).toFixed(2);
     return (
-      <Row><Cell colSpan='6'><div className='Aligner'>
+      <Row><Cell/><Cell colSpan='7'><div className='Aligner'>
         <div className='Aligner-item--top' />
         <Form onSubmit={handleOnSubmit} size='tiny' className='Aligner-item'>
         <Group widths='equal'>
@@ -96,7 +94,7 @@ class LostProductForm extends Component{
         </Group>
         </Form>
         <div className='Aligner-item--bottom'/>
-      </div></Cell></Row>
+      </div></Cell><Cell/></Row>
     );
   }
 

@@ -15,17 +15,22 @@ class VendorList extends Component{
     this.buttonRender = this.buttonRender.bind(this);
   }
   buttonRender(){
-    const {editBool} = this.state;
+    const { editBool } = this.state;
+    const [ color, content ] = editBool ? ['red', 'Cancelar'] : ['teal', 'Crear Nuevo'];
     return (
-      <div className='Aligner-item'>
-        {
-          editBool &&  <VendorForm />
-        }
-        <Button
-          color={editBool ? 'red' : 'teal'}
-          content={editBool ? 'Cancelar' : 'Crear Nuevo'}
-          onClick={this.onButtonClick}
-        />
+      <div className='Aligner'>
+        <div className='Aligner-item--top' />
+          <div className='Aligner-item'>
+            {
+              editBool &&  <VendorForm toggleView={this.onButtonClick}/>
+            }
+            <Button
+              color={color}
+              content={content}
+              onClick={this.onButtonClick}
+            />
+          </div>
+        <div className='Aligner-item--bottom' />
       </div>
     )
   }
@@ -34,7 +39,6 @@ class VendorList extends Component{
   }
   render(){
     const {vendors, isAdmin} = this.props;
-    const { editBool } = this.state;
     return (
       <div className='Aligner'>
         <div className='Aligner-item--top' />
@@ -51,14 +55,9 @@ class VendorList extends Component{
             vendors.map(vendor => <VendorTile key={vendor.id} {...vendor} />)
           }
           </Card.Group>
-          <div className='Aligner'>
-            <div className='Aligner-item--top' />
-
-              {
-                isAdmin && this.buttonRender()
-              }
-            <div className='Aligner-item--bottom' />
-          </div>
+          {
+            isAdmin && this.buttonRender()
+          }
         </div>
         <div className='Aligner-item--bottom' />
       </div>

@@ -23,7 +23,7 @@ router.get('/', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
-  const newVendor = Vendor.create(req.body, {
+  const newVendor = await Vendor.create(req.body, {
     include: { model: Bill, attributes: ['total', 'date']}
   }).catch(next);
   res.json(newVendor);
@@ -36,6 +36,7 @@ router.get('/:vendorId', async (req, res, next) => {
 
 router.put('/:vendorId', async (req, res, next) => {
   const updatedVendor = await req.vendor(req.body).catch(next);
+  const reloadedVendor = await updatedVendor.reload({ include: [ Bill ]})
   res.status(200).json(updatedVendor);
 })
 

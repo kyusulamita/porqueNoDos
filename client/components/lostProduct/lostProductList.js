@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { LostProductRow, LostProductForm } from '../index';
-import { Table } from 'semantic-ui-react'
+import { Table, Button } from 'semantic-ui-react'
 const { Header, Row, HeaderCell, Body, Footer, Cell } = Table;
 
 
@@ -22,17 +22,27 @@ class lostProductList extends Component {
   render(){
     const { addBool } = this.state;
     const { lostProducts } = this.props;
-    return(
+    const [ buttonColor, content ] = addBool ? ['red', 'Cancelar'] :['green', 'Nuevo'];
+    return (
       <div className='Aligner'>
       <div className='Align-item--top' />
       <Table  celled collapsing basic='very' className='Align-item' padded unstackable >
         <Header>
           <Row>
+            <HeaderCell/>
             <HeaderCell textAlign='center'>Date</HeaderCell>
             <HeaderCell>Product</HeaderCell>
             <HeaderCell>Amount</HeaderCell>
             <HeaderCell>Price</HeaderCell>
             <HeaderCell>Total</HeaderCell>
+            <HeaderCell colSpan='2' textAlign='center'>
+              <Button
+                onClick={this.toggleAdd}
+                color={buttonColor}
+                content={content}
+                size='small'
+              />
+            </HeaderCell>
             <HeaderCell/>
           </Row>
           </Header>
@@ -51,11 +61,11 @@ class lostProductList extends Component {
   }
 }
 
-const mapState = ({lostProducts}, ownProps) => ({
+const mapState = ({lostProducts}) => ({
   lostProducts,
 });
 
-const mapDispatch = (dispatch, ownProps) => ({
+const mapDispatch = (dispatch) => ({
 
 })
 
