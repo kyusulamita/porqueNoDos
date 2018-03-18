@@ -2,7 +2,7 @@ const LiveReloadPlugin = require('webpack-livereload-plugin')
 const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
-  entry: './client/index.js',
+  entry: ['babel-polyfill', './client/index.js'],
   output: {
     path: __dirname,
     filename: './public/bundle.js'
@@ -17,6 +17,7 @@ module.exports = {
         // dont't forget the presets or you'll end up running into an error
         options: {
           presets: ['react', 'es2015'],
+          plugins: ['transform-async-to-generator']
         },
       },
       {
