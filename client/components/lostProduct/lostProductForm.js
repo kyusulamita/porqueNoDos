@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
-import { Form, Table } from 'semantic-ui-react'
+import { Form, Table } from 'semantic-ui-react';
+import { addProduct, updateProduct } from '../../store';
 
 const { Row, Cell } = Table;
 const { Group, Input, Button } = Form;
@@ -14,7 +14,7 @@ class LostProductForm extends Component{
       product: '',
       amount: '',
       price: '',
-    }
+    };
     this.handleOnSubmit= this.handleOnSubmit.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
   }
@@ -24,8 +24,20 @@ class LostProductForm extends Component{
 
   handleOnSubmit(event){
     event.preventDefault();
-    console.log(this.state);
+    // console.log(this.state);
     // if(!this.pt)
+    const { newForm } = this.props;
+    if (newForm){
+      this.props.add(this.state);
+    } else {
+      const updatedInfo = {};
+      for (const key in this.state){
+        if (this.state[key]) updatedInfo[key] = this.state[key];
+      }
+      this.props.update(this.props.placeholder.id, updatedInfo);
+    }
+    this.props.toggleView();
+    this.setState({ date: '', product: '', amount: '', price: '' });
   }
   render(){
     const { date, product, amount, price} = this.state;
@@ -35,8 +47,9 @@ class LostProductForm extends Component{
     const newPrice = (newForm) ? (+price) : (+price || +placeholder.price);
     const total = Number(newAmount * newPrice).toFixed(2);
     return (
-      <Row><Cell colSpan='6'>
-        <Form onSubmit={handleOnSubmit}>
+      <Row><Cell colSpan='6'><div className='Aligner'>
+        <div className='Aligner-item--top' />
+        <Form onSubmit={handleOnSubmit} size='tiny' className='Aligner-item'>
         <Group widths='equal'>
           <Input
             label='Date'
@@ -74,7 +87,6 @@ class LostProductForm extends Component{
             label='Total'
             placeholder={placeholder.total}
             value={total}
-            disabled
           />
           <Button
             color='green'
@@ -83,7 +95,8 @@ class LostProductForm extends Component{
           />
         </Group>
         </Form>
-      </Cell></Row>
+        <div className='Aligner-item--bottom'/>
+      </div></Cell></Row>
     );
   }
 
@@ -95,11 +108,16 @@ const mapState = (state, ownProps) => {
   return ({
     placeholder: ownProps.product || placeholder,
     newForm: !ownProps.product,
-    buttonText: !ownProps.product ? 'Crear' : 'Cambiar'
+    buttonText: !ownProps.product ? 'Crear' : 'Confirmar'
   })
 }
 
-const mapDispatch = (dispatch, ownProps) => {
-
-}
+const mapDispatch = (dispatch, ownProps) => ({
+  add(newLostProduct){
+    dispatch(addProduct(newLostProduct));
+  },
+  update(id, lostProductUpdate){
+    dispatch(updateProduct(id, lostProductUpdate));
+  }
+})
 export default connect(mapState, mapDispatch)(LostProductForm);

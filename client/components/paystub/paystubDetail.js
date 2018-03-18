@@ -50,7 +50,7 @@ class PaystubDetail extends Component{
           <EmployeeTile key={employee.id} {...employee} className='Aligner-item' />
           <div className='Aligner-item--bottom' />
         </div>
-        <Table celled>
+        <Table celled unstackable>
           <Header>
             <Row>
               <HeaderCell  colSpan='4' textAlign='center'>Current Earnings</HeaderCell>
