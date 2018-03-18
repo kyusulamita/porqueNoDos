@@ -36859,10 +36859,13 @@ var deleteEmployee = exports.deleteEmployee = function deleteEmployee(id) {
 };
 
 function addPrevNext(arr) {
-  return arr.map(function (stub, index) {
-    if (index !== 0) stub.prev = arr[index - 1].id;
-    if (index + 1 !== arr.length) stub.next = arr[index + 1].id;
-    return stub;
+  arr.sort(function (a, b) {
+    return new Date(b.start) - new Date(a.start);
+  });
+  arr.map(function (stub, index) {
+    if (index !== 0) stub.next = arr[index - 1].id;
+    if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
+    // return stub;
   });
 }
 
@@ -36875,14 +36878,14 @@ exports.default = function () {
   switch (action.type) {
     case GET_ALL:
       return action.employees.map(function (employee) {
-        employee.stubs = addPrevNext(employee.stubs);
+        addPrevNext(employee.stubs);
         return employee;
       });
     case ADD:
-      action.employee.stubs = addPrevNext(action.employee.stubs);
+      addPrevNext(action.employee.stubs);
       return [].concat(_toConsumableArray(employees), [action.employee]);
     case UPDATE:
-      action.employee.stubs = addPrevNext(action.employee.stubs);
+      addPrevNext(action.employee.stubs);
       return employees.map(function (employee) {
         return employee.id !== action.employee.id ? employee : action.employee;
       });

@@ -54,11 +54,12 @@ export const deleteEmployee = (id) =>
     .catch(err => console.log(`${err} UNABLE TO DELETE EMPLOYEE ${id}`))
 
 function addPrevNext(arr){
-  return arr.map((stub, index) => {
-    if (index !== 0) stub.prev = arr[index - 1].id;
-    if (index + 1 !== arr.length) stub.next = arr[index + 1].id;
-    return stub;
-  })
+    arr.sort((a, b) => new Date(b.start) - new Date(a.start))
+    arr.map((stub, index) => {
+      if (index !== 0) stub.next = arr[index - 1].id;
+      if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
+      // return stub;
+    })
 }
 
 /** REDUCER**/
@@ -66,14 +67,14 @@ export default (employees = defaultEmployees, action) => {
   switch (action.type){
     case GET_ALL:
       return action.employees.map(employee => {
-        employee.stubs = addPrevNext(employee.stubs);
+        addPrevNext(employee.stubs);
         return employee;
       });
     case ADD:
-      action.employee.stubs = addPrevNext(action.employee.stubs);
+      addPrevNext(action.employee.stubs);
       return [...employees, action.employee];
     case UPDATE:
-      action.employee.stubs = addPrevNext(action.employee.stubs);
+      addPrevNext(action.employee.stubs);
       return employees.map(employee => (
          (employee.id !== action.employee.id) ? employee : action.employee));
     case REMOVE:

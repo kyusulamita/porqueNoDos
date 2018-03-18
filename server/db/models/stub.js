@@ -5,7 +5,7 @@ const db = require('../db')
 const Stub = db.define('stub', {
   rate: {
     type: Sequelize.STRING,
-    defaultValue: '12',
+    defaultValue: '10',
     allowNull: false,
     get(){
       return Number(this.getDataValue('rate')).toFixed(2)
