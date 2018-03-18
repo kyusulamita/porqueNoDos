@@ -1,6 +1,6 @@
 import axios from 'axios';
 import history from '../history';
-
+import { removeUser } from './paystubs';
 /** ACTION TYPES **/
 const GET_ALL = 'GET_EMPLOYEES';
 const ADD = 'ADD_EMPLOYEE';
@@ -50,6 +50,7 @@ export const deleteEmployee = (id) =>
   dispatch =>
     axios.delete(`/api/employees/${id}`)
     .then(() => dispatch(remove(id)))
+    .then(() => dispatch(removeUser(id)))
     .then(() => history.push(`/empleados`))
     .catch(err => console.log(`${err} UNABLE TO DELETE EMPLOYEE ${id}`))
 

@@ -7,6 +7,7 @@ const GET_ALL = 'GET_PAYSTUBS';
 const ADD = 'ADD_PAYSTUB';
 const UPDATE = 'UPDATE_PAYSTUB';
 const REMOVE= 'REMOVE_PAYSTUB';
+const REMOVE_USER = 'REMOVE_USER_PAYSTUBS'
 
 /** INITIAL STATE **/
 const defaultPaystubs = [];
@@ -16,7 +17,7 @@ const getAll = paystubs => ({type: GET_ALL, paystubs});
 const add = paystub => ({type: ADD, paystub});
 const update = paystub => ({type: UPDATE, paystub});
 const remove = id => ({type: REMOVE, id});
-
+export const removeUser = id => ({type: REMOVE_USER, id });
 /** THUNK CREATORS **/
 export const getPaystubs = () =>
   dispatch =>
@@ -74,6 +75,8 @@ export default (paystubs = defaultPaystubs, action) => {
       ));
     case REMOVE:
       return paystubs.filter(paystub => paystub.id !== action.id);
+    case REMOVE_USER:
+      return paystubs.filter(paystub => paystub.employeeId !== action.id)
     default:
       return paystubs;
   }
