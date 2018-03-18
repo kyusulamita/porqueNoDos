@@ -38,32 +38,96 @@ class EmployeeForm extends Component{
     this.setState({ firstName: '', lastName: '', address: '', city: '', state: '', zipcode: '', phoneNumber: ''})
   }
   render (){
-    const employee = this.props.employee || {};
-    const newForm = !this.props.employee;
     const { firstName, lastName, address, city, state, zipcode, phoneNumber} = this.state;
+    const { placeholder, newForm, buttonText } = this.props;
     return (
         <Form onSubmit={this.handleOnSubmit}>
           <Group widths='equal'>
-            <Input label='Nombre' placeholder={employee.firstName || 'Nombre'} name='firstName'onChange={this.handleChange} required={newForm} value={firstName}/>
-            <Input label='Apellido' placeholder={employee.lastName || 'Apellido'} name='lastName' onChange={this.handleChange} required={newForm} value={lastName} />
+            <Input
+              label='Nombre'
+              placeholder={placeholder.firstName}
+              name='firstName'
+              onChange={this.handleChange}
+              required={newForm}
+              value={firstName}
+            />
+            <Input
+              label='Apellido'
+              placeholder={placeholder.lastName}
+              name='lastName'
+              onChange={this.handleChange}
+              required={newForm}
+              value={lastName} />
           </Group>
           <Group>
-            <Input label='Direccion' placeholder={employee.address || 'Direccion'} name='address' onChange={this.handleChange} required={newForm} value={address}/>
-            <Input label='Cuidad' placeholder={employee.city || 'Cuidad'} name='city' onChange={this.handleChange} required={newForm} value={city} />
-            <Input label='Estado' placeholder={employee.state || 'Estado'} name='state' onChange={this.handleChange} required={newForm} value={state} />
+            <Input
+              label='Direccion'
+              placeholder={placeholder.address}
+              name='address'
+              onChange={this.handleChange}
+              required={newForm}
+              value={address}
+            />
+            <Input
+              label='Cuidad'
+              placeholder={placeholder.city}
+              name='city'
+              onChange={this.handleChange}
+              required={newForm}
+              value={city}
+            />
+            <Input
+              label='Estado'
+              placeholder={placeholder.state}
+              name='state'
+              onChange={this.handleChange}
+              required={newForm}
+              value={state}
+            />
           </Group>
           <Group>
-            <Input label='Codigo Postal' placeholder={employee.zipcode || 'Codigo Postal'} name='zipcode' onChange={this.handleChange} required={newForm} value={zipcode} />
-            <Input label='Numero De Telefono' placeholder={employee.phoneNumber || '(999)999-9999'} name='phoneNumber' onChange={this.handleChange} required={newForm} value={phoneNumber} />
+            <Input
+              label='Codigo Postal'
+              placeholder={placeholder.zipcode}
+              name='zipcode'
+              onChange={this.handleChange}
+              required={newForm}
+              value={zipcode}
+            />
+            <Input
+              label='Numero De Telefono'
+              placeholder={placeholder.phoneNumber}
+              name='phoneNumber'
+              onChange={this.handleChange}
+              required={newForm}
+              value={phoneNumber}
+            />
           </Group>
-          <Button color='green' type='submit'>{newForm ? 'Crear' : 'Confirmar'}</Button>
+          <Button
+            color='green'
+            type='submit'
+            content={buttonText}
+          />
         </Form>
     )
   }
 }
-const mapState = (state) => ({
-
-})
+const mapState = (state, ownProps) => {
+  const placeholder = {
+      firstName: 'Nombre',
+      lastName: 'Apellido',
+      address: 'Direccion',
+      city: 'Cuidad',
+      state: 'Estado',
+      zipcode: 'Codigo Postal',
+      phoneNumber: '(XXX) XXX-XXXX',
+    };
+  return ({
+    newForm: !ownProps.employee,
+    buttonText: !ownProps.employee ? 'Crear' : 'Confirmar',
+    placeholder: ownProps.employee || placeholder,
+  });
+}
 
 const mapDispatch = (dispatch) => ({
   add(newEmployee){

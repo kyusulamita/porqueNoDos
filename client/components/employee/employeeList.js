@@ -10,12 +10,38 @@ class EmployeeList extends Component{
     this.state = {
       editBool: false,
     }
+    this.toggleEdit = this.toggleEdit.bind(this);
+    this.adminView = this.adminView.bind(this);
   }
 
-  render(){
-    const {employees, isAdmin} = this.props;
+  toggleEdit(){
+    this.setState(({editBool}) => ({ editBool: !editBool}));
+  }
+
+  adminView(){
     const { editBool } = this.state;
+    const [ color, content ] = editBool ? ['red', 'Cancelar'] : ['teal','Crear Nuevo'];
     return (
+      <div className='Aligner'>
+        <div className='Aligner-item--top' />
+          <div className='Aligner-item'>
+          {
+            editBool && <EmployeeForm triggerView={this.toggleEdit} />
+          }
+            <Button
+              color={color}
+              content={content}
+              onClick={this.toggleEdit}
+            />
+          </div>
+        <div className='Aligner-item--bottom' />
+      </div>
+    )
+  }
+  render(){
+    const { employees, isAdmin } = this.props;
+    return (
+      <div>
       <div className='Aligner'>
         <div className='Aligner-item--top' />
         <div className='Aligner-item-wide'>
@@ -31,21 +57,12 @@ class EmployeeList extends Component{
             employees.map(employee => <EmployeeTile key={employee.id} {...employee} />)
           }
           </Card.Group>
-          <div className='Aligner'>
-            <div className='Aligner-item--top' />
-
-              {
-                isAdmin && (<div className='Aligner-item'>
-                              <Button basic color='teal' content={editBool ? 'Cancelar' : 'Crear Nuevo'} onClick={() => this.setState(({editBool}) => ({ editBool:!editBool}))} />
-                            </div>)
-              }
-              {
-                editBool && <div className='Aligner-item'><EmployeeForm /></div>
-              }
-            <div className='Aligner-item--bottom' />
-          </div>
         </div>
         <div className='Aligner-item--bottom' />
+      </div>
+      {
+        isAdmin && this.adminView()
+      }
       </div>
     )
   }
