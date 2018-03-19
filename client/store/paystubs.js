@@ -1,13 +1,14 @@
 import axios from 'axios';
 import history from '../history';
-
+import { REMOVE as REMOVE_EMPLOYEE } from './employees';
+import { REMOVE_USER } from './currentUser';
 
 /** ACTION TYPES **/
 const GET_ALL = 'GET_PAYSTUBS';
 const ADD = 'ADD_PAYSTUB';
 const UPDATE = 'UPDATE_PAYSTUB';
 const REMOVE= 'REMOVE_PAYSTUB';
-const REMOVE_USER = 'REMOVE_USER_PAYSTUBS'
+const REMOVE_USER_PAYSTUBS = 'REMOVE_USER_PAYSTUBS'
 
 /** INITIAL STATE **/
 const defaultPaystubs = [];
@@ -75,8 +76,10 @@ export default (paystubs = defaultPaystubs, action) => {
       ));
     case REMOVE:
       return paystubs.filter(paystub => paystub.id !== action.id);
+    case REMOVE_EMPLOYEE:
+      return paystubs.filter(paystub => paystub.employeeId !== action.id);
     case REMOVE_USER:
-      return paystubs.filter(paystub => paystub.employeeId !== action.id)
+      return defaultPaystubs;
     default:
       return paystubs;
   }

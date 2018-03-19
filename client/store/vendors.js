@@ -1,5 +1,6 @@
 import axios from 'axios';
 import history from '../history';
+import { REMOVE_USER } from './currentUser';
 
 const GET_ALL = 'GET_VENDORS';
 const ADD = 'ADD_VENDOR';
@@ -55,9 +56,11 @@ export default (vendors = defaultVendors, action) => {
     case ADD:
       return [...vendors, action.vendor];
     case UPDATE:
-      return vendors.map(vendor => vendor.id === action.vendor.id ? actions.vendor : vendor);
+      return vendors.map(vendor => vendor.id === action.vendor.id ? action.vendor : vendor);
     case REMOVE:
       return vendors.filter(vendor => vendor.id !== action.id)
+    case REMOVE_USER:
+      return defaultVendors;
     default:
       return vendors;
   }

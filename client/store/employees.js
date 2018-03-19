@@ -1,11 +1,12 @@
 import axios from 'axios';
 import history from '../history';
-import { removeUser } from './paystubs';
+import { REMOVE_USER } from './currentUser'
 /** ACTION TYPES **/
+
 const GET_ALL = 'GET_EMPLOYEES';
 const ADD = 'ADD_EMPLOYEE';
 const UPDATE = 'UPDATE_EMPLOYEE';
-const REMOVE= 'REMOVE_EMPLOYEE';
+export const REMOVE = 'REMOVE_EMPLOYEE';
 
 /** INITIAL STATE **/
 const defaultEmployees = [];
@@ -50,7 +51,6 @@ export const deleteEmployee = (id) =>
   dispatch =>
     axios.delete(`/api/employees/${id}`)
     .then(() => dispatch(remove(id)))
-    .then(() => dispatch(removeUser(id)))
     .then(() => history.push(`/empleados`))
     .catch(err => console.log(`${err} UNABLE TO DELETE EMPLOYEE ${id}`))
 
@@ -80,6 +80,8 @@ export default (employees = defaultEmployees, action) => {
          (employee.id !== action.employee.id) ? employee : action.employee));
     case REMOVE:
       return employees.filter(employee => employee.id !== action.id);
+    case REMOVE_USER:
+      return defaultEmployees;
     default:
       return employees;
   }

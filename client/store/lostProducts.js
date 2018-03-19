@@ -1,10 +1,12 @@
 import axios from 'axios';
 import history from '../history';
+import { REMOVE_USER } from './currentUser';
 
 const GET_ALL = 'GET_PRODUCTS';
 const ADD = 'ADD_PRODUCT'
 const UPDATE = 'UPDATE_PRODUCT';
 const REMOVE = 'REMOVE_PRODUCT';
+
 
 const defaultProducts = [];
 
@@ -57,6 +59,8 @@ export default (lostproducts = defaultProducts, action) => {
       return lostproducts.map(product => (product.id === action.product.id ? action.product : product));
     case REMOVE:
       return lostproducts.filter(product => product.id !== action.id);
+    case REMOVE_USER:
+      return defaultProducts;
     default:
       return lostproducts;
   }

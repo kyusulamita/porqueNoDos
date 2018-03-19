@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { getPaystub, deletePaystub } from '../../store';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import PrintTemplate from 'react-print';
 
 import { PaystubForm, EmployeeTile } from '../index';
 import { Button, Table } from 'semantic-ui-react'

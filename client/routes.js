@@ -15,10 +15,20 @@ import {me, getEmployees, getPaystubs, getProducts, getVendors } from './store'
 class Routes extends Component {
   componentDidMount () {
     this.props.loadInitialData()
+    // console.log(this.props);
   }
 
+  componentWillReceiveProps(nextProps){
+    if (!this.props.isLoggedIn && nextProps.isLoggedIn){
+      if (nextProps.isAdmin){
+        this.props.loadAdminData();
+      } else {
+        this.props.loadUserData();
+      }
+    }
+  }
   render () {
-    const {isLoggedIn} = this.props
+    const { isLoggedIn, isAdmin } = this.props
 
     return (
       <Router history={history}>
@@ -30,13 +40,18 @@ class Routes extends Component {
               isLoggedIn &&
                 <Switch>
                   <Route path='/home' component={UserHome} />
-                  <Route exact path='/empleados' component={EmployeeList} />
-                  <Route path='/empleados/:employeeId' component={EmployeeDetail} />
-                  <Route exact path ='/stubs' component={PaystubList}/>
-                  <Route path = '/stubs/:stubId' component={PaystubDetail} />
                   <Route exact path ='/vendedores' component={VendorList} />
                   <Route path ='/vendedores/:vendorId' component={VendorDetail} />
                   <Route exact path = '/perdidas' component={LostProductList} />
+                  {
+                    isAdmin &&
+                      <Switch>
+                        <Route exact path='/empleados' component={EmployeeList} />
+                        <Route path='/empleados/:employeeId' component={EmployeeDetail} />
+                        <Route exact path ='/stubs' component={PaystubList}/>
+                        <Route path = '/stubs/:stubId' component={PaystubDetail} />
+                      </Switch>
+                  }
                   <Route component={UserHome}/>
                 </Switch>
             }
@@ -53,18 +68,25 @@ class Routes extends Component {
  */
 const mapState = (state) => {
   return {
-    isLoggedIn: !!state.currentUser.id
+    isLoggedIn: !!state.currentUser.id,
+    isAdmin: state.currentUser.isAdmin,
   }
 }
 
-const mapDispatch = (dispatch) => {
+const mapDispatch = (dispatch, ownProps) => {
+  console.log(ownProps)
   return {
     loadInitialData () {
-      dispatch(me())
-      dispatch(getEmployees())
-      dispatch(getPaystubs())
-      dispatch(getProducts())
-      dispatch(getVendors())
+      dispatch(me());
+    },
+    loadAdminData(){
+      dispatch(getEmployees());
+      dispatch(getPaystubs());
+      dispatch(getProducts());
+      dispatch(getVendors());
+    },
+    loadUserData(){
+      console.log('normal user');
     }
   }
 }
