@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const {User} = require('../db/models');
+const { isLoggedIn, isAdmin, isAuthorized, adminOrSelf } = require('./utilFuncs');
 
-
-router.get('/', async (req, res, next) => {
+router.get('/', isAdmin, async (req, res, next) => {
   const users = await User.findAll({
     attributes: ['id', 'email', 'name', 'adminLevel', 'employeeId']
   }).catch(next);

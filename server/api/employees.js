@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Employee, Stub} = require('../db/models');
-
+const { isLoggedIn, isAdmin, isAuthorized, adminOrSelf } = require('./utilFuncs');
 // router.param('employeeId', async (req, res, next, id) => {
 //   const employee = Employee.findById(req.params.employeeId, {
 //     include: [ Stub ],
@@ -12,7 +12,7 @@ const { Employee, Stub} = require('../db/models');
 // })
 
 
-router.get('/', async (req, res, next) => {
+router.get('/', isAdmin, async (req, res, next) => {
   const employees = await Employee.findAll({
     include: [ { model: Stub, attributes: ['rateType', 'id'] } ],
     attributes: ['firstName', 'lastName', 'phoneNumber', 'id'],
@@ -21,21 +21,21 @@ router.get('/', async (req, res, next) => {
   res.json(employees)
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', isAdmin, async (req, res, next) => {
   const createdEmployee = await Employee.create(req.body, {
     attributes: ['firstName', 'lastName', 'phoneNumber'],
   }).catch(next);
   res.json(createdEmployee)
 })
 
-router.get('/:employeeId', async (req, res, next) => {
+router.get('/:employeeId', adminOrSelf, async (req, res, next) => {
   const employeeWithStubs = await Employee.findById(req.params.employeeId, {
     include: [ { model: Stub, order: ['start'] }]
   }).catch(next);
   res.json(employeeWithStubs)
 })
 
-router.put('/:employeeId', async (req, res, next) => {
+router.put('/:employeeId', adminOrSelf, async (req, res, next) => {
   const [rowAffected, employeesAffected ] = await Employee.update(req.body, {
     where: { id : req.params.employeeId },
     returning: true
@@ -46,7 +46,7 @@ router.put('/:employeeId', async (req, res, next) => {
   res.json(updatedEmployee);
 })
 
-router.delete('/:employeeId', async(req, res, next) => {
+router.delete('/:employeeId', isAdmin, async(req, res, next) => {
   const employeesDeleted = await Employee.destroy({
     where: { id: req.params.employeeId }
   }).catch(next)

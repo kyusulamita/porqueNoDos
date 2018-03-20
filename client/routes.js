@@ -101,9 +101,9 @@ const mapDispatch = (dispatch, ownProps) => {
       dispatch(getProducts());
       dispatch(getVendors());
     },
-    loadUserData(id){
+    loadUserData(id, isAdmin){
       console.log('normal user');
-      dispatch(getEmployee(id))
+      dispatch(getEmployee(id, isAdmin))
     }
   }
 }

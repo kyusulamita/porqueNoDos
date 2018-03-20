@@ -38131,9 +38131,9 @@ var mapDispatch = function mapDispatch(dispatch, ownProps) {
       dispatch((0, _store.getProducts)());
       dispatch((0, _store.getVendors)());
     },
-    loadUserData: function loadUserData(id) {
+    loadUserData: function loadUserData(id, isAdmin) {
       console.log('normal user');
-      dispatch((0, _store.getEmployee)(id));
+      dispatch((0, _store.getEmployee)(id, isAdmin));
     }
   };
 };

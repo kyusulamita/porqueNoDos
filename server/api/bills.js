@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const { Bill, Vendor } = require('../db/models');
+const { isLoggedIn, isAdmin, isAuthorized, adminOrSelf } = require('./utilFuncs');
 
-
-router.get('/', async (req, res, next) => {
+router.get('/', isAuthorized, async (req, res, next) => {
   const bills = await Bill.findAll({
     include: [ { model: Vendor, attributes: ['name', 'id'] }],
   })
@@ -10,20 +10,20 @@ router.get('/', async (req, res, next) => {
   res.json(bills);
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', isAuthorized, async (req, res, next) => {
   const createdBill = await Bill.create(req.body)
     .catch(next);
   res.json(createdBill)
 })
 
-router.get('/:billId', async (req, res, next) => {
+router.get('/:billId', isAuthorized, async (req, res, next) => {
  const billWithVendor = await Bill.findById(req.params.billId, { include: [ Vendor ]})
     .catch(next);
   res.json(billWithVendor)
 })
 
 
-router.put('/:billId', async (req, res, next) => {
+router.put('/:billId', isAuthorized ,async (req, res, next) => {
   const [numOfBills, billsAffected ] = await Bill.update(req.body, {
     where: { id: req.params.billId },
     returning: true,
@@ -32,7 +32,7 @@ router.put('/:billId', async (req, res, next) => {
    res.json(billsAffected[0]);
 })
 
-router.delete('/:billId', (req, res, next) => {
+router.delete('/:billId', isAuthorized ,(req, res, next) => {
   const billsDeleted = Bill.destroy({
     where: { id: req.params.billId }
   }).catch(next);

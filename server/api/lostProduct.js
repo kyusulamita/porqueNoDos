@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { LostProduct , User } = require('../db/models');
+const { isLoggedIn, isAdmin, isAuthorized, adminOrSelf } = require('./utilFuncs');
 
 router.param('lostProductId', async (req, res, next, id) => {
   const lostProduct = await LostProduct.findById(id, {
@@ -17,7 +18,7 @@ router.param('lostProductId', async (req, res, next, id) => {
 })
 
 
-router.get('/', async (req, res, next) => {
+router.get('/', isAuthorized, async (req, res, next) => {
   const lostProducts = await LostProduct.findAll({
     include: [ { model: User, attributes: ['name', 'id'] }],
   })
@@ -25,17 +26,17 @@ router.get('/', async (req, res, next) => {
   res.json(lostProducts);
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', isAuthorized ,async (req, res, next) => {
   const createdLostProduct = await LostProduct.create(req.body)
     .catch(next);
   res.json(createdLostProduct)
 })
 
-router.get('/:lostProductId', async (req, res, next) => {
+router.get('/:lostProductId', isAuthorized , async (req, res, next) => {
   res.json(req.lostProduct);
 })
 
-router.put('/:lostProductId', async (req, res, next) => {
+router.put('/:lostProductId', isAuthorized , async (req, res, next) => {
   // console.log
   const updatedStub = await req.lostProduct.update(req.body)
     .catch(next);
@@ -45,7 +46,7 @@ router.put('/:lostProductId', async (req, res, next) => {
   res.json(reloadedStub);
 })
 
-router.delete('/:lostProductId', async (req, res, next) => {
+router.delete('/:lostProductId', isAuthorized, async (req, res, next) => {
   const productsDeleted = await req.lostProduct.destroy().catch(next);
   res.send(`Destroyed ${productsDeleted}`)
 })
