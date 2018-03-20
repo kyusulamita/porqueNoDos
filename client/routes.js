@@ -42,20 +42,20 @@ class Routes extends Component {
                   <Route path='/home' component={UserHome} />
                   {
                     writeAccess &&
-                    <Switch>
-                      <Route exact path ='/vendedores' component={VendorList} />
-                      <Route path ='/vendedores/:vendorId' component={VendorDetail} />
-                      <Route exact path = '/perdidas' component={LostProductList} />
-                    </Switch>
+                    [
+                      <Route exact path ='/vendedores' component={VendorList} />,
+                      <Route path ='/vendedores/:vendorId' component={VendorDetail} />,
+                      <Route exact path = '/perdidas' component={LostProductList} />,
+                    ]
                   }
                   {
                     isAdmin &&
-                      <Switch>
-                        <Route exact path='/empleados' component={EmployeeList} />
-                        <Route path='/empleados/:employeeId' component={EmployeeDetail} />
-                        <Route exact path ='/stubs' component={PaystubList}/>
-                        <Route path = '/stubs/:stubId' component={PaystubDetail} />
-                      </Switch>
+                      [
+                        <Route exact path='/empleados' component={EmployeeList} />,
+                        <Route path='/empleados/:employeeId' component={EmployeeDetail} />,
+                        <Route exact path ='/stubs' component={PaystubList}/>,
+                        <Route path = '/stubs/:stubId' component={PaystubDetail} />,
+                      ]
                   }
                   <Route component={UserHome}/>
                 </Switch>

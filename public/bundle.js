@@ -37981,21 +37981,8 @@ var Routes = function (_Component) {
               _reactRouterDom.Switch,
               null,
               _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _components.UserHome }),
-              writeAccess && _react2.default.createElement(
-                _reactRouterDom.Switch,
-                null,
-                _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/vendedores', component: _components.VendorList }),
-                _react2.default.createElement(_reactRouterDom.Route, { path: '/vendedores/:vendorId', component: _components.VendorDetail }),
-                _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/perdidas', component: _components.LostProductList })
-              ),
-              isAdmin && _react2.default.createElement(
-                _reactRouterDom.Switch,
-                null,
-                _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/empleados', component: _components.EmployeeList }),
-                _react2.default.createElement(_reactRouterDom.Route, { path: '/empleados/:employeeId', component: _components.EmployeeDetail }),
-                _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/stubs', component: _components.PaystubList }),
-                _react2.default.createElement(_reactRouterDom.Route, { path: '/stubs/:stubId', component: _components.PaystubDetail })
-              ),
+              writeAccess && [_react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/vendedores', component: _components.VendorList }), _react2.default.createElement(_reactRouterDom.Route, { path: '/vendedores/:vendorId', component: _components.VendorDetail }), _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/perdidas', component: _components.LostProductList })],
+              isAdmin && [_react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/empleados', component: _components.EmployeeList }), _react2.default.createElement(_reactRouterDom.Route, { path: '/empleados/:employeeId', component: _components.EmployeeDetail }), _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/stubs', component: _components.PaystubList }), _react2.default.createElement(_reactRouterDom.Route, { path: '/stubs/:stubId', component: _components.PaystubDetail })],
               _react2.default.createElement(_reactRouterDom.Route, { component: _components.UserHome })
             ),
             _react2.default.createElement(_reactRouterDom.Route, { component: _components.Login })
