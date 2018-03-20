@@ -16250,6 +16250,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+// import { add as addStub } from './paystubs';
 /** ACTION TYPES **/
 
 var GET_ALL = 'GET_EMPLOYEES';
@@ -16260,16 +16261,33 @@ var REMOVE = exports.REMOVE = 'REMOVE_EMPLOYEE';
 /** INITIAL STATE **/
 var defaultEmployees = [];
 
+function addPrevNext(arr) {
+  arr.sort(function (a, b) {
+    return new Date(b.start) - new Date(a.start);
+  });
+  arr.map(function (stub, index) {
+    if (index !== 0) stub.next = arr[index - 1].id;
+    if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
+  });
+}
+
 /** ACTION CREATORS **/
 var getAll = function getAll(employees) {
+  employees.forEach(function (_ref) {
+    var stubs = _ref.stubs;
+    return addPrevNext(stubs);
+  });
   return { type: GET_ALL, employees: employees };
 };
 var add = function add(employee) {
+  addPrevNext(employee.stubs);
   return { type: ADD, employee: employee };
 };
 var update = function update(employee) {
+  addPrevNext(employee.stubs);
   return { type: UPDATE, employee: employee };
 };
+
 var remove = function remove(id) {
   return { type: REMOVE, id: id };
 };
@@ -16287,12 +16305,16 @@ var getEmployees = exports.getEmployees = function getEmployees() {
   };
 };
 
-var getEmployee = exports.getEmployee = function getEmployee(employeeId) {
+var getEmployee = exports.getEmployee = function getEmployee(employeeId, isAdmin) {
   return function (dispatch) {
     return _axios2.default.get('/api/employees/' + employeeId).then(function (res) {
       return res.data;
     }).then(function (singleEmployee) {
-      return dispatch(update(singleEmployee));
+      if (isAdmin) return dispatch(update(singleEmployee));
+      singleEmployee.stubs.map(function (paystub) {
+        return dispatch({ type: 'ADD_PAYSTUB', paystub: paystub });
+      });
+      dispatch(add(singleEmployee));
     }).catch(function (err) {
       return console.log(err + '. UNABLE TO GET EMPLOYEE ' + employeeId);
     });
@@ -16335,16 +16357,6 @@ var deleteEmployee = exports.deleteEmployee = function deleteEmployee(id) {
   };
 };
 
-function addPrevNext(arr) {
-  arr.sort(function (a, b) {
-    return new Date(b.start) - new Date(a.start);
-  });
-  arr.map(function (stub, index) {
-    if (index !== 0) stub.next = arr[index - 1].id;
-    if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
-  });
-}
-
 /** REDUCER**/
 
 exports.default = function () {
@@ -16353,24 +16365,13 @@ exports.default = function () {
 
   switch (action.type) {
     case GET_ALL:
-      return action.employees.map(function (employee) {
-        addPrevNext(employee.stubs);
-        return employee;
-      });
+      return action.employees;
     case ADD:
-      addPrevNext(action.employee.stubs);
       return [].concat(_toConsumableArray(employees), [action.employee]);
     case UPDATE:
-      {
-        addPrevNext(action.employee.stubs);
-        var found = false;
-        var newEmployees = employees.map(function (employee) {
-          if (employee.id !== action.employee.id) return employee;
-          found = true;
-          return action.employee;
-        });
-        return found ? newEmployees : [].concat(_toConsumableArray(newEmployees), [action.employee]);
-      }
+      return employees.map(function (employee) {
+        return employee.id !== action.employee.id ? employee : action.employee;
+      });
     case REMOVE:
       return employees.filter(function (employee) {
         return employee.id !== action.id;
@@ -38477,15 +38478,9 @@ exports.default = function () {
     case ADD:
       return [].concat(_toConsumableArray(paystubs), [action.paystub]);
     case UPDATE:
-      {
-        var found = false;
-        var newPaystubs = paystubs.map(function (paystub) {
-          if (paystub.id !== action.paystub.id) return paystub;
-          found = true;
-          return action.paystub;
-        });
-        return found ? newPaystubs : [].concat(_toConsumableArray(newPaystubs), [action.paystub]);
-      }
+      return paystubs.map(function (paystub) {
+        return paystub.id !== action.paystub.id ? paystub : action.paystub;
+      });
     case REMOVE:
       return paystubs.filter(function (paystub) {
         return paystub.id !== action.id;

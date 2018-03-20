@@ -1,6 +1,7 @@
 import axios from 'axios';
 import history from '../history';
 import { REMOVE_USER } from './currentUser'
+// import { add as addStub } from './paystubs';
 /** ACTION TYPES **/
 
 const GET_ALL = 'GET_EMPLOYEES';
@@ -11,10 +12,30 @@ export const REMOVE = 'REMOVE_EMPLOYEE';
 /** INITIAL STATE **/
 const defaultEmployees = [];
 
+
+function addPrevNext(arr){
+    arr.sort((a, b) => new Date(b.start) - new Date(a.start))
+    arr.map((stub, index) => {
+      if (index !== 0) stub.next = arr[index - 1].id;
+      if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
+    })
+}
+
+
 /** ACTION CREATORS **/
-const getAll = employees => ({type: GET_ALL, employees});
-const add = employee => ({type: ADD, employee});
-const update = employee => ({type: UPDATE, employee});
+const getAll = employees => {
+  employees.forEach(({stubs}) => addPrevNext(stubs));
+  return ({type: GET_ALL, employees})
+};
+const add = employee => {
+  addPrevNext(employee.stubs);
+  return ({type: ADD, employee})
+};
+const update = employee => {
+  addPrevNext(employee.stubs);
+  return ({type: UPDATE, employee})
+};
+
 const remove = id => ({type: REMOVE, id});
 
 /** THUNK CREATORS **/
@@ -25,11 +46,15 @@ export const getEmployees = () =>
       .then(allEmployees => dispatch(getAll(allEmployees || defaultEmployees)))
       .catch(err => console.log(err))
 
-export const getEmployee = (employeeId) =>
+export const getEmployee = (employeeId, isAdmin) =>
   dispatch =>
     axios.get(`/api/employees/${employeeId}`)
       .then(res => res.data)
-      .then(singleEmployee => dispatch(update(singleEmployee)))
+      .then(singleEmployee => {
+        if (isAdmin) return dispatch(update(singleEmployee));
+        singleEmployee.stubs.map(paystub => dispatch({type: 'ADD_PAYSTUB', paystub}))
+        dispatch(add(singleEmployee));
+      })
       .catch(err => console.log(`${err}. UNABLE TO GET EMPLOYEE ${employeeId}`))
 
 export const addEmployee = (employee) =>
@@ -54,35 +79,16 @@ export const deleteEmployee = (id) =>
     .then(() => history.push(`/empleados`))
     .catch(err => console.log(`${err} UNABLE TO DELETE EMPLOYEE ${id}`))
 
-function addPrevNext(arr){
-    arr.sort((a, b) => new Date(b.start) - new Date(a.start))
-    arr.map((stub, index) => {
-      if (index !== 0) stub.next = arr[index - 1].id;
-      if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
-    })
-}
 
 /** REDUCER**/
 export default (employees = defaultEmployees, action) => {
   switch (action.type){
     case GET_ALL:
-      return action.employees.map(employee => {
-        addPrevNext(employee.stubs);
-        return employee;
-      });
+      return action.employees;
     case ADD:
-      addPrevNext(action.employee.stubs);
       return [...employees, action.employee];
-    case UPDATE: {
-      addPrevNext(action.employee.stubs);
-      let found = false;
-      const newEmployees = employees.map(employee => {
-         if (employee.id !== action.employee.id) return employee;
-         found = true;
-         return action.employee;
-      });
-      return found ? newEmployees : [...newEmployees, action.employee];
-    }
+    case UPDATE:
+      return employees.map(employee => ((employee.id !== action.employee.id) ? employee : action.employee));
     case REMOVE:
       return employees.filter(employee => employee.id !== action.id);
     case REMOVE_USER:
