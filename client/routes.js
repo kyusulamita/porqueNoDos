@@ -40,6 +40,7 @@ class Routes extends Component {
               isLoggedIn &&
                 <Switch>
                   <Route path='/home' component={UserHome} />
+                  <Route path='/personal/:stubId' component={PaystubDetail} />
                   {
                     writeAccess &&
                     [
