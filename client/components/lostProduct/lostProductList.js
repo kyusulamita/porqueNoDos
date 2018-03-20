@@ -24,12 +24,9 @@ class lostProductList extends Component {
     const { lostProducts } = this.props;
     const [ buttonColor, content ] = addBool ? ['red', 'Cancelar'] :['green', 'Nuevo'];
     return (
-      <div className='Aligner'>
-      <div className='Align-item--top' />
-      <Table  celled collapsing basic='very' className='Align-item' padded unstackable >
+      <Table  celled padded unstackable >
         <Header>
           <Row>
-            <HeaderCell/>
             <HeaderCell textAlign='center'>Date</HeaderCell>
             <HeaderCell>Product</HeaderCell>
             <HeaderCell>Amount</HeaderCell>
@@ -43,7 +40,6 @@ class lostProductList extends Component {
                 size='small'
               />
             </HeaderCell>
-            <HeaderCell/>
           </Row>
           </Header>
         <Body>
@@ -55,8 +51,6 @@ class lostProductList extends Component {
           lostProducts.map((itemInfo) => <LostProductRow key={itemInfo.id} {...itemInfo} />)
         }
       </Table>
-      <div className='Align-item--bottom'/>
-      </div>
     )
   }
 }

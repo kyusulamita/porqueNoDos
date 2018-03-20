@@ -66,10 +66,10 @@ class Routes extends Component {
 /**
  * CONTAINER
  */
-const mapState = (state) => {
+const mapState = ({currentUser}) => {
   return {
-    isLoggedIn: !!state.currentUser.id,
-    isAdmin: state.currentUser.isAdmin,
+    isLoggedIn: !!currentUser.id,
+    isAdmin: currentUser.adminLevel && currentUser.adminLevel === 'ADMIN',
   }
 }
 

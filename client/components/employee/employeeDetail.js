@@ -123,7 +123,7 @@ const mapState = (state, ownProps) => {
   const { employees, currentUser } = state;
   const employee = employees.find(employ => employ.id === employeeId);
   return ({
-    isAdmin: (currentUser && !!currentUser.isAdmin),
+    isAdmin: (currentUser.adminLevel && currentUser.adminLevel === 'ADMIN'),
     currentUser,
     employee,
   })

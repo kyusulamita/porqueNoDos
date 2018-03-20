@@ -69,7 +69,7 @@ class EmployeeList extends Component{
 }
 
 const mapState = ({currentUser, employees}) => ({
-  isAdmin: currentUser && currentUser.isAdmin,
+  isAdmin: currentUser.adminLevel && currentUser.adminLevel === 'ADMIN',
   employees
 })
 

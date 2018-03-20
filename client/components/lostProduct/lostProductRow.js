@@ -37,11 +37,10 @@ class LostProductRow extends Component{
     const [ editColor, editContent ] = (toggleEdit || atWarning) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
     const warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
     const deleteText = warnings[atWarning];
-
+    console.log(this.props.writePrivelege);
     return (
       <Body>
         <Row key={id}>
-          <Cell/>
           <Cell>{date}</Cell>
           <Cell>{product}</Cell>
           <Cell>{amount}</Cell>
@@ -72,7 +71,9 @@ class LostProductRow extends Component{
   }
 }
 
-const mapState = (state, ownProps) => ({})
+const mapState = (state, ownProps) => ({
+  writePrivelege: state.currentUser.adminLevel && (state.currentUser.adminLevel === 'ADMIN')
+})
 const mapDispatch = (dispatch, ownProps) => ({
   delete(id){
     dispatch(deleteProduct(id));

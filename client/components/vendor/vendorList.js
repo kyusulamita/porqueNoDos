@@ -66,7 +66,7 @@ class VendorList extends Component{
 }
 
 const mapState = ({currentUser, vendors}) => ({
-  isAdmin: currentUser && currentUser.isAdmin,
+  isAdmin: currentUser.adminLevel && currentUser.adminLevel === 'ADMIN',
   vendors
 })
 

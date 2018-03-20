@@ -20,10 +20,10 @@ const User = db.define('user', {
   googleId: {
     type: Sequelize.STRING
   },
-  isAdmin: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false,
-  }
+  adminLevel: {
+    type: Sequelize.ENUM('REGULAR', 'WRITE', 'ADMIN'),
+    defaultValue: 'REGULAR',
+  },
 })
 
 module.exports = User
