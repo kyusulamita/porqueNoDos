@@ -196,11 +196,12 @@ class PaystubDetail extends Component{
   }
 }
 
-const mapState = ({paystubs, employees, currentUser }, ownProps) => {
+const mapState = ({paystubs, employees, currentUser}, ownProps) => {
   const stubId = +ownProps.match.params.stubId;
   const currentStub = paystubs.find(stub => stub.id === stubId);
   const stubEmployee = employees.length && currentStub && employees.find(employee => employee.id === currentStub.employeeId);
-  const isAuthorized = currentStub && (currentStub.employeeId === currentUser.employeeId);
+  const isAdmin = currentUser.adminLevel === 'ADMIN';
+  const isAuthorized = isAdmin || (currentStub && (currentStub.employeeId === currentUser.employeeId));
   return ({
     isAuthorized,
     currentStub,

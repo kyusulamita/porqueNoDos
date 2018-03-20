@@ -16305,7 +16305,8 @@ var getEmployees = exports.getEmployees = function getEmployees() {
   };
 };
 
-var getEmployee = exports.getEmployee = function getEmployee(employeeId, isAdmin) {
+var getEmployee = exports.getEmployee = function getEmployee(employeeId) {
+  var isAdmin = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   return function (dispatch) {
     return _axios2.default.get('/api/employees/' + employeeId).then(function (res) {
       return res.data;
@@ -34855,6 +34856,7 @@ var employeeDetail = function (_Component) {
           employee = _props.employee,
           isAdmin = _props.isAdmin,
           isAuthorized = _props.isAuthorized;
+      // console.log(this.props);
 
       if (!employee) return _react2.default.createElement('div', null);
       if (!isAuthorized) return _react2.default.createElement(
@@ -36520,7 +36522,8 @@ var mapState = function mapState(_ref7, ownProps) {
   var stubEmployee = employees.length && currentStub && employees.find(function (employee) {
     return employee.id === currentStub.employeeId;
   });
-  var isAuthorized = currentStub && currentStub.employeeId === currentUser.employeeId;
+  var isAdmin = currentUser.adminLevel === 'ADMIN';
+  var isAuthorized = isAdmin || currentStub && currentStub.employeeId === currentUser.employeeId;
   return {
     isAuthorized: isAuthorized,
     currentStub: currentStub,
@@ -38044,14 +38047,15 @@ var Routes = function (_Component) {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       if (!this.props.isLoggedIn && nextProps.isLoggedIn) {
-        console.log(nextProps);
+        // console.log(nextProps);
+        // const {}
         if (nextProps.isAdmin) {
           this.props.loadAdminData();
         }
         if (nextProps.writeAccess) {
           this.props.loadWriteData();
         }
-        this.props.loadUserData(nextProps.employeeId);
+        this.props.loadUserData(nextProps.employeeId, nextProps.isAdmin);
       }
     }
   }, {

@@ -20,14 +20,15 @@ class Routes extends Component {
 
   componentWillReceiveProps(nextProps){
     if (!this.props.isLoggedIn && nextProps.isLoggedIn){
-      console.log(nextProps);
+      // console.log(nextProps);
+      // const {}
       if (nextProps.isAdmin){
         this.props.loadAdminData();
       }
       if (nextProps.writeAccess){
         this.props.loadWriteData();
       }
-      this.props.loadUserData(nextProps.employeeId);
+      this.props.loadUserData(nextProps.employeeId, nextProps.isAdmin);
     }
   }
   render () {

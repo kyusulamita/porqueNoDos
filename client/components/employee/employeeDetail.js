@@ -87,6 +87,7 @@ class employeeDetail extends Component{
 
   render() {
     const { employee, isAdmin, isAuthorized } = this.props;
+    // console.log(this.props);
     if (!employee) return <div />
     if (!isAuthorized) return <div>You don't have the right! </div>
     const { firstName, lastName, stubs, address, city, state, zipcode, phoneNumber, id } = employee;

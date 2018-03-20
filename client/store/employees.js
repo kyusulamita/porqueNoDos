@@ -46,7 +46,7 @@ export const getEmployees = () =>
       .then(allEmployees => dispatch(getAll(allEmployees || defaultEmployees)))
       .catch(err => console.log(err))
 
-export const getEmployee = (employeeId, isAdmin) =>
+export const getEmployee = (employeeId, isAdmin = true) =>
   dispatch =>
     axios.get(`/api/employees/${employeeId}`)
       .then(res => res.data)
