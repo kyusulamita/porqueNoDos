@@ -52,8 +52,8 @@ class PaystubDetail extends Component{
 
   render(){
     if (!this.props.currentStub || !this.props.currentStub.YTD) return <div/>
-    // const { employee, YTD, employeeId } = this.props.currentStub;
-    // const { hours, rate, gross, taxSocial, taxFederal, taxState, pay, id, rateType, start, end, payDate } = this.props.currentStub;
+    if (!this.props.isAuthorized) return <div> You don't have the right! </div>
+
     const { toggleEdit } = this.state;
     const atWarning = this.state.triggerDelete;
     const [ editColor, editContent ] = (toggleEdit || atWarning) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
@@ -64,6 +64,7 @@ class PaystubDetail extends Component{
     const { employee, YTD, employeeId, rateType, id } = currentStub;
     const { stubs } = this.props.stubEmployee;
     const { next, prev } = stubs.find(stub => stub.id === id);
+
     const hourlyPay = (rateType === 'HOURLY');
     const [workedText, rateText] = hourlyPay ? ['Week Hours', 'Hourly Rate'] : ['Weeks Worked', 'Weekly Rate'];
     const deduction = Number(currentStub.gross - currentStub.pay).toFixed(2);
@@ -195,11 +196,13 @@ class PaystubDetail extends Component{
   }
 }
 
-const mapState = ({paystubs, employees}, ownProps) => {
+const mapState = ({paystubs, employees, currentUser }, ownProps) => {
   const stubId = +ownProps.match.params.stubId;
   const currentStub = paystubs.find(stub => stub.id === stubId);
   const stubEmployee = employees.length && currentStub && employees.find(employee => employee.id === currentStub.employeeId);
+  const isAuthorized = currentStub && (currentStub.employeeId === currentUser.employeeId);
   return ({
+    isAuthorized,
     currentStub,
     stubEmployee
   })

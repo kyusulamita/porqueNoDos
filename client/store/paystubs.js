@@ -70,10 +70,15 @@ export default (paystubs = defaultPaystubs, action) => {
       return action.paystubs;
     case ADD:
       return [...paystubs, action.paystub];
-    case UPDATE:
-      return paystubs.map(paystub => (
-        paystub.id === action.paystub.id ? action.paystub : paystub
-      ));
+    case UPDATE: {
+      let found = false;
+      const newPaystubs = paystubs.map(paystub => {
+        if (paystub.id !== action.paystub.id) return paystub;
+        found = true;
+        return action.paystub;
+      });
+      return found ? newPaystubs : [...newPaystubs, action.paystub];
+    }
     case REMOVE:
       return paystubs.filter(paystub => paystub.id !== action.id);
     case REMOVE_EMPLOYEE:

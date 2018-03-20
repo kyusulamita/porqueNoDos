@@ -59,7 +59,6 @@ function addPrevNext(arr){
     arr.map((stub, index) => {
       if (index !== 0) stub.next = arr[index - 1].id;
       if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
-      // return stub;
     })
 }
 
@@ -74,10 +73,16 @@ export default (employees = defaultEmployees, action) => {
     case ADD:
       addPrevNext(action.employee.stubs);
       return [...employees, action.employee];
-    case UPDATE:
+    case UPDATE: {
       addPrevNext(action.employee.stubs);
-      return employees.map(employee => (
-         (employee.id !== action.employee.id) ? employee : action.employee));
+      let found = false;
+      const newEmployees = employees.map(employee => {
+         if (employee.id !== action.employee.id) return employee;
+         found = true;
+         return action.employee;
+      });
+      return found ? newEmployees : [...newEmployees, action.employee];
+    }
     case REMOVE:
       return employees.filter(employee => employee.id !== action.id);
     case REMOVE_USER:

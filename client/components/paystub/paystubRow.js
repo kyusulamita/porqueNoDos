@@ -8,10 +8,8 @@ const { Content, Avatar, Author, Metadata, Text, Actions, Action } = Comment;
 
 export const StubRow = (props) => {
   const { hours, pay, id, payDate, rateType } = props;
-  const { employeeId, firstName, lastName, personal } = props;
+  const { employeeId, firstName, lastName } = props;
   const stubPay = (rateType === 'HOURLY') ? `${hours} horas` : `1 semana`;
-  console.log(props)
-  const linkTo = personal ? `/personal/${id}` : `/stubs/${id}`
   return (
     <Comment key={id}>
       <Avatar  src="https://placebear.com/200/200"/>
@@ -20,7 +18,7 @@ export const StubRow = (props) => {
         <Metadata> Fecha: {payDate}</Metadata>
         <Text>Trabajo: {stubPay}. Pago: ${pay}</Text>
         <Actions>
-          <Action as={Link} to={linkTo}>Ver stub in detalle</Action>
+          <Action as={Link} to={`/stubs/${id}`}>Ver stub in detalle</Action>
         </Actions>
       </Content>
     </Comment>

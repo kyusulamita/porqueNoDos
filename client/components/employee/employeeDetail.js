@@ -86,8 +86,9 @@ class employeeDetail extends Component{
   }
 
   render() {
-    const { employee, isAdmin } = this.props;
+    const { employee, isAdmin, isAuthorized } = this.props;
     if (!employee) return <div />
+    if (!isAuthorized) return <div>You don't have the right! </div>
     const { firstName, lastName, stubs, address, city, state, zipcode, phoneNumber, id } = employee;
     const stubExtra = { firstName, lastName, employeeId: id }
     return (
@@ -122,8 +123,11 @@ const mapState = (state, ownProps) => {
   const employeeId = +ownProps.match.params.employeeId;
   const { employees, currentUser } = state;
   const employee = employees.find(employ => employ.id === employeeId);
+  const isAdmin = (currentUser.adminLevel && currentUser.adminLevel === 'ADMIN');
+  const isAuthorized = isAdmin || (employeeId  === currentUser.employeeId);
   return ({
-    isAdmin: (currentUser.adminLevel && currentUser.adminLevel === 'ADMIN'),
+    isAuthorized,
+    isAdmin,
     currentUser,
     employee,
   })

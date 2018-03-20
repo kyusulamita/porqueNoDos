@@ -24,6 +24,9 @@ class Routes extends Component {
       if (nextProps.isAdmin){
         this.props.loadAdminData();
       }
+      if (nextProps.writeAccess){
+        this.props.loadWriteData();
+      }
       this.props.loadUserData(nextProps.employeeId);
     }
   }
@@ -40,7 +43,8 @@ class Routes extends Component {
               isLoggedIn &&
                 <Switch>
                   <Route path='/home' component={UserHome} />
-                  <Route path='/personal/:stubId' component={PaystubDetail} />
+                  <Route path='/empleados/:employeeId' component={EmployeeDetail}/>
+                  <Route path = '/stubs/:stubId' component={PaystubDetail} />
                   {
                     writeAccess &&
                     [
@@ -53,9 +57,7 @@ class Routes extends Component {
                     isAdmin &&
                       [
                         <Route exact path='/empleados' component={EmployeeList} />,
-                        <Route path='/empleados/:employeeId' component={EmployeeDetail} />,
                         <Route exact path ='/stubs' component={PaystubList}/>,
-                        <Route path = '/stubs/:stubId' component={PaystubDetail} />,
                       ]
                   }
                   <Route component={UserHome}/>
@@ -93,6 +95,8 @@ const mapDispatch = (dispatch, ownProps) => {
     loadAdminData(){
       dispatch(getEmployees());
       dispatch(getPaystubs());
+    },
+    loadWriteData(){
       dispatch(getProducts());
       dispatch(getVendors());
     },
