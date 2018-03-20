@@ -8,7 +8,7 @@ import {Main, Login, Signup, UserHome, EmployeeList, EmployeeDetail,
         VendorList, VendorDetail, PaystubDetail, LostProductList, PaystubList } from './components'
 
 // going to want to grab all vendors and employees right from the getGo
-import {me, getEmployees, getPaystubs, getProducts, getVendors } from './store'
+import {me, getEmployees, getPaystubs, getProducts, getVendors, getEmployee } from './store'
 
 
 
@@ -20,15 +20,15 @@ class Routes extends Component {
 
   componentWillReceiveProps(nextProps){
     if (!this.props.isLoggedIn && nextProps.isLoggedIn){
+      console.log(nextProps);
       if (nextProps.isAdmin){
         this.props.loadAdminData();
-      } else {
-        this.props.loadUserData();
       }
+      this.props.loadUserData(nextProps.employeeId);
     }
   }
   render () {
-    const { isLoggedIn, isAdmin } = this.props
+    const { isLoggedIn, isAdmin, writeAccess } = this.props
 
     return (
       <Router history={history}>
@@ -40,9 +40,14 @@ class Routes extends Component {
               isLoggedIn &&
                 <Switch>
                   <Route path='/home' component={UserHome} />
-                  <Route exact path ='/vendedores' component={VendorList} />
-                  <Route path ='/vendedores/:vendorId' component={VendorDetail} />
-                  <Route exact path = '/perdidas' component={LostProductList} />
+                  {
+                    writeAccess &&
+                    <Switch>
+                      <Route exact path ='/vendedores' component={VendorList} />
+                      <Route path ='/vendedores/:vendorId' component={VendorDetail} />
+                      <Route exact path = '/perdidas' component={LostProductList} />
+                    </Switch>
+                  }
                   {
                     isAdmin &&
                       <Switch>
@@ -67,9 +72,14 @@ class Routes extends Component {
  * CONTAINER
  */
 const mapState = ({currentUser}) => {
+  const { adminLevel } = currentUser;
+  const isAdmin = (adminLevel === 'ADMIN');
+  const writeAccess = isAdmin || (adminLevel === 'WRITE')
   return {
     isLoggedIn: !!currentUser.id,
-    isAdmin: currentUser.adminLevel && currentUser.adminLevel === 'ADMIN',
+    employeeId: currentUser.employeeId,
+    isAdmin,
+    writeAccess,
   }
 }
 
@@ -85,8 +95,9 @@ const mapDispatch = (dispatch, ownProps) => {
       dispatch(getProducts());
       dispatch(getVendors());
     },
-    loadUserData(){
+    loadUserData(id){
       console.log('normal user');
+      dispatch(getEmployee(id))
     }
   }
 }

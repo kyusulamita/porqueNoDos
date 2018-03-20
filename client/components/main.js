@@ -4,20 +4,17 @@ import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {logout} from '../store'
 import { Menu } from 'semantic-ui-react'
-// import { Item } from Menu
-/**
- * COMPONENT
- *  The Main component is our 'picture frame' - it displays the navbar and anything
- *  else common to our entire app. The 'picture' inside the frame is the space
- *  rendered out by the component's `children`.
- */
+
+
 class Main extends Component {
   constructor(props){
     super(props);
     this.state = { activeTab: 'home' };
     this.handleMenuClick = this.handleMenuClick.bind(this);
     this.loggedOutMenu = this.loggedOutMenu.bind(this);
+    this.bonusAdminMenu = this.bonusAdminMenu.bind(this);
     this.loggedInMenu = this.loggedInMenu.bind(this);
+    this.writeMenu = this.writeMenu.bind(this);
   }
 
   componentDidMount(){
@@ -32,46 +29,58 @@ class Main extends Component {
   }
   loggedInMenu(){
     const { activeTab } = this.state;
-    const { onLogout } = this.props;
+    const { onLogout} = this.props;
     return (
-    <Menu pointing secondary>
-      <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
-      <Menu.Item name='empleados' active={activeTab === 'empleados'} onClick={this.handleMenuClick} as={Link} to='/empleados'/>
-      <Menu.Item name='stubs' active={activeTab === 'stub'} onClick={this.handleMenuClick} as={Link} to='/stubs'/>
-      <Menu.Item name='vendedores' active={activeTab === 'vendedores'} onClick={this.handleMenuClick} as={Link} to='/vendedores'/>
-      <Menu.Item name='productos perdidos' active={activeTab === 'productos perdidos'} onClick={this.handleMenuClick} as={Link} to='/perdidas'/>
       <Menu.Menu position='right'>
         <Menu.Item name='salir' active={activeTab === 'salir'} onClick={onLogout} />
       </Menu.Menu>
-    </Menu>)
+    )
+  }
+
+  writeMenu(){
+    const { activeTab } = this.state;
+    return ([
+      <Menu.Item name='perdidas' key='perdidas' active={activeTab === 'perdidos'} onClick={this.handleMenuClick} as={Link} to='/perdidas'/>,
+      <Menu.Item name='vendedores' key='vendedores' active={activeTab === 'vendedores'} onClick={this.handleMenuClick} as={Link} to='/vendedores'/>,
+    ])
+  }
+  bonusAdminMenu(){
+    const { activeTab } = this.state;
+    return ([
+      <Menu.Item name='empleados' key='empleados' active={activeTab === 'empleados'} onClick={this.handleMenuClick} as={Link} to='/empleados'/>,
+      <Menu.Item name='stubs' key='stubs' active={activeTab === 'stub'} onClick={this.handleMenuClick} as={Link} to='/stubs'/>,
+    ])
   }
 
   loggedOutMenu(){
     const { activeTab } = this.state;
-    return(
-      <Menu pointing secondary>
-        <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
-        <Menu.Item name='entrar' active={activeTab === 'entrar'} onClick={this.handleMenuClick} as={Link} to='/entrar' />
-        <Menu.Item name='registrar' active={activeTab === 'registrar'} onClick={this.handleMenuClick} as={Link} to='/registrar' />
-      </Menu>
-    )
+    return ([
+      <Menu.Item name='entrar' active={activeTab === 'entrar'} key='entrar' onClick={this.handleMenuClick} as={Link} to='/entrar' />,
+      <Menu.Item name='registrar' active={activeTab === 'registrar'} key='registrar' onClick={this.handleMenuClick} as={Link} to='/registrar' />
+    ])
   }
 
  // handleMenuClick = this.handleMenuClick.bind(this);
 
   render(){
-    const {children, isLoggedIn} = this.props;
+    const { children, isLoggedIn, isAdmin, writeAccess } = this.props;
+    const { activeTab } = this.state;
     return (
 
       <div>
-        <div><h1>Porque no los dos?</h1></div>
+        <div><h1>La Bendicion - Grand Rapids, MI </h1></div>
+        <Menu pointing secondary>
+        <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
         {
-          isLoggedIn
-            ?
-              this.loggedInMenu()
-            :
-              this.loggedOutMenu()
+          (writeAccess || isAdmin)  && this.writeMenu()
         }
+        {
+          isAdmin && this.bonusAdminMenu()
+        }
+        {
+          isLoggedIn ? this.loggedInMenu() : this.loggedOutMenu()
+        }
+        </Menu>
         <hr />
         {children}
       </div>
@@ -81,9 +90,11 @@ class Main extends Component {
 /**
  * CONTAINER
  */
-const mapState = (state) => {
+const mapState = ({currentUser}) => {
   return {
-    isLoggedIn: !!state.currentUser.id
+    isLoggedIn: !!currentUser.id,
+    isAdmin: (currentUser.adminLevel && (currentUser.adminLevel === 'ADMIN')),
+    writeAccess: (currentUser.adminLevel && (currentUser.adminLevel === 'WRITE')),
   }
 }
 

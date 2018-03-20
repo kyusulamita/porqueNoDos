@@ -6,12 +6,12 @@ import {connect} from 'react-redux'
  * COMPONENT
  */
 export const UserHome = (props) => {
-  const {email, name} = props
-
+  const {email, name, employeeInfo} = props
+  console.log(employeeInfo)
   return (
     <div>
-      <h3>Welcome, {name}</h3>
-      <h4>This is going to be a very simple version of quickbooks! Woohoo, it's going to be an online app</h4>
+      <h3>Bienvenido, {name}</h3>
+      <h4>Aqui esta su informacion de empleado</h4>
     </div>
   )
 }
@@ -19,12 +19,17 @@ export const UserHome = (props) => {
 /**
  * CONTAINER
  */
-const mapState = ({currentUser}) => {
+const mapState = ({currentUser, employees}) => {
   return {
     email: currentUser.email,
-    name: currentUser.name
+    name: currentUser.name,
+    employeeId: currentUser.employeeId,
+    employeeInfo: employees.find(employee => employee.id === currentUser.employeeId)
   }
 }
+const mapDispatch = (dispatch, ownProps) => ({
+
+})
 
 export default connect(mapState)(UserHome)
 

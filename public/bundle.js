@@ -37661,13 +37661,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-// import { Item } from Menu
-/**
- * COMPONENT
- *  The Main component is our 'picture frame' - it displays the navbar and anything
- *  else common to our entire app. The 'picture' inside the frame is the space
- *  rendered out by the component's `children`.
- */
 var Main = function (_Component) {
   _inherits(Main, _Component);
 
@@ -37679,7 +37672,9 @@ var Main = function (_Component) {
     _this.state = { activeTab: 'home' };
     _this.handleMenuClick = _this.handleMenuClick.bind(_this);
     _this.loggedOutMenu = _this.loggedOutMenu.bind(_this);
+    _this.bonusAdminMenu = _this.bonusAdminMenu.bind(_this);
     _this.loggedInMenu = _this.loggedInMenu.bind(_this);
+    _this.writeMenu = _this.writeMenu.bind(_this);
     return _this;
   }
 
@@ -37705,32 +37700,31 @@ var Main = function (_Component) {
       var onLogout = this.props.onLogout;
 
       return _react2.default.createElement(
-        _semanticUiReact.Menu,
-        { pointing: true, secondary: true },
-        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'home', active: activeTab === 'home', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/home' }),
-        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'empleados', active: activeTab === 'empleados', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/empleados' }),
-        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'stubs', active: activeTab === 'stub', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/stubs' }),
-        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'vendedores', active: activeTab === 'vendedores', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/vendedores' }),
-        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'productos perdidos', active: activeTab === 'productos perdidos', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/perdidas' }),
-        _react2.default.createElement(
-          _semanticUiReact.Menu.Menu,
-          { position: 'right' },
-          _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'salir', active: activeTab === 'salir', onClick: onLogout })
-        )
+        _semanticUiReact.Menu.Menu,
+        { position: 'right' },
+        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'salir', active: activeTab === 'salir', onClick: onLogout })
       );
+    }
+  }, {
+    key: 'writeMenu',
+    value: function writeMenu() {
+      var activeTab = this.state.activeTab;
+
+      return [_react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'perdidas', key: 'perdidas', active: activeTab === 'perdidos', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/perdidas' }), _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'vendedores', key: 'vendedores', active: activeTab === 'vendedores', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/vendedores' })];
+    }
+  }, {
+    key: 'bonusAdminMenu',
+    value: function bonusAdminMenu() {
+      var activeTab = this.state.activeTab;
+
+      return [_react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'empleados', key: 'empleados', active: activeTab === 'empleados', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/empleados' }), _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'stubs', key: 'stubs', active: activeTab === 'stub', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/stubs' })];
     }
   }, {
     key: 'loggedOutMenu',
     value: function loggedOutMenu() {
       var activeTab = this.state.activeTab;
 
-      return _react2.default.createElement(
-        _semanticUiReact.Menu,
-        { pointing: true, secondary: true },
-        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'home', active: activeTab === 'home', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/home' }),
-        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'entrar', active: activeTab === 'entrar', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/entrar' }),
-        _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'registrar', active: activeTab === 'registrar', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/registrar' })
-      );
+      return [_react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'entrar', active: activeTab === 'entrar', key: 'entrar', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/entrar' }), _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'registrar', active: activeTab === 'registrar', key: 'registrar', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/registrar' })];
     }
 
     // handleMenuClick = this.handleMenuClick.bind(this);
@@ -37740,7 +37734,10 @@ var Main = function (_Component) {
     value: function render() {
       var _props = this.props,
           children = _props.children,
-          isLoggedIn = _props.isLoggedIn;
+          isLoggedIn = _props.isLoggedIn,
+          isAdmin = _props.isAdmin,
+          writeAccess = _props.writeAccess;
+      var activeTab = this.state.activeTab;
 
       return _react2.default.createElement(
         'div',
@@ -37751,10 +37748,17 @@ var Main = function (_Component) {
           _react2.default.createElement(
             'h1',
             null,
-            'Porque no los dos?'
+            'La Bendicion - Grand Rapids, MI '
           )
         ),
-        isLoggedIn ? this.loggedInMenu() : this.loggedOutMenu(),
+        _react2.default.createElement(
+          _semanticUiReact.Menu,
+          { pointing: true, secondary: true },
+          _react2.default.createElement(_semanticUiReact.Menu.Item, { name: 'home', active: activeTab === 'home', onClick: this.handleMenuClick, as: _reactRouterDom.Link, to: '/home' }),
+          (writeAccess || isAdmin) && this.writeMenu(),
+          isAdmin && this.bonusAdminMenu(),
+          isLoggedIn ? this.loggedInMenu() : this.loggedOutMenu()
+        ),
         _react2.default.createElement('hr', null),
         children
       );
@@ -37768,9 +37772,13 @@ var Main = function (_Component) {
  */
 
 
-var mapState = function mapState(state) {
+var mapState = function mapState(_ref2) {
+  var currentUser = _ref2.currentUser;
+
   return {
-    isLoggedIn: !!state.currentUser.id
+    isLoggedIn: !!currentUser.id,
+    isAdmin: currentUser.adminLevel && currentUser.adminLevel === 'ADMIN',
+    writeAccess: currentUser.adminLevel && currentUser.adminLevel === 'WRITE'
   };
 };
 
@@ -37825,22 +37833,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 var UserHome = exports.UserHome = function UserHome(props) {
   var email = props.email,
-      name = props.name;
+      name = props.name,
+      employeeInfo = props.employeeInfo;
 
-
+  console.log(employeeInfo);
   return _react2.default.createElement(
     'div',
     null,
     _react2.default.createElement(
       'h3',
       null,
-      'Welcome, ',
+      'Bienvenido, ',
       name
     ),
     _react2.default.createElement(
       'h4',
       null,
-      'This is going to be a very simple version of quickbooks! Woohoo, it\'s going to be an online app'
+      'Aqui esta su informacion de empleado'
     )
   );
 };
@@ -37849,12 +37858,20 @@ var UserHome = exports.UserHome = function UserHome(props) {
  * CONTAINER
  */
 var mapState = function mapState(_ref) {
-  var currentUser = _ref.currentUser;
+  var currentUser = _ref.currentUser,
+      employees = _ref.employees;
 
   return {
     email: currentUser.email,
-    name: currentUser.name
+    name: currentUser.name,
+    employeeId: currentUser.employeeId,
+    employeeInfo: employees.find(function (employee) {
+      return employee.id === currentUser.employeeId;
+    })
   };
+};
+var mapDispatch = function mapDispatch(dispatch, ownProps) {
+  return {};
 };
 
 exports.default = (0, _reactRedux.connect)(mapState)(UserHome);
@@ -37933,11 +37950,11 @@ var Routes = function (_Component) {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       if (!this.props.isLoggedIn && nextProps.isLoggedIn) {
+        console.log(nextProps);
         if (nextProps.isAdmin) {
           this.props.loadAdminData();
-        } else {
-          this.props.loadUserData();
         }
+        this.props.loadUserData(nextProps.employeeId);
       }
     }
   }, {
@@ -37945,7 +37962,8 @@ var Routes = function (_Component) {
     value: function render() {
       var _props = this.props,
           isLoggedIn = _props.isLoggedIn,
-          isAdmin = _props.isAdmin;
+          isAdmin = _props.isAdmin,
+          writeAccess = _props.writeAccess;
 
 
       return _react2.default.createElement(
@@ -37963,9 +37981,13 @@ var Routes = function (_Component) {
               _reactRouterDom.Switch,
               null,
               _react2.default.createElement(_reactRouterDom.Route, { path: '/home', component: _components.UserHome }),
-              _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/vendedores', component: _components.VendorList }),
-              _react2.default.createElement(_reactRouterDom.Route, { path: '/vendedores/:vendorId', component: _components.VendorDetail }),
-              _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/perdidas', component: _components.LostProductList }),
+              writeAccess && _react2.default.createElement(
+                _reactRouterDom.Switch,
+                null,
+                _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/vendedores', component: _components.VendorList }),
+                _react2.default.createElement(_reactRouterDom.Route, { path: '/vendedores/:vendorId', component: _components.VendorDetail }),
+                _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/perdidas', component: _components.LostProductList })
+              ),
               isAdmin && _react2.default.createElement(
                 _reactRouterDom.Switch,
                 null,
@@ -37993,10 +38015,15 @@ var Routes = function (_Component) {
 
 var mapState = function mapState(_ref) {
   var currentUser = _ref.currentUser;
+  var adminLevel = currentUser.adminLevel;
 
+  var isAdmin = adminLevel === 'ADMIN';
+  var writeAccess = isAdmin || adminLevel === 'WRITE';
   return {
     isLoggedIn: !!currentUser.id,
-    isAdmin: currentUser.adminLevel && currentUser.adminLevel === 'ADMIN'
+    employeeId: currentUser.employeeId,
+    isAdmin: isAdmin,
+    writeAccess: writeAccess
   };
 };
 
@@ -38012,8 +38039,9 @@ var mapDispatch = function mapDispatch(dispatch, ownProps) {
       dispatch((0, _store.getProducts)());
       dispatch((0, _store.getVendors)());
     },
-    loadUserData: function loadUserData() {
+    loadUserData: function loadUserData(id) {
       console.log('normal user');
+      dispatch((0, _store.getEmployee)(id));
     }
   };
 };
