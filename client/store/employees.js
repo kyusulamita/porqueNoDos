@@ -3,6 +3,7 @@ import history from '../history';
 import { REMOVE_USER } from './currentUser'
 // import { add as addStub } from './paystubs';
 /** ACTION TYPES **/
+import { sortByStartDate, sortAndLink } from './utilFunc';
 
 const GET_ALL = 'GET_EMPLOYEES';
 const ADD = 'ADD_EMPLOYEE';
@@ -13,26 +14,28 @@ export const REMOVE = 'REMOVE_EMPLOYEE';
 const defaultEmployees = [];
 
 
-function addPrevNext(arr){
-    arr.sort((a, b) => new Date(b.start) - new Date(a.start))
-    arr.map((stub, index) => {
-      if (index !== 0) stub.next = arr[index - 1].id;
-      if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
-    })
-}
+// function addPrevNext(arr){
+//     arr.sort((a, b) => new Date(b.start) - new Date(a.start))
+//     arr.map((stub, index) => {
+//       if (index !== 0) stub.next = arr[index - 1].id;
+//       if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
+//     })
+// }
 
 
 /** ACTION CREATORS **/
 const getAll = employees => {
-  employees.forEach(({stubs}) => addPrevNext(stubs));
+  employees.forEach(({stubs}) => sortAndLink(stubs, sortByStartDate));
   return ({type: GET_ALL, employees})
 };
 const add = employee => {
-  addPrevNext(employee.stubs);
+  // addPrevNext(employee.stubs);
+  sortAndLink(employee.stubs, sortByStartDate);
   return ({type: ADD, employee})
 };
 const update = employee => {
-  addPrevNext(employee.stubs);
+  // addPrevNext(employee.stubs);
+  sortAndLink(employee.stubs, sortByStartDate);
   return ({type: UPDATE, employee})
 };
 

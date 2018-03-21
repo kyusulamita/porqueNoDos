@@ -2,6 +2,9 @@ import axios from 'axios';
 import history from '../history';
 import { REMOVE as REMOVE_EMPLOYEE } from './employees';
 import { REMOVE_USER } from './currentUser';
+import { sortByEmployeeAndDate, sortAndLink } from './utilFunc';
+// functo
+
 
 /** ACTION TYPES **/
 const GET_ALL = 'GET_PAYSTUBS';
@@ -14,10 +17,15 @@ const REMOVE_USER_PAYSTUBS = 'REMOVE_USER_PAYSTUBS'
 const defaultPaystubs = [];
 
 /** ACTION CREATORS **/
-const getAll = paystubs => ({type: GET_ALL, paystubs});
+const getAll = paystubs => {
+  sortAndLink(paystubs, sortByEmployeeAndDate);
+  return ({type: GET_ALL, paystubs})
+};
 const add = paystub => ({type: ADD, paystub});
 const update = paystub => ({type: UPDATE, paystub});
 const remove = id => ({type: REMOVE, id});
+
+
 export const removeUser = id => ({type: REMOVE_USER, id });
 /** THUNK CREATORS **/
 export const getPaystubs = () =>
@@ -30,9 +38,7 @@ export const getPaystubs = () =>
 export const getPaystub = (paystubId) => {
   const asyncDispatch = async (dispatch) => {
       let singlePaystub = await axios.get(`/api/stubs/${paystubId}`);
-      let YTD = await axios.get(`/api/stubs/${paystubId}/YTD`);
       singlePaystub = singlePaystub.data;
-      singlePaystub.YTD = YTD.data;
       return dispatch(update(singlePaystub))
   }
   return asyncDispatch;
@@ -48,9 +54,9 @@ export const addPaystub = (paystub) =>
 export const updatePaystub = (id, paystub) => {
   const asyncDispatch = async (dispatch) => {
     let updatedStub = await axios.put(`/api/stubs/${id}`, paystub).catch(console.log);
-    let YTD = await axios.get(`/api/stubs/${id}/YTD`).catch(console.log);
+    // let YTD = await axios.get(`/api/stubs/${id}/YTD`).catch(console.log);
     updatedStub = updatedStub.data;
-    updatedStub.YTD = YTD.data;
+    // updatedStub.YTD = YTD.data;
     return dispatch(update(updatedStub));
   }
   return asyncDispatch;
@@ -69,9 +75,9 @@ export default (paystubs = defaultPaystubs, action) => {
     case GET_ALL:
       return action.paystubs;
     case ADD:
-      return [...paystubs, action.paystub];
+      return sortAndLink([...paystubs, action.paystub], sortByEmployeeAndDate);
     case UPDATE:
-      return paystubs.map(paystub => ((paystub.id !== action.paystub.id) ? paystub : action.paystub));
+      return paystubs.map(paystub => ((paystub.id !== action.paystub.id) ? paystub : (Object.assign({}, paystub, action.paystub))));
     case REMOVE:
       return paystubs.filter(paystub => paystub.id !== action.id);
     case REMOVE_EMPLOYEE:

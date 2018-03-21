@@ -16246,12 +16246,14 @@ var _history2 = _interopRequireDefault(_history);
 
 var _currentUser = __webpack_require__(125);
 
+var _utilFunc = __webpack_require__(1304);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 // import { add as addStub } from './paystubs';
 /** ACTION TYPES **/
+
 
 var GET_ALL = 'GET_EMPLOYEES';
 var ADD = 'ADD_EMPLOYEE';
@@ -16261,30 +16263,31 @@ var REMOVE = exports.REMOVE = 'REMOVE_EMPLOYEE';
 /** INITIAL STATE **/
 var defaultEmployees = [];
 
-function addPrevNext(arr) {
-  arr.sort(function (a, b) {
-    return new Date(b.start) - new Date(a.start);
-  });
-  arr.map(function (stub, index) {
-    if (index !== 0) stub.next = arr[index - 1].id;
-    if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
-  });
-}
+// function addPrevNext(arr){
+//     arr.sort((a, b) => new Date(b.start) - new Date(a.start))
+//     arr.map((stub, index) => {
+//       if (index !== 0) stub.next = arr[index - 1].id;
+//       if (index + 1 !== arr.length) stub.prev = arr[index + 1].id;
+//     })
+// }
+
 
 /** ACTION CREATORS **/
 var getAll = function getAll(employees) {
   employees.forEach(function (_ref) {
     var stubs = _ref.stubs;
-    return addPrevNext(stubs);
+    return (0, _utilFunc.sortAndLink)(stubs, _utilFunc.sortByStartDate);
   });
   return { type: GET_ALL, employees: employees };
 };
 var add = function add(employee) {
-  addPrevNext(employee.stubs);
+  // addPrevNext(employee.stubs);
+  (0, _utilFunc.sortAndLink)(employee.stubs, _utilFunc.sortByStartDate);
   return { type: ADD, employee: employee };
 };
 var update = function update(employee) {
-  addPrevNext(employee.stubs);
+  // addPrevNext(employee.stubs);
+  (0, _utilFunc.sortAndLink)(employee.stubs, _utilFunc.sortByStartDate);
   return { type: UPDATE, employee: employee };
 };
 
@@ -36096,8 +36099,9 @@ var PaystubDetail = function (_Component) {
   _createClass(PaystubDetail, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var stubId = +this.props.match.params.stubId;
-      this.props.getStub(stubId);
+      // const stubId = +this.props.match.params.stubId;
+      // console.log(this.props)
+      // this.props.getStub(stubId);
     }
   }, {
     key: 'handleToggle',
@@ -36130,7 +36134,7 @@ var PaystubDetail = function (_Component) {
     value: function componentWillReceiveProps(nextProps) {
       var nextStubId = +nextProps.match.params.stubId;
       var stubId = +this.props.match.params.stubId;
-      if (nextStubId !== stubId) {
+      if (nextStubId !== stubId && !nextProps.currentStub.YTD) {
         this.props.getStub(nextStubId);
       }
       this.setState({ toggleEdit: false });
@@ -36138,16 +36142,29 @@ var PaystubDetail = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      if (!this.props.currentStub || !this.props.currentStub.YTD) return _react2.default.createElement('div', null);
       if (!this.props.isAuthorized) return _react2.default.createElement(
         'div',
         null,
         ' You don\'t have the right! '
       );
+      if (!this.props.currentStub) return _react2.default.createElement('div', null);
+      if (!this.props.currentStub.YTD) {
+        this.props.getStub();
+        return _react2.default.createElement('div', null);
+      }
 
       var toggleEdit = this.state.toggleEdit;
 
       var atWarning = this.state.triggerDelete;
+      var currentStub = this.props.currentStub;
+      var _props$currentStub = this.props.currentStub,
+          employee = _props$currentStub.employee,
+          YTD = _props$currentStub.YTD,
+          employeeId = _props$currentStub.employeeId,
+          rateType = _props$currentStub.rateType,
+          id = _props$currentStub.id,
+          next = _props$currentStub.next,
+          prev = _props$currentStub.prev;
 
       var _ref3 = toggleEdit || atWarning ? ['red', 'Cancelar'] : ['green', 'Cambiar'],
           _ref4 = _slicedToArray(_ref3, 2),
@@ -36156,20 +36173,6 @@ var PaystubDetail = function (_Component) {
 
       var warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
       var deleteText = warnings[atWarning];
-
-      var currentStub = this.props.currentStub;
-      var employee = currentStub.employee,
-          YTD = currentStub.YTD,
-          employeeId = currentStub.employeeId,
-          rateType = currentStub.rateType,
-          id = currentStub.id;
-      var stubs = this.props.stubEmployee.stubs;
-
-      var _stubs$find = stubs.find(function (stub) {
-        return stub.id === id;
-      }),
-          next = _stubs$find.next,
-          prev = _stubs$find.prev;
 
       var hourlyPay = rateType === 'HOURLY';
 
@@ -36180,6 +36183,7 @@ var PaystubDetail = function (_Component) {
 
       var deduction = Number(currentStub.gross - currentStub.pay).toFixed(2);
       var deductionYTD = Number(YTD.gross - YTD.pay).toFixed(2);
+
       return _react2.default.createElement(
         'div',
         null,
@@ -36512,16 +36516,13 @@ var PaystubDetail = function (_Component) {
 
 var mapState = function mapState(_ref7, ownProps) {
   var paystubs = _ref7.paystubs,
-      employees = _ref7.employees,
       currentUser = _ref7.currentUser;
 
   var stubId = +ownProps.match.params.stubId;
   var currentStub = paystubs.find(function (stub) {
     return stub.id === stubId;
   });
-  var stubEmployee = employees.length && currentStub && employees.find(function (employee) {
-    return employee.id === currentStub.employeeId;
-  });
+  var stubEmployee = currentStub && currentStub.employee;
   var isAdmin = currentUser.adminLevel === 'ADMIN';
   var isAuthorized = isAdmin || currentStub && currentStub.employeeId === currentUser.employeeId;
   return {
@@ -36533,7 +36534,8 @@ var mapState = function mapState(_ref7, ownProps) {
 
 var mapDispatch = function mapDispatch(dispatch, ownProps) {
   return {
-    getStub: function getStub(stubId) {
+    getStub: function getStub() {
+      var stubId = +ownProps.match.params.stubId;
       dispatch((0, _store.getPaystub)(stubId));
     },
     delete: function _delete(stubId, employeeId) {
@@ -38326,11 +38328,16 @@ var _employees = __webpack_require__(340);
 
 var _currentUser = __webpack_require__(125);
 
+var _utilFunc = __webpack_require__(1304);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+// functo
+
 
 /** ACTION TYPES **/
 var GET_ALL = 'GET_PAYSTUBS';
@@ -38344,6 +38351,7 @@ var defaultPaystubs = [];
 
 /** ACTION CREATORS **/
 var getAll = function getAll(paystubs) {
+  (0, _utilFunc.sortAndLink)(paystubs, _utilFunc.sortByEmployeeAndDate);
   return { type: GET_ALL, paystubs: paystubs };
 };
 var add = function add(paystub) {
@@ -38355,6 +38363,7 @@ var update = function update(paystub) {
 var remove = function remove(id) {
   return { type: REMOVE, id: id };
 };
+
 var removeUser = exports.removeUser = function removeUser(id) {
   return { type: _currentUser.REMOVE_USER, id: id };
 };
@@ -38374,7 +38383,7 @@ var getPaystubs = exports.getPaystubs = function getPaystubs() {
 var getPaystub = exports.getPaystub = function getPaystub(paystubId) {
   var asyncDispatch = function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
-      var singlePaystub, YTD;
+      var singlePaystub;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -38384,17 +38393,11 @@ var getPaystub = exports.getPaystub = function getPaystub(paystubId) {
 
             case 2:
               singlePaystub = _context.sent;
-              _context.next = 5;
-              return _axios2.default.get('/api/stubs/' + paystubId + '/YTD');
-
-            case 5:
-              YTD = _context.sent;
 
               singlePaystub = singlePaystub.data;
-              singlePaystub.YTD = YTD.data;
               return _context.abrupt('return', dispatch(update(singlePaystub)));
 
-            case 9:
+            case 5:
             case 'end':
               return _context.stop();
           }
@@ -38424,7 +38427,7 @@ var addPaystub = exports.addPaystub = function addPaystub(paystub) {
 var updatePaystub = exports.updatePaystub = function updatePaystub(id, paystub) {
   var asyncDispatch = function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
-      var updatedStub, YTD;
+      var updatedStub;
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -38434,17 +38437,13 @@ var updatePaystub = exports.updatePaystub = function updatePaystub(id, paystub) 
 
             case 2:
               updatedStub = _context2.sent;
-              _context2.next = 5;
-              return _axios2.default.get('/api/stubs/' + id + '/YTD').catch(console.log);
 
-            case 5:
-              YTD = _context2.sent;
-
+              // let YTD = await axios.get(`/api/stubs/${id}/YTD`).catch(console.log);
               updatedStub = updatedStub.data;
-              updatedStub.YTD = YTD.data;
+              // updatedStub.YTD = YTD.data;
               return _context2.abrupt('return', dispatch(update(updatedStub)));
 
-            case 9:
+            case 5:
             case 'end':
               return _context2.stop();
           }
@@ -38480,10 +38479,10 @@ exports.default = function () {
     case GET_ALL:
       return action.paystubs;
     case ADD:
-      return [].concat(_toConsumableArray(paystubs), [action.paystub]);
+      return (0, _utilFunc.sortAndLink)([].concat(_toConsumableArray(paystubs), [action.paystub]), _utilFunc.sortByEmployeeAndDate);
     case UPDATE:
       return paystubs.map(function (paystub) {
-        return paystub.id !== action.paystub.id ? paystub : action.paystub;
+        return paystub.id !== action.paystub.id ? paystub : Object.assign({}, paystub, action.paystub);
       });
     case REMOVE:
       return paystubs.filter(function (paystub) {
@@ -94219,6 +94218,54 @@ function toArray(list, index) {
 __webpack_require__(595);
 module.exports = __webpack_require__(594);
 
+
+/***/ }),
+/* 1304 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// const sortArr = (arr, sortFunc) =>
+
+
+// function that sorts object by date
+// latest - earliest
+var sortByStartDate = exports.sortByStartDate = function sortByStartDate(valA, valB) {
+  return new Date(valB.start) - new Date(valA.start);
+};
+
+// function that sorts object by Name
+var sortByEmployeeId = function sortByEmployeeId(valA, valB) {
+  return valA.employeeId - valB.employeeId;
+};
+
+// function that sorts by name first and if name is the  same sorts by startDate
+var sortByEmployeeAndDate = exports.sortByEmployeeAndDate = function sortByEmployeeAndDate(valA, valB) {
+  return sortByEmployeeId(valA, valB) ? sortByEmployeeId(valA, valB) : sortByStartDate(valA, valB);
+};
+
+// takes in an arr and add links from
+// I guess...technically once it's sort I don't have to.....HMM BUT
+// let's do it anyways
+var createLinks = function createLinks(arr) {
+  arr.map(function (cur, index) {
+    var prev = arr[index - 1];
+    if (prev && prev.employeeId === cur.employeeId) {
+      prev.next = cur.id;
+      cur.prev = prev.id;
+    }
+  });
+};
+
+var sortAndLink = exports.sortAndLink = function sortAndLink(arr, sortBy) {
+  // sortBy(arr);
+  arr.sort(sortBy);
+  createLinks(arr);
+};
 
 /***/ })
 /******/ ]);

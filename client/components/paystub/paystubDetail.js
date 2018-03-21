@@ -20,8 +20,9 @@ class PaystubDetail extends Component{
   }
 
   componentDidMount(){
-    const stubId = +this.props.match.params.stubId;
-    this.props.getStub(stubId);
+    // const stubId = +this.props.match.params.stubId;
+    // console.log(this.props)
+    // this.props.getStub(stubId);
   }
 
   handleToggle(){
@@ -43,7 +44,7 @@ class PaystubDetail extends Component{
   componentWillReceiveProps(nextProps){
     const nextStubId = +nextProps.match.params.stubId;
     const stubId = +this.props.match.params.stubId;
-    if (nextStubId !== stubId){
+    if (nextStubId !== stubId && !nextProps.currentStub.YTD){
       this.props.getStub(nextStubId);
     }
     this.setState({ toggleEdit: false });
@@ -51,24 +52,29 @@ class PaystubDetail extends Component{
 
 
   render(){
-    if (!this.props.currentStub || !this.props.currentStub.YTD) return <div/>
     if (!this.props.isAuthorized) return <div> You don't have the right! </div>
+    if (!this.props.currentStub) return <div />
+    if (!this.props.currentStub.YTD) {
+      this.props.getStub();
+      return <div />
+    }
 
     const { toggleEdit } = this.state;
     const atWarning = this.state.triggerDelete;
+    const { currentStub } = this.props;
+    const { employee, YTD, employeeId, rateType, id, next, prev } = this.props.currentStub;
+
     const [ editColor, editContent ] = (toggleEdit || atWarning) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
     const warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
     const deleteText = warnings[atWarning];
 
-    const { currentStub } = this.props;
-    const { employee, YTD, employeeId, rateType, id } = currentStub;
-    const { stubs } = this.props.stubEmployee;
-    const { next, prev } = stubs.find(stub => stub.id === id);
 
     const hourlyPay = (rateType === 'HOURLY');
     const [workedText, rateText] = hourlyPay ? ['Week Hours', 'Hourly Rate'] : ['Weeks Worked', 'Weekly Rate'];
     const deduction = Number(currentStub.gross - currentStub.pay).toFixed(2);
     const deductionYTD = Number(YTD.gross - YTD.pay).toFixed(2);
+
+
     return (
       <div>
         <div className='Aligner'>
@@ -196,10 +202,10 @@ class PaystubDetail extends Component{
   }
 }
 
-const mapState = ({paystubs, employees, currentUser}, ownProps) => {
+const mapState = ({paystubs, currentUser}, ownProps) => {
   const stubId = +ownProps.match.params.stubId;
   const currentStub = paystubs.find(stub => stub.id === stubId);
-  const stubEmployee = employees.length && currentStub && employees.find(employee => employee.id === currentStub.employeeId);
+  const stubEmployee = currentStub && currentStub.employee;
   const isAdmin = currentUser.adminLevel === 'ADMIN';
   const isAuthorized = isAdmin || (currentStub && (currentStub.employeeId === currentUser.employeeId));
   return ({
@@ -210,7 +216,8 @@ const mapState = ({paystubs, employees, currentUser}, ownProps) => {
 }
 
 const mapDispatch = (dispatch, ownProps) => ({
-    getStub(stubId){
+    getStub(){
+      const stubId = +ownProps.match.params.stubId;
       dispatch(getPaystub(stubId));
     },
     delete(stubId, employeeId){

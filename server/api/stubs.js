@@ -31,18 +31,21 @@ router.post('/', isAdmin, async (req, res, next) => {
 })
 
 router.get('/:stubId', adminOrSelf, async (req, res, next) => {
-  const yearTo = await req.paystub.YTD();
-  req.paystub.yearTo = yearTo;
+  const yearToDate = await req.paystub.YTD();
+  req.paystub.dataValues.YTD = yearToDate;
   res.json(req.paystub);
 })
 
-router.get('/:stubId/YTD', adminOrSelf ,async (req, res, next) => {
-  res.json(await req.paystub.YTD());
-})
+// router.get('/:stubId/YTD', adminOrSelf ,async (req, res, next) => {
+//   const paystubYTD = await req.paystub.YTD();
+//   res.json(paystubYTD);
+// })
 
 router.put('/:stubId', isAdmin, async(req, res, next) => {
   const updatedStub = await req.paystub.update(req.body).catch(next);
   const reloadedStub = await updatedStub.reload({include: [ Employee ]})
+  const yearToDate = reloadedStub.YTD();
+  reloadedStub.dataValues.YTD = yearToDate;
   res.json(reloadedStub);
 })
 
