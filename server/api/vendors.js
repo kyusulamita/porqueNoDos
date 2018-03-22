@@ -24,7 +24,7 @@ router.get('/', isAuthorized ,async (req, res, next) => {
 
 router.post('/', isAuthorized,async (req, res, next) => {
   const newVendor = await Vendor.create(req.body, {
-    include: { model: Bill, attributes: ['total', 'date']}
+    include: { model: Bill, attributes: ['total', 'date', 'id']}
   }).catch(next);
   res.json(newVendor);
 })

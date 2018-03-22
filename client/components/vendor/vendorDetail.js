@@ -20,17 +20,23 @@ class vendorDetail extends Component{
     this.handleSort = this.handleSort.bind(this);
   }
 
-  componentDidMount(){
+  componentWillMount(){
     this.props.fetchVendor();
+    // this.setState({ bills: this.props.currentVendor.bills })
+    console.log(this.props.currentVendor);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.currentVendor && nextProps.currentVendor) {
-      this.setState({ bills: nextProps.currentVendor.bills });
+    if (nextProps.currentVendor){
+      const { bills } = nextProps.currentVendor;
+      this.setState({ bills });
     }
-    if (this.props.currentVendor && (this.props.currentVendor.id !== nextProps.currentVendor.id)) {
-      this.setState({ bills: nextProps.currentUser.bills });
-    }
+    // if (!this.props.currentVendor && nextProps.currentVendor) {
+    //   this.setState({ bills: nextProps.currentVendor.bills });
+    // }
+    // if (this.props.currentVendor && (this.props.currentVendor.id !== nextProps.currentVendor.id)) {
+    //   this.setState({ bills: nextProps.currentUser.bills });
+    // }
   }
 
   handleSort(clickedColumn){
@@ -83,7 +89,7 @@ class vendorDetail extends Component{
             </Table.Row>
           </Table.Header>
           {
-            bills.map((bill) => <BillRow {...bill} />)
+            bills.map((bill) => <BillRow {...bill} key={bill.id} />)
           }
         </Table>
       </div>

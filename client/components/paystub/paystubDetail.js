@@ -42,10 +42,10 @@ class PaystubDetail extends Component{
     }
     this.setState(({triggerDelete}) => ({ triggerDelete: ++triggerDelete }));
   }
-  componentWillReceiveProps(nextProps){
-    const nextStubId = +nextProps.match.params.stubId;
-    const stubId = +this.props.match.params.stubId;
-    if (nextStubId !== stubId && !nextProps.currentStub.YTD){
+  componentDidUpdate(prevProps){
+    const nextStubId = +this.props.match.params.stubId;
+    const stubId = +prevProps.match.params.stubId;
+    if (nextStubId !== stubId && !this.props.currentStub.YTD){
       this.props.getStub(nextStubId);
     }
     this.setState({ toggleEdit: false });

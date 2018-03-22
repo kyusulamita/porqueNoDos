@@ -45,9 +45,9 @@ class LostProductForm extends Component{
     const newPrice = (newForm) ? (+price) : (+price || +placeholder.price);
     const total = Number(newAmount * newPrice).toFixed(2);
     return (
-      <Row><Cell/><Cell colSpan='7'><div className='Aligner'>
+      <Row><Cell colSpan='9'><div className='Aligner'>
         <div className='Aligner-item--top' />
-        <Form onSubmit={handleOnSubmit} size='tiny' className='Aligner-item'>
+        <Form onSubmit={handleOnSubmit} className='Aligner-item'>
         <Group widths='equal'>
           <Input
             label='Date'
@@ -94,7 +94,7 @@ class LostProductForm extends Component{
         </Group>
         </Form>
         <div className='Aligner-item--bottom'/>
-      </div></Cell><Cell/></Row>
+      </div></Cell></Row>
     );
   }
 

@@ -3,6 +3,7 @@ import history from '../history';
 import { REMOVE as REMOVE_EMPLOYEE } from './employees';
 import { REMOVE_USER } from './currentUser';
 import { sortByEmployeeAndDate, sortAndLink } from './utilFunc';
+import _ from 'lodash';
 // functo
 
 
@@ -78,8 +79,10 @@ export default (paystubs = defaultPaystubs, action) => {
   switch (action.type){
     case GET_ALL:
       return action.paystubs;
-    case ADD:
-      return sortAndLink([...paystubs, action.paystub], sortByEmployeeAndDate);
+    case ADD:{
+      const newPaystubs = _.cloneDeep([...paystubs, action.paystub]);
+      return sortAndLink(newPaystubs, sortByEmployeeAndDate);
+    }
     case UPDATE:
       return paystubs.map(paystub => ((paystub.id !== action.paystub.id) ? paystub : (Object.assign({}, paystub, action.paystub))));
     case REMOVE:
