@@ -36,6 +36,7 @@ export const sortAndLink = (arr, sortBy) => {
   // sortBy(arr);
   arr.sort(sortBy);
   createLinks(arr);
+  return arr;
 }
 
 

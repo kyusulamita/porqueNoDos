@@ -48,7 +48,11 @@ export const addPaystub = (paystub) =>
   dispatch =>
     axios.post('/api/stubs', paystub)
       .then(res => res.data)
-      .then(newPaystub => dispatch(add(newPaystub)))
+      .then(newPaystub => {
+        dispatch(add(newPaystub))
+        return newPaystub.id;
+      })
+      .then(id => history.push(`/stubs/${id}`))
       .catch(err => console.log(`${err}. UNABLE TO ADD PAYSTUB ${paystub.employeeId}`))
 
 export const updatePaystub = (id, paystub) => {
