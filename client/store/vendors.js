@@ -33,7 +33,7 @@ export const addVendor = (vendor) =>
   axios.post(`/api/vendors`, vendor)
   .then(res => res.data)
   .then(newVendor => dispatch(add(newVendor)))
-  .catch(next)
+  .catch(err => console.log(err))
 
 export const updateVendor = (id, vendor) =>
   dispatch =>

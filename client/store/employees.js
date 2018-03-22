@@ -56,7 +56,7 @@ export const getEmployee = (employeeId, isAdmin = true) =>
       .then(singleEmployee => {
         if (isAdmin) return dispatch(update(singleEmployee));
         singleEmployee.stubs.map(paystub => dispatch({type: 'ADD_PAYSTUB', paystub}))
-        dispatch(add(singleEmployee));
+        return dispatch(add(singleEmployee));
       })
       .catch(err => console.log(`${err}. UNABLE TO GET EMPLOYEE ${employeeId}`))
 

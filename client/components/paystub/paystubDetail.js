@@ -17,6 +17,7 @@ class PaystubDetail extends Component{
     };
     this.handleToggle = this.handleToggle.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.adminBox = this.adminBox.bind(this)
   }
 
   componentDidMount(){
@@ -51,22 +52,44 @@ class PaystubDetail extends Component{
   }
 
 
+  adminBox(){
+    const { currentStub } = this.props;
+    const atWarning = this.state.triggerDelete;
+    const { toggleEdit } = this.state;
+    const { handleToggle, handleDelete } = this;
+    const [ editColor, editContent ] = (toggleEdit || atWarning) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
+    const warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
+    const deleteText = warnings[atWarning];
+    return (
+      <div>
+        {
+          toggleEdit && <PaystubForm stub={currentStub} employeeId={currentStub.employeeId} />
+        }
+        <Button
+          onClick={handleToggle}
+          color={editColor}
+          content={editContent}
+        />
+        <Button
+          onClick={handleDelete}
+          color='red'
+          content={deleteText}
+        />
+      </div>
+    )
+  }
+
+
   render(){
     if (!this.props.isAuthorized) return <div> You don't have the right! </div>
-    if (!this.props.currentStub) return <div />
+    if (!this.props.currentStub) return <div/>
     if (!this.props.currentStub.YTD) {
       this.props.getStub();
       return <div />
     }
 
-    const { toggleEdit } = this.state;
-    const atWarning = this.state.triggerDelete;
-    const { currentStub } = this.props;
-    const { employee, YTD, employeeId, rateType, id, next, prev } = this.props.currentStub;
-
-    const [ editColor, editContent ] = (toggleEdit || atWarning) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
-    const warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
-    const deleteText = warnings[atWarning];
+    const { currentStub, isAdmin } = this.props;
+    const { employee, YTD, rateType, next, prev } = this.props.currentStub;
 
 
     const hourlyPay = (rateType === 'HOURLY');
@@ -185,18 +208,8 @@ class PaystubDetail extends Component{
           <div className='Aligner-item--bottom' />
         </div>
         {
-          toggleEdit && <PaystubForm stub={this.props.currentStub} employeeId={employeeId} />
+          isAdmin && this.adminBox()
         }
-        <Button
-          onClick={this.handleToggle}
-          color={editColor}
-          content={editContent}
-          />
-        <Button
-          onClick={this.handleDelete}
-          color='red'
-          content={deleteText}
-          />
       </div>
     )
   }
@@ -209,6 +222,7 @@ const mapState = ({paystubs, currentUser}, ownProps) => {
   const isAdmin = currentUser.adminLevel === 'ADMIN';
   const isAuthorized = isAdmin || (currentStub && (currentStub.employeeId === currentUser.employeeId));
   return ({
+    isAdmin,
     isAuthorized,
     currentStub,
     stubEmployee
