@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { getVendor, deleteVendor } from '../../store';
 import { connect } from 'react-redux';
 
-import { Header, Image } from 'semantic-ui-react';
+import { Header, Image, Table } from 'semantic-ui-react';
 
+// const { Row, Header, HeaderCell} =
 class vendorDetail extends Component{
   constructor(props){
     super(props);
@@ -21,7 +22,7 @@ class vendorDetail extends Component{
 
   render() {
     if (!this.props.currentVendor) return <div/>
-    const { name, address, city, state, zipcode, phoneNumber } = this.props.currentVendor;
+    const { name, address, city, state, zipcode, phoneNumber,bills } = this.props.currentVendor;
     console.log(this.props.currentVendor);
     return (
       <div>
@@ -34,6 +35,16 @@ class vendorDetail extends Component{
             <div textalign='left'>{city}, {state} {zipcode}</div>
             <div textalign='left'>{phoneNumber}</div>
         </div>
+        <Table>
+          <Table.Header colSpan='4'>
+            Bills by date
+          </Table.Header>
+          <Table.Body>
+            {
+              bills && bills.map(({ total }) => <div>{total}</div>)
+            }
+          </Table.Body>
+        </Table>
       </div>
     )
   }

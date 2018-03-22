@@ -37103,6 +37103,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+// const { Row, Header, HeaderCell} =
 var vendorDetail = function (_Component) {
   _inherits(vendorDetail, _Component);
 
@@ -37135,7 +37136,8 @@ var vendorDetail = function (_Component) {
           city = _props$currentVendor.city,
           state = _props$currentVendor.state,
           zipcode = _props$currentVendor.zipcode,
-          phoneNumber = _props$currentVendor.phoneNumber;
+          phoneNumber = _props$currentVendor.phoneNumber,
+          bills = _props$currentVendor.bills;
 
       console.log(this.props.currentVendor);
       return _react2.default.createElement(
@@ -37169,6 +37171,27 @@ var vendorDetail = function (_Component) {
             'div',
             { textalign: 'left' },
             phoneNumber
+          )
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Table,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Table.Header,
+            { colSpan: '4' },
+            'Bills by date'
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Table.Body,
+            null,
+            bills && bills.map(function (_ref) {
+              var total = _ref.total;
+              return _react2.default.createElement(
+                'div',
+                null,
+                total
+              );
+            })
           )
         )
       );
