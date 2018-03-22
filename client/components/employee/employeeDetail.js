@@ -134,16 +134,17 @@ const mapState = (state, ownProps) => {
   })
 }
 
-const mapDispatch = (dispatch, ownProps) => ({
+const mapDispatch = (dispatch, ownProps) => {
+  const employeeId = +ownProps.match.params.employeeId;
+  return ({
     fetchEmployee(){
-      const employeeId = +ownProps.match.params.employeeId;
       dispatch(getEmployee(employeeId));
     },
     delete(){
-      const employeeId = +ownProps.match.params.employeeId;
       dispatch(deleteEmployee(employeeId));
     }
-});
+  })
+};
 
 export default connect(mapState, mapDispatch)(employeeDetail);
 

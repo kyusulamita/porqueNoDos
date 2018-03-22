@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { LostProductRow, LostProductForm } from '../index';
 import { Table, Button } from 'semantic-ui-react'
-const { Header, Row, HeaderCell, Body, Footer, Cell } = Table;
+const { Header, Row, HeaderCell, Body } = Table;
 
 
 class lostProductList extends Component {
@@ -44,7 +44,7 @@ class lostProductList extends Component {
           </Header>
         <Body>
           {
-            addBool && <LostProductForm toggleView={this.toggleAdd}/>
+            addBool && <LostProductForm toggleView={this.toggleAdd} />
           }
         </Body>
         {
@@ -59,9 +59,6 @@ const mapState = ({lostProducts}) => ({
   lostProducts,
 });
 
-const mapDispatch = (dispatch) => ({
-
-})
 
 
-export default connect(mapState, mapDispatch)(lostProductList);
+export default connect(mapState)(lostProductList);

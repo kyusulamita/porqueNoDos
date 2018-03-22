@@ -18,32 +18,42 @@ class LostProductForm extends Component{
     this.handleOnSubmit= this.handleOnSubmit.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
   }
+
+
   handleOnChange(event, {name, value}){
     this.setState({ [name]: value });
   }
 
+
   handleOnSubmit(event){
     event.preventDefault();
-    const { newForm } = this.props;
-    if (newForm){
+    // add the product if it's new
+    if (this.props.newForm){
       this.props.add(this.state);
     } else {
+      // make object with updated vals
       const updatedInfo = {};
       for (const key in this.state){
         if (this.state[key]) updatedInfo[key] = this.state[key];
       }
+      //update the product
       this.props.update(this.props.placeholder.id, updatedInfo);
     }
+    // passed downm closes form after change is made
     this.props.toggleView();
-    this.setState({ date: '', product: '', amount: '', price: '' });
   }
+
+
   render(){
     const { date, product, amount, price} = this.state;
     const { placeholder, newForm, buttonText } = this.props;
     const { handleOnSubmit, handleOnChange } = this;
+
     const newAmount = (newForm) ? (+amount)  : (+amount || +placeholder.amount);
     const newPrice = (newForm) ? (+price) : (+price || +placeholder.price);
+
     const total = Number(newAmount * newPrice).toFixed(2);
+
     return (
       <Row><Cell colSpan='9'><div className='Aligner'>
         <div className='Aligner-item--top' />
@@ -100,6 +110,7 @@ class LostProductForm extends Component{
 
 }
 
+
 const mapState = (state, ownProps) => {
   const placeholder = { date: 'MM/DD/YY', product: 'Enter Name', amount: 'Amount', price: 'Don\'t include $', total: 'Total'};
 
@@ -109,6 +120,7 @@ const mapState = (state, ownProps) => {
     buttonText: !ownProps.product ? 'Crear' : 'Confirmar'
   })
 }
+
 
 const mapDispatch = (dispatch, ownProps) => ({
   add(newLostProduct){

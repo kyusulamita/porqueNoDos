@@ -15,29 +15,63 @@ class LostProductRow extends Component{
     }
     this.onButtonClick = this.onButtonClick.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.adminBox = this.adminBox.bind(this);
   }
+
+  // if delete has been triggered clicking first button cancels it
+  // if not clicking first button triggers edit
   onButtonClick(){
-    const { triggerDelete } = this.state;
-    if (!triggerDelete) {
+    if (!this.state.triggerDelete) {
       this.setState(({toggleEdit}) => ({ toggleEdit: !toggleEdit }))
     } else {
       this.setState({ triggerDelete: 0 });
     }
   }
+
+
+  // increases triggerDelete by 1 each time, user must click it 4 times to delete
   onDelete(){
     if (this.state.triggerDelete === 3){
       this.props.delete(this.props.id);
     }
-    this.setState(({triggerDelete}) => ({ triggerDelete: (++triggerDelete%4)}));
+    this.setState(({triggerDelete}) => ({ triggerDelete: (++triggerDelete)}));
   }
-  render(){
-    const {total, date, product, amount, price, id} = this.props;
-    const {toggleEdit} = this.state;
+
+  // if admin then update and delete buttons will be displayed
+  adminBox(){
+    const { toggleEdit } = this.state;
     const atWarning = this.state.triggerDelete;
+
     const [ editColor, editContent ] = (toggleEdit || atWarning) ? ['red', 'Cancelar'] : ['green', 'Cambiar'];
     const warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
     const deleteText = warnings[atWarning];
-    console.log(this.props.writePrivelege);
+
+
+    return ([
+      <Cell>
+        <Button
+          onClick={this.onButtonClick}
+          color={editColor}
+          content={editContent}
+          size='small'
+        />
+      </Cell>,
+      <Cell>
+        <Button
+          onClick={this.onDelete}
+          color='red'
+          content={deleteText}
+          size='small'
+        />
+      </Cell>
+    ])
+  }
+
+
+  render(){
+    const {total, date, product, amount, price, id, writePrivelege} = this.props;
+    const {toggleEdit} = this.state;
+
     return (
       <Body>
         <Row key={id}>
@@ -46,22 +80,9 @@ class LostProductRow extends Component{
           <Cell>{amount}</Cell>
           <Cell>${price}</Cell>
           <Cell>${total}</Cell>
-          <Cell>
-            <Button
-              onClick={this.onButtonClick}
-              color={editColor}
-              content={editContent}
-              size='small'
-            />
-          </Cell>
-          <Cell>
-            <Button
-              onClick={this.onDelete}
-              color='red'
-              content={deleteText}
-              size='small'
-            />
-          </Cell>
+           {
+              writePrivelege ? this.adminBox() : [<Cell />,<Cell />]
+           }
          </Row>
          {
           toggleEdit && <LostProductForm product={this.props} toggleView={this.onButtonClick}/>
@@ -71,9 +92,12 @@ class LostProductRow extends Component{
   }
 }
 
-const mapState = (state, ownProps) => ({
-  writePrivelege: state.currentUser.adminLevel && (state.currentUser.adminLevel === 'ADMIN')
-})
+const mapState = (state, ownProps) => {
+  const { adminLevel } = state.currentUser;
+  return ({
+    writePrivelege: adminLevel && (adminLevel === 'ADMIN' || adminLevel === 'WRITE');
+  })
+}
 const mapDispatch = (dispatch, ownProps) => ({
   delete(id){
     dispatch(deleteProduct(id));

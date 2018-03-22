@@ -22,8 +22,6 @@ class vendorDetail extends Component{
 
   componentWillMount(){
     this.props.fetchVendor();
-    // this.setState({ bills: this.props.currentVendor.bills })
-    console.log(this.props.currentVendor);
   }
 
   componentWillReceiveProps(nextProps) {
