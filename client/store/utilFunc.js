@@ -14,6 +14,10 @@ const sortByEmployeeId= (valA, valB) => valA.employeeId - valB.employeeId;
 export const sortByEmployeeAndDate = (valA, valB) => sortByEmployeeId(valA, valB) ? sortByEmployeeId(valA, valB) : sortByStartDate(valA, valB)
 
 
+
+export const sortByDate = (valA, valB) => new Date(valB.date) - new Date(valA.date);
+
+
 // takes in an arr and add links from
 // I guess...technically once it's sort I don't have to.....HMM BUT
 // let's do it anyways
