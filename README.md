@@ -1,6 +1,6 @@
 # Porque No Dos?
 
-\*\*Screen shots to come!!\*\*
+![Alt Text](https://media.giphy.com/media/37sriqqivQrVH5qNIz/giphy.gif)
 
 This is a simple application, meant to be a super simplified version of quickbooks. Mostly just for my parents who think quickbooks is too over over complicated.
 
