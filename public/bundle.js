@@ -53074,9 +53074,202 @@ exports.default = (0, _reactRedux.connect)(mapState)(lostProductList);
 
 /***/ }),
 /* 628 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: SyntaxError: Unexpected token, expected , (98:84)\n\n\u001b[0m \u001b[90m  96 | \u001b[39m  \u001b[36mconst\u001b[39m { adminLevel } \u001b[33m=\u001b[39m state\u001b[33m.\u001b[39mcurrentUser\u001b[33m;\u001b[39m\n \u001b[90m  97 | \u001b[39m  \u001b[36mreturn\u001b[39m ({\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  98 | \u001b[39m    writePrivelege\u001b[33m:\u001b[39m adminLevel \u001b[33m&&\u001b[39m (adminLevel \u001b[33m===\u001b[39m \u001b[32m'ADMIN'\u001b[39m \u001b[33m||\u001b[39m adminLevel \u001b[33m===\u001b[39m \u001b[32m'WRITE'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     | \u001b[39m                                                                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  99 | \u001b[39m  })\n \u001b[90m 100 | \u001b[39m}\n \u001b[90m 101 | \u001b[39m\u001b[36mconst\u001b[39m mapDispatch \u001b[33m=\u001b[39m (dispatch\u001b[33m,\u001b[39m ownProps) \u001b[33m=>\u001b[39m ({\u001b[0m\n");
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(28);
+
+var _semanticUiReact = __webpack_require__(29);
+
+var _index = __webpack_require__(68);
+
+var _store = __webpack_require__(53);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Row = _semanticUiReact.Table.Row,
+    Cell = _semanticUiReact.Table.Cell,
+    Body = _semanticUiReact.Table.Body;
+
+var LostProductRow = function (_Component) {
+  _inherits(LostProductRow, _Component);
+
+  function LostProductRow(props) {
+    _classCallCheck(this, LostProductRow);
+
+    var _this = _possibleConstructorReturn(this, (LostProductRow.__proto__ || Object.getPrototypeOf(LostProductRow)).call(this, props));
+
+    _this.state = {
+      toggleEdit: false,
+      triggerDelete: 0
+    };
+    _this.onButtonClick = _this.onButtonClick.bind(_this);
+    _this.onDelete = _this.onDelete.bind(_this);
+    _this.adminBox = _this.adminBox.bind(_this);
+    return _this;
+  }
+
+  // if delete has been triggered clicking first button cancels it
+  // if not clicking first button triggers edit
+
+
+  _createClass(LostProductRow, [{
+    key: 'onButtonClick',
+    value: function onButtonClick() {
+      if (!this.state.triggerDelete) {
+        this.setState(function (_ref) {
+          var toggleEdit = _ref.toggleEdit;
+          return { toggleEdit: !toggleEdit };
+        });
+      } else {
+        this.setState({ triggerDelete: 0 });
+      }
+    }
+
+    // increases triggerDelete by 1 each time, user must click it 4 times to delete
+
+  }, {
+    key: 'onDelete',
+    value: function onDelete() {
+      if (this.state.triggerDelete === 3) {
+        this.props.delete(this.props.id);
+      }
+      this.setState(function (_ref2) {
+        var triggerDelete = _ref2.triggerDelete;
+        return { triggerDelete: ++triggerDelete };
+      });
+    }
+
+    // if admin then update and delete buttons will be displayed
+
+  }, {
+    key: 'adminBox',
+    value: function adminBox() {
+      var toggleEdit = this.state.toggleEdit;
+
+      var atWarning = this.state.triggerDelete;
+
+      var _ref3 = toggleEdit || atWarning ? ['red', 'Cancelar'] : ['green', 'Cambiar'],
+          _ref4 = _slicedToArray(_ref3, 2),
+          editColor = _ref4[0],
+          editContent = _ref4[1];
+
+      var warnings = ['Borrar', 'Seguro?', 'Segurisimo?', 'Aviso Final'];
+      var deleteText = warnings[atWarning];
+
+      return [_react2.default.createElement(
+        Cell,
+        null,
+        _react2.default.createElement(_semanticUiReact.Button, {
+          onClick: this.onButtonClick,
+          color: editColor,
+          content: editContent,
+          size: 'small'
+        })
+      ), _react2.default.createElement(
+        Cell,
+        null,
+        _react2.default.createElement(_semanticUiReact.Button, {
+          onClick: this.onDelete,
+          color: 'red',
+          content: deleteText,
+          size: 'small'
+        })
+      )];
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          total = _props.total,
+          date = _props.date,
+          product = _props.product,
+          amount = _props.amount,
+          price = _props.price,
+          id = _props.id,
+          writePrivelege = _props.writePrivelege;
+      var toggleEdit = this.state.toggleEdit;
+
+
+      return _react2.default.createElement(
+        Body,
+        null,
+        _react2.default.createElement(
+          Row,
+          { key: id },
+          _react2.default.createElement(
+            Cell,
+            null,
+            date
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            product
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            amount
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            '$',
+            price
+          ),
+          _react2.default.createElement(
+            Cell,
+            null,
+            '$',
+            total
+          ),
+          writePrivelege ? this.adminBox() : [_react2.default.createElement(Cell, null), _react2.default.createElement(Cell, null)]
+        ),
+        toggleEdit && _react2.default.createElement(_index.LostProductForm, { product: this.props, toggleView: this.onButtonClick })
+      );
+    }
+  }]);
+
+  return LostProductRow;
+}(_react.Component);
+
+var mapState = function mapState(state, ownProps) {
+  var adminLevel = state.currentUser.adminLevel;
+
+  return {
+    writePrivelege: adminLevel && (adminLevel === 'ADMIN' || adminLevel === 'WRITE')
+  };
+};
+var mapDispatch = function mapDispatch(dispatch, ownProps) {
+  return {
+    delete: function _delete(id) {
+      dispatch((0, _store.deleteProduct)(id));
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(LostProductRow);
 
 /***/ }),
 /* 629 */

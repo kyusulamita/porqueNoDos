@@ -95,7 +95,7 @@ class LostProductRow extends Component{
 const mapState = (state, ownProps) => {
   const { adminLevel } = state.currentUser;
   return ({
-    writePrivelege: adminLevel && (adminLevel === 'ADMIN' || adminLevel === 'WRITE');
+    writePrivelege: adminLevel && (adminLevel === 'ADMIN' || adminLevel === 'WRITE')
   })
 }
 const mapDispatch = (dispatch, ownProps) => ({
