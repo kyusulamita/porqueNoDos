@@ -20,7 +20,6 @@ class Main extends Component {
   componentDidMount(){
     let currentLocation = this.props.location.pathname;
     currentLocation = currentLocation.split('/');
-    console.log(currentLocation[1])
     this.setState({ activeTab: currentLocation[1]})
   }
 
@@ -49,6 +48,7 @@ class Main extends Component {
     return ([
       <Menu.Item name='empleados' key='empleados' active={activeTab === 'empleados'} onClick={this.handleMenuClick} as={Link} to='/empleados'/>,
       <Menu.Item name='stubs' key='stubs' active={activeTab === 'stub'} onClick={this.handleMenuClick} as={Link} to='/stubs'/>,
+      <Menu.Item name='usarios' key='usarios' active={activeTab === 'usarios'} onClick={this.handleMenuClick} as={Link} to='/usarios' />
     ])
   }
 
@@ -70,7 +70,9 @@ class Main extends Component {
       <div>
         <div><h1>La Bendicion - Grand Rapids, MI </h1></div>
         <Menu pointing secondary>
-        <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
+        {
+          isLoggedIn && <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
+        }
         {
           (writeAccess || isAdmin)  && this.writeMenu()
         }
