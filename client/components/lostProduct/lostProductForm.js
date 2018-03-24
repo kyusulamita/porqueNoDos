@@ -112,7 +112,7 @@ class LostProductForm extends Component{
 
 
 const mapState = (state, ownProps) => {
-  const placeholder = { date: 'MM/DD/YY', product: 'Enter Name', amount: 'Amount', price: 'Don\'t include $', total: 'Total'};
+  const placeholder = { date: 'AAAA-MM-DD', product: 'Enter Name', amount: 'Amount', price: 'Don\'t include $', total: 'Total'};
 
   return ({
     placeholder: ownProps.product || placeholder,

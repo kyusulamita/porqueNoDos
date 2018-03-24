@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Header, Image, Table } from 'semantic-ui-react';
 import { BillRow } from '../index'
 // const { Row, Header, HeaderCell} =
+
 class vendorDetail extends Component{
   constructor(props){
     super(props);

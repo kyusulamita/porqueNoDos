@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PrintTemplate from 'react-print';
 
-import { PaystubForm, EmployeeTile } from '../index';
+import { PaystubForm, EmployeeTile, AccessDenied, Waiting } from '../index';
 import { Button, Table } from 'semantic-ui-react'
 const { Header, Row, HeaderCell, Cell, Footer, Body } = Table;
 
@@ -21,9 +21,9 @@ class PaystubDetail extends Component{
   }
 
   componentDidMount(){
-    // const stubId = +this.props.match.params.stubId;
-    // console.log(this.props)
-    // this.props.getStub(stubId);
+    const stubId = +this.props.match.params.stubId;
+    console.log(this.props)
+    this.props.getStub(stubId);
   }
 
   handleToggle(){
@@ -42,13 +42,14 @@ class PaystubDetail extends Component{
     }
     this.setState(({triggerDelete}) => ({ triggerDelete: ++triggerDelete }));
   }
+
   componentDidUpdate(prevProps){
     const nextStubId = +this.props.match.params.stubId;
     const stubId = +prevProps.match.params.stubId;
     if (nextStubId !== stubId && !this.props.currentStub.YTD){
       this.props.getStub(nextStubId);
+      this.setState({ toggleEdit: false });
     }
-    this.setState({ toggleEdit: false });
   }
 
 
@@ -81,11 +82,9 @@ class PaystubDetail extends Component{
 
 
   render(){
-    if (!this.props.isAuthorized) return <div> You don't have the right! </div>
-    if (!this.props.currentStub) return <div/>
-    if (!this.props.currentStub.YTD) {
-      this.props.getStub();
-      return <div />
+    if (!this.props.isAuthorized) return <AccessDenied />
+    if (!this.props.currentStub || !this.props.currentStub.YTD) {
+      return <Waiting />
     }
 
     const { currentStub, isAdmin } = this.props;

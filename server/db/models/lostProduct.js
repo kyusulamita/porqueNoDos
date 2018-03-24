@@ -33,7 +33,6 @@ const lostProduct = db.define('lostProduct', {
       return Number(possiblePrice).toFixed(2);
     }
   }
-
 });
 
 module.exports = lostProduct;

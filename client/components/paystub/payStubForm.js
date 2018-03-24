@@ -134,7 +134,7 @@ class StubForm extends Component{
   }
 }
 const mapState = (state, ownProps) => {
-  const placeholder = { rate: 'Rate', rateType: 'Escoge el Tipo', married: false, hours: 'Horas', start:'MM/DD/AAAA', end: 'MM/DD/AAAA', payDate: 'MM/DD/AAAA'};
+  const placeholder = { rate: 'Rate', rateType: 'Escoge el Tipo', married: false, hours: 'Horas', start:'AAAA-MM-DD', end: 'AAAA-MM-DD', payDate: 'AAAA-MM-DD'};
   const employees = state.employees.map(employee => {
     const { id, firstName, lastName } = employee;
     return ({ key: id, value: id, text: `${firstName} ${lastName}`});

@@ -85,6 +85,7 @@ const Stub = db.define('stub', {
 })
 
 
+
 Stub.prototype.YTD = async function(){
   const allStubs = await Stub.findAll({
     where: {
