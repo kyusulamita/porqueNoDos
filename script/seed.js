@@ -28,6 +28,9 @@ async function seed () {
   // Whoa! Because we `await` the promise that db.sync returns, the next line will not be
   // executed until that promise resolves!
 
+
+  const employees = await Promise.map(employeeList, (employee) => Employee.create(employee));
+
   const users = await Promise.all([
     User.create({email: 'admin@me.com', name: 'Alvaro', password: 'hellohi', adminLevel:'ADMIN' ,employeeId: 3}),
     User.create({email: 'pleb@me.com', name: 'Sula', password: 'hellohi', employeeId: 4}),
@@ -39,11 +42,11 @@ async function seed () {
     LostProduct.create({product: 'Tortix', amount: 23, price: '.79', userId: 1}),
     LostProduct.create({product: 'Tomato', amount: 1, price: '13.34', userId:1}),
   ]);
+
   const vendors = await Promise.all([
     Vendor.create({name: 'La Michacoana', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49509', phoneNumber: '9999999'}),
     Vendor.create({name: 'Vendor 2', address: '1234 Some Ave', city: 'Grand Rapids', state: 'MI', zipcode: '49509', phoneNumber: '9999999'}),
-  ])
-  const employees = await Promise.map(employeeList, (employee) => Employee.create(employee));
+  ]);
 
   // Wowzers! We can even `await` on the right-hand side of the assignment operator
   // and store the result that the promise resolves to in a variable! This is nice!
