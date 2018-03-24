@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Header, Image, List, Button, Comment } from 'semantic-ui-react';
 
-import { EmployeeForm, PaystubForm, PaystubRow } from '../index'
+import { EmployeeForm, PaystubForm, PaystubRow, Loading, AccessDenied } from '../index'
 
 class employeeDetail extends Component{
   constructor (props){
@@ -19,7 +19,9 @@ class employeeDetail extends Component{
     this.toggleEdit = this.toggleEdit.bind(this);
     this.onDelete = this.onDelete.bind(this);
   }
+
   componentDidMount(){
+    console.log(this.props)
     this.props.fetchEmployee();
   }
 
@@ -34,12 +36,14 @@ class employeeDetail extends Component{
       this.setState(({editBool}) => ({ editBool: !editBool }));
     }
   }
+
   onDelete(){
     if (this.state.triggerDelete === 3){
       this.props.delete();
     }
     this.setState(({triggerDelete}) => ({ triggerDelete: (++triggerDelete)}));
   }
+
   adminDisplay(){
     const { editBool, addBool } = this.state;
     const { toggleEdit, toggleAdd, onDelete } = this;
@@ -88,10 +92,13 @@ class employeeDetail extends Component{
   render() {
     const { employee, isAdmin, isAuthorized } = this.props;
     // console.log(this.props);
-    if (!employee) return <div />
-    if (!isAuthorized) return <div>You don't have the right! </div>
+
+    if (!isAuthorized) return <AccessDenied error={employee.error} />
+    if (!employee) return <Loading />
+
     const { firstName, lastName, stubs, address, city, state, zipcode, phoneNumber, id } = employee;
     const stubExtra = { firstName, lastName, employeeId: id }
+
     return (
       <div>
         <Header as='h2' className='adminBox' textalign='center'>
@@ -126,6 +133,7 @@ const mapState = (state, ownProps) => {
   const employee = employees.find(employ => employ.id === employeeId);
   const isAdmin = (currentUser.adminLevel && currentUser.adminLevel === 'ADMIN');
   const isAuthorized = isAdmin || (employeeId  === currentUser.employeeId);
+
   return ({
     isAuthorized,
     isAdmin,

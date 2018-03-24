@@ -5,23 +5,18 @@ import {Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import history from './history'
 import {Main, Login, Signup, UserHome, EmployeeList, EmployeeDetail,
-        VendorList, VendorDetail, PaystubDetail, LostProductList, PaystubList } from './components'
+        VendorList, VendorDetail, PaystubDetail, LostProductList, PaystubList, UserList } from './components'
 
 // going to want to grab all vendors and employees right from the getGo
-import {me, getEmployees, getPaystubs, getProducts, getVendors, getEmployee } from './store'
-
-
+import {me, getEmployees, getPaystubs, getProducts, getVendors, getEmployee, getUsers } from './store'
 
 class Routes extends Component {
   componentDidMount () {
     this.props.loadInitialData()
-    // console.log(this.props);
   }
 
   componentWillReceiveProps(nextProps){
     if (!this.props.isLoggedIn && nextProps.isLoggedIn){
-      // console.log(nextProps);
-      // const {}
       if (nextProps.isAdmin){
         this.props.loadAdminData();
       }
@@ -49,16 +44,17 @@ class Routes extends Component {
                   {
                     writeAccess &&
                     [
-                      <Route exact path ='/vendedores' component={VendorList} />,
-                      <Route path ='/vendedores/:vendorId' component={VendorDetail} />,
-                      <Route exact path = '/perdidas' component={LostProductList} />,
+                      <Route exact key='vendedores' path ='/vendedores' component={VendorList} />,
+                      <Route key='vendorId' path='/vendedores/:vendorId' component={VendorDetail} />,
+                      <Route key='perdidas' exact path = '/perdidas' component={LostProductList} />,
                     ]
                   }
                   {
                     isAdmin &&
                       [
-                        <Route exact path='/empleados' component={EmployeeList} />,
-                        <Route exact path ='/stubs' component={PaystubList}/>,
+                        <Route exact path='/empleados' component={EmployeeList} key='empleados'/>,
+                        <Route exact path ='/stubs' component={PaystubList} key='stubs'/>,
+                        <Route exact path='/usarios' component={UserList} key='usarios' />
                       ]
                   }
                   <Route component={UserHome}/>
@@ -96,13 +92,13 @@ const mapDispatch = (dispatch, ownProps) => {
     loadAdminData(){
       dispatch(getEmployees());
       dispatch(getPaystubs());
+      dispatch(getUsers());
     },
     loadWriteData(){
       dispatch(getProducts());
       dispatch(getVendors());
     },
     loadUserData(id, isAdmin){
-      console.log('normal user');
       dispatch(getEmployee(id, isAdmin))
     }
   }

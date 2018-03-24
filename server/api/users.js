@@ -20,5 +20,19 @@ router.get('/:userId', async(req, res, next) => {
   res.json(user)
 });
 
+router.put('/:userId', async(req, res, next) => {
+  const [numOfUsersAffected, usersAffected ] = await User.update(req.body, {
+    where: { id: req.params.userId },
+    returning: true,
+  }).catch(next);
+  res.json(usersAffected[0])
+});
+
+router.delete('/:userId', async(req, res, next) => {
+  const destroyed = await User.destroy({
+    where: { id: req.params.userId }
+  }).catch(next);
+  res.json(`${destroyed} destroyed`)
+});
 
 module.exports = router;

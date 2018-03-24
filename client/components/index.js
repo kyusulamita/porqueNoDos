@@ -13,5 +13,7 @@ export * from './Bill';
 export * from './Employee';
 export * from './LostProduct';
 export * from './Vendor';
+export * from './User';
+
 export {default as Waiting} from './Waiting';
 export {default as AccessDenied} from './AccessDenied'
