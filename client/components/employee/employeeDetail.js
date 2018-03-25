@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { getEmployee, deleteEmployee } from '../../store';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Header, Image, List, Button, Comment } from 'semantic-ui-react';
+import { Header, Image, Button, Comment } from 'semantic-ui-react';
 
-import { EmployeeForm, PaystubForm, PaystubRow, Loading, AccessDenied } from '../index'
+import { EmployeeForm, PaystubForm, PaystubRow, Loading, AccessDenied } from '../index';
 
 class employeeDetail extends Component{
   constructor (props){
@@ -13,7 +13,7 @@ class employeeDetail extends Component{
       editBool: false,
       addBool: false,
       triggerDelete: 0,
-    }
+    };
     this.adminDisplay = this.adminDisplay.bind(this);
     this.toggleAdd = this.toggleAdd.bind(this);
     this.toggleEdit = this.toggleEdit.bind(this);
@@ -21,7 +21,6 @@ class employeeDetail extends Component{
   }
 
   componentDidMount(){
-    console.log(this.props)
     this.props.fetchEmployee();
   }
 
@@ -54,35 +53,35 @@ class employeeDetail extends Component{
     const deleteText = warnings[atWarning];
     return (
       <div >
-        <div className='adminBoxForm'>
+        <div className="adminBoxForm">
         <Button
-          size='small'
+          size="small"
           negative
           content={deleteText}
           onClick={onDelete}
         />
         <Button
-          size='small'
-          color='teal'
+          size="small"
+          color="teal"
           negative={editBool || !!atWarning }
           content={editText}
           onClick={toggleEdit}
         />
         {
-          editBool && <EmployeeForm employee={this.props.employee} triggerView={toggleEdit}/>
+          editBool && <EmployeeForm employee={this.props.employee} triggerView={toggleEdit} />
         }
         </div>
-        <div className='adminBoxForm'>
+        <div className="adminBoxForm">
         <Button
-          size='small'
+          size="small"
           secondary={!addBool}
-          color='teal'
+          color="teal"
           negative={addBool}
           content={addText}
           onClick={toggleAdd}
         />
         {
-          addBool && <PaystubForm employeeId={this.props.employee.id} triggerView={toggleAdd}/>
+          addBool && <PaystubForm employeeId={this.props.employee.id} triggerView={toggleAdd} />
         }
         </div>
       </div>
@@ -91,7 +90,6 @@ class employeeDetail extends Component{
 
   render() {
     const { employee, isAdmin, isAuthorized } = this.props;
-    // console.log(this.props);
 
     if (!isAuthorized) return <AccessDenied error={employee.error} />
     if (!employee) return <Loading />
@@ -99,27 +97,29 @@ class employeeDetail extends Component{
     const { firstName, lastName, stubs, address, city, state, zipcode, phoneNumber, id } = employee;
     const stubExtra = { firstName, lastName, employeeId: id }
 
+    const allPaystubs = stubs.map(stub => <PaystubRow key={stub.id} {...stub} {...stubExtra} />);
+
     return (
       <div>
-        <Header as='h2' className='adminBox' textalign='center'>
-          <Image circular src="https://placebear.com/200/200"/>
+        <Header as="h2" className="adminBox" textalign="center">
+          <Image circular src="https://placebear.com/200/200" />
           {'  '}{firstName} {lastName}
           <Header.Subheader>
             {' '} Trabaja en el departamento
           </Header.Subheader>
         </Header>
         <div >
-            <div textalign='left'>{address}</div>
-            <div textalign='left'>{city}, {state} {zipcode}</div>
-            <div textalign='left'>{phoneNumber}</div>
+            <div textalign="left">{address}</div>
+            <div textalign="left">{city}, {state} {zipcode}</div>
+            <div textalign="left">{phoneNumber}</div>
         </div>
         {
           isAdmin && this.adminDisplay()
         }
         <Comment.Group>
-          <Header as='h3' dividing> Paystubs </Header>
+          <Header as="h3" dividing> Paystubs </Header>
           {
-            stubs && stubs.map(stub => <PaystubRow key={stub.id} {...stub} {...stubExtra} />)
+            allPaystubs
           }
         </Comment.Group>
       </div>

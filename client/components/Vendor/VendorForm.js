@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addVendor, updateVendor } from '../../store';
 import { Form, Button } from 'semantic-ui-react';
-const { Group, Input } = Form;
+const { Input } = Form;
 
 class VendorForm extends Component{
   constructor(props){
@@ -15,7 +15,7 @@ class VendorForm extends Component{
       zipcode: '',
       phoneNumber: '',
     }
-    this.handleOnSubmit= this.handleOnSubmit.bind(this);
+    this.handleOnSubmit = this.handleOnSubmit.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
   }
   handleOnChange(event, {name, value}){
@@ -45,9 +45,9 @@ class VendorForm extends Component{
     return (
         <Form onSubmit={handleOnSubmit}>
           <Input
-            label='Nombre'
+            label="Nombre"
             placeholder={placeholder.name}
-            name='name'
+            name="name"
             value={name}
             required={newForm}
             onChange={handleOnChange}
@@ -55,9 +55,9 @@ class VendorForm extends Component{
             inline
           />
           <Input
-            label='Dirección'
+            label="Dirección"
             placeholder={placeholder.address}
-            name='address'
+            name="address"
             value={address}
             required={newForm}
             onChange={handleOnChange}
@@ -65,9 +65,9 @@ class VendorForm extends Component{
             inline
           />
           <Input
-            label='Cuidad'
+            label="Cuidad"
             placeholder={placeholder.city}
-            name='city'
+            name="city"
             value={city}
             required={newForm}
             onChange={handleOnChange}
@@ -75,9 +75,9 @@ class VendorForm extends Component{
             inline
           />
           <Input
-            label='Estado'
+            label="Estado"
             placeholder={placeholder.state}
-            name='state'
+            name="state"
             value={state}
             required={newForm}
             onChange={handleOnChange}
@@ -85,9 +85,9 @@ class VendorForm extends Component{
             inline
           />
           <Input
-            label='Codigo Postal'
+            label="Codigo Postal"
             placeholder={placeholder.zipcode}
-            name='zipcode'
+            name="zipcode"
             value={zipcode}
             required={newForm}
             onChange={handleOnChange}
@@ -95,9 +95,9 @@ class VendorForm extends Component{
             inline
           />
           <Input
-            label='Numero de Telefono'
+            label="Numero de Telefono"
             placeholder={placeholder.phoneNumber}
-            name='phoneNumber'
+            name="phoneNumber"
             value={phoneNumber}
             required={newForm}
             onChange={handleOnChange}
@@ -105,8 +105,8 @@ class VendorForm extends Component{
             inline
           />
         <Button
-          color='green'
-          type='submit'
+          color="green"
+          type="submit"
           content={buttonText}
         />
       </Form>
@@ -125,7 +125,7 @@ const mapState = (state, ownProps) => {
   })
 }
 
-const mapDispatch = (dispatch, ownProps) => ({
+const mapDispatch = (dispatch) => ({
   add(newVendor){
     dispatch(addVendor(newVendor));
   },

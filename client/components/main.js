@@ -30,8 +30,8 @@ class Main extends Component {
     const { activeTab } = this.state;
     const { onLogout} = this.props;
     return (
-      <Menu.Menu position='right'>
-        <Menu.Item name='salir' active={activeTab === 'salir'} onClick={onLogout} />
+      <Menu.Menu position="right">
+        <Menu.Item name="salir" active={activeTab === 'salir'} onClick={onLogout} />
       </Menu.Menu>
     )
   }
@@ -39,24 +39,24 @@ class Main extends Component {
   writeMenu(){
     const { activeTab } = this.state;
     return ([
-      <Menu.Item name='perdidas' key='perdidas' active={activeTab === 'perdidos'} onClick={this.handleMenuClick} as={Link} to='/perdidas'/>,
-      <Menu.Item name='vendedores' key='vendedores' active={activeTab === 'vendedores'} onClick={this.handleMenuClick} as={Link} to='/vendedores'/>,
+      <Menu.Item name="perdidas" key="perdidas" active={activeTab === 'perdidos'} onClick={this.handleMenuClick} as={Link} to="/perdidas" />,
+      <Menu.Item name="vendedores" key="vendedores" active={activeTab === 'vendedores'} onClick={this.handleMenuClick} as={Link} to="/vendedores" />,
     ])
   }
   bonusAdminMenu(){
     const { activeTab } = this.state;
     return ([
-      <Menu.Item name='empleados' key='empleados' active={activeTab === 'empleados'} onClick={this.handleMenuClick} as={Link} to='/empleados'/>,
-      <Menu.Item name='stubs' key='stubs' active={activeTab === 'stub'} onClick={this.handleMenuClick} as={Link} to='/stubs'/>,
-      <Menu.Item name='usarios' key='usarios' active={activeTab === 'usarios'} onClick={this.handleMenuClick} as={Link} to='/usarios' />
+      <Menu.Item name="empleados" key="empleados" active={activeTab === 'empleados'} onClick={this.handleMenuClick} as={Link} to="/empleados" />,
+      <Menu.Item name="stubs" key="stubs" active={activeTab === 'stub'} onClick={this.handleMenuClick} as={Link} to="/stubs" />,
+      <Menu.Item name="usarios" key="usarios" active={activeTab === 'usarios'} onClick={this.handleMenuClick} as={Link} to="/usarios" />
     ])
   }
 
   loggedOutMenu(){
     const { activeTab } = this.state;
     return ([
-      <Menu.Item name='entrar' active={activeTab === 'entrar'} key='entrar' onClick={this.handleMenuClick} as={Link} to='/entrar' />,
-      <Menu.Item name='registrar' active={activeTab === 'registrar'} key='registrar' onClick={this.handleMenuClick} as={Link} to='/registrar' />
+      <Menu.Item name="entrar" active={activeTab === 'entrar'} key="entrar" onClick={this.handleMenuClick} as={Link} to="/entrar" />,
+      <Menu.Item name="registrar" active={activeTab === 'registrar'} key="registrar" onClick={this.handleMenuClick} as={Link} to="/registrar" />
     ])
   }
 
@@ -71,7 +71,7 @@ class Main extends Component {
         <div><h1>La Bendicion - Grand Rapids, MI </h1></div>
         <Menu pointing secondary>
         {
-          isLoggedIn && <Menu.Item name='home' active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to='/home'/>
+          isLoggedIn && <Menu.Item name="home" active={activeTab === 'home'} onClick={this.handleMenuClick} as={Link} to="/home" />
         }
         {
           (writeAccess || isAdmin)  && this.writeMenu()

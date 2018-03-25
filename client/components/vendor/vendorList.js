@@ -18,11 +18,11 @@ class VendorList extends Component{
     const { editBool } = this.state;
     const [ color, content ] = editBool ? ['red', 'Cancelar'] : ['teal', 'Crear Nuevo'];
     return (
-      <div className='Aligner'>
-        <div className='Aligner-item--top' />
-          <div className='Aligner-item'>
+      <div className="Aligner">
+        <div className="Aligner-item--top" />
+          <div className="Aligner-item">
             {
-              editBool &&  <VendorForm toggleView={this.onButtonClick}/>
+              editBool &&  <VendorForm toggleView={this.onButtonClick} />
             }
             <Button
               color={color}
@@ -30,7 +30,7 @@ class VendorList extends Component{
               onClick={this.onButtonClick}
             />
           </div>
-        <div className='Aligner-item--bottom' />
+        <div className="Aligner-item--bottom" />
       </div>
     )
   }
@@ -40,11 +40,11 @@ class VendorList extends Component{
   render(){
     const {vendors, isAdmin} = this.props;
     return (
-      <div className='Aligner'>
-        <div className='Aligner-item--top' />
-        <div className='Aligner-item-wide'>
-          <Header as='h2' icon textAlign='center'>
-            <Icon name='users' circular />
+      <div className="Aligner">
+        <div className="Aligner-item--top" />
+        <div className="Aligner-item-wide">
+          <Header as="h2" icon textAlign="center">
+            <Icon name="users" circular />
             <Header.Content>
               Vendedores
             </Header.Content>
@@ -59,7 +59,7 @@ class VendorList extends Component{
             isAdmin && this.adminBox()
           }
         </div>
-        <div className='Aligner-item--bottom' />
+        <div className="Aligner-item--bottom" />
       </div>
     )
   }
@@ -71,5 +71,4 @@ const mapState = ({currentUser, vendors}) => ({
 })
 
 export default connect(mapState)(VendorList);
-
 

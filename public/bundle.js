@@ -52122,7 +52122,6 @@ var employeeDetail = function (_Component) {
   _createClass(employeeDetail, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      console.log(this.props);
       this.props.fetchEmployee();
     }
   }, {
@@ -52214,7 +52213,7 @@ var employeeDetail = function (_Component) {
           employee = _props.employee,
           isAdmin = _props.isAdmin,
           isAuthorized = _props.isAuthorized;
-      // console.log(this.props);
+
 
       if (!isAuthorized) return _react2.default.createElement(_index.AccessDenied, { error: employee.error });
       if (!employee) return _react2.default.createElement(_index.Loading, null);
@@ -52230,6 +52229,10 @@ var employeeDetail = function (_Component) {
           id = employee.id;
 
       var stubExtra = { firstName: firstName, lastName: lastName, employeeId: id };
+
+      var allPaystubs = stubs.map(function (stub) {
+        return _react2.default.createElement(_index.PaystubRow, _extends({ key: stub.id }, stub, stubExtra));
+      });
 
       return _react2.default.createElement(
         'div',
@@ -52281,9 +52284,7 @@ var employeeDetail = function (_Component) {
             { as: 'h3', dividing: true },
             ' Paystubs '
           ),
-          stubs && stubs.map(function (stub) {
-            return _react2.default.createElement(_index.PaystubRow, _extends({ key: stub.id }, stub, stubExtra));
-          })
+          allPaystubs
         )
       );
     }
@@ -54780,8 +54781,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Group = _semanticUiReact.Form.Group,
-    Input = _semanticUiReact.Form.Input;
+var Input = _semanticUiReact.Form.Input;
 
 var VendorForm = function (_Component) {
   _inherits(VendorForm, _Component);
@@ -54934,7 +54934,7 @@ var mapState = function mapState(state, ownProps) {
   };
 };
 
-var mapDispatch = function mapDispatch(dispatch, ownProps) {
+var mapDispatch = function mapDispatch(dispatch) {
   return {
     add: function add(newVendor) {
       dispatch((0, _store.addVendor)(newVendor));
