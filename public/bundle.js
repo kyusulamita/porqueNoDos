@@ -54506,6 +54506,7 @@ var UserRow = function UserRow(_ref) {
     _react2.default.createElement(
       _semanticUiReact.Card,
       null,
+      _react2.default.createElement(_semanticUiReact.Image, { src: 'https://placeimg.com/360/360/people' }),
       _react2.default.createElement(
         _semanticUiReact.Card.Content,
         null,
@@ -54513,6 +54514,22 @@ var UserRow = function UserRow(_ref) {
           _semanticUiReact.Card.Header,
           null,
           user.email
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Card.Meta,
+          null,
+          user.employee.firstName,
+          ' ',
+          user.employee.lastName
+        )
+      ),
+      _react2.default.createElement(
+        _semanticUiReact.Card.Content,
+        { extra: true },
+        _react2.default.createElement(
+          _semanticUiReact.Button,
+          { size: 'tiny' },
+          'Editar'
         )
       )
     )
