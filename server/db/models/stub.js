@@ -93,16 +93,20 @@ Stub.prototype.YTD = async function(){
       employeeId: this.employeeId,
     }
   });
+
   let initialState = { taxFederal: 0, taxSocial:0, taxState:0, pay:0, gross:0 };
+
   const finalInfo = allStubs.reduce((acc, cur) => {
       for (let key in acc){
         acc[key] += +cur[key];
       }
       return acc;
     }, initialState);
+
   for (let key in finalInfo){
     finalInfo[key] = Number(finalInfo[key]).toFixed(2);
   }
+
   return finalInfo;
 };
 

@@ -54435,10 +54435,11 @@ var UserList = function (_Component) {
     value: function render() {
       var _props = this.props,
           users = _props.users,
-          employees = _props.employees;
+          employees = _props.employees,
+          descriptionDetail = _props.descriptionDetail;
 
       var allUsers = users.map(function (user) {
-        return _react2.default.createElement(_index.UserRow, { user: user, employees: employees, key: user.id });
+        return _react2.default.createElement(_index.UserRow, { user: user, employees: employees, key: user.id, descriptionDetail: descriptionDetail });
       });
 
       return _react2.default.createElement(
@@ -54458,6 +54459,7 @@ var UserList = function (_Component) {
 }(_react.Component);
 
 var mapState = function mapState(state, ownProps) {
+
   return {
     users: state.users,
     employees: state.employees.map(function (employee) {
@@ -54466,7 +54468,12 @@ var mapState = function mapState(state, ownProps) {
         value: employee.id,
         text: employee.firstName + ' ' + employee.lastName
       };
-    })
+    }),
+    descriptionDetail: {
+      ADMIN: 'Tiene acceso al sitio completo',
+      WRITE: 'Puede registrar billes y perdidas',
+      REGULAR: 'Solamente tiene acceso a propia informacion'
+    }
   };
 };
 
@@ -54499,7 +54506,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var UserRow = function UserRow(_ref) {
   var employees = _ref.employees,
-      user = _ref.user;
+      user = _ref.user,
+      descriptionDetails = _ref.descriptionDetails;
+  var employee = user.employee,
+      adminLevel = user.adminLevel;
+
+  var fullName = employee ? employee.firstName + ' ' + employee.lastName : '';
+  var description = descriptionDetails[adminLevel];
+
   return _react2.default.createElement(
     'div',
     { key: user.id },
@@ -54518,9 +54532,12 @@ var UserRow = function UserRow(_ref) {
         _react2.default.createElement(
           _semanticUiReact.Card.Meta,
           null,
-          user.employee.firstName,
-          ' ',
-          user.employee.lastName
+          fullName
+        ),
+        _react2.default.createElement(
+          _semanticUiReact.Card.Description,
+          null,
+          description
         )
       ),
       _react2.default.createElement(

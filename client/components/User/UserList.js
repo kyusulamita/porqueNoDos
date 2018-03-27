@@ -7,12 +7,12 @@ import { UserRow } from '../index'
 class UserList extends Component {
 
   render(){
-  const { users, employees } = this.props;
-  const allUsers = users.map(user => <UserRow user={user} employees={employees} key={user.id}/>)
+  const { users, employees, descriptionDetail } = this.props;
+  const allUsers = users.map(user => <UserRow user={user} employees={employees} key={user.id} descriptionDetail={descriptionDetail} />)
 
-    return(
+    return (
       <div>
-        <Header as='h2'>Usarios</Header>
+        <Header as="h2">Usarios</Header>
         {allUsers}
       </div>
     )
@@ -20,14 +20,22 @@ class UserList extends Component {
   }
 }
 
-const mapState = (state, ownProps) => ({
-  users: state.users,
-  employees: state.employees.map(employee => ({
-    key: employee.id,
-    value: employee.id,
-    text: `${employee.firstName} ${employee.lastName}`,
-  })),
-})
+const mapState = (state, ownProps) => {
+
+  return ({
+    users: state.users,
+    employees: state.employees.map(employee => ({
+      key: employee.id,
+      value: employee.id,
+      text: `${employee.firstName} ${employee.lastName}`,
+    })),
+    descriptionDetail: {
+      ADMIN: 'Tiene acceso al sitio completo',
+      WRITE: 'Puede registrar billes y perdidas',
+      REGULAR: 'Solamente tiene acceso a propia informacion',
+    },
+  })
+}
 
 const mapDispatch = (dispatch, ownProps) => ({});
 
