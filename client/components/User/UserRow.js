@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Dropdown, Card, Icon, Image, Button } from 'semantic-ui-react';
