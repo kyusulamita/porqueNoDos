@@ -1,11 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Dropdown } from 'semantic-ui-react';
+import { Dropdown, Card, Icon, Image } from 'semantic-ui-react';
 
 const UserRow = ({employees, user}) => (
   <div key={user.id}>
-    {user.email}  {user.adminLevel}
+    <Card>
+      <Card.Content>
+        <Card.Header>{user.email}</Card.Header>
+      </Card.Content>
+    </Card>
   </div>
 )
 
