@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Bill, Vendor } = require('../db/models');
+
 const { isLoggedIn, isAdmin, isAuthorized, adminOrSelf } = require('./utilFuncs');
 
 router.get('/', isAuthorized, async (req, res, next) => {

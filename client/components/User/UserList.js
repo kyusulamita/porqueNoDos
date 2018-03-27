@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { Header } from 'semantic-ui-react'
 import { UserRow } from '../index'
 
 class UserList extends Component {
@@ -11,6 +12,7 @@ class UserList extends Component {
 
     return(
       <div>
+        <Header as='h2'>Usarios</Header>
         {allUsers}
       </div>
     )
@@ -20,7 +22,11 @@ class UserList extends Component {
 
 const mapState = (state, ownProps) => ({
   users: state.users,
-  employees: state.employees,
+  employees: state.employees.map(employee => ({
+    key: employee.id,
+    value: employee.id,
+    text: `${employee.firstName} ${employee.lastName}`,
+  })),
 })
 
 const mapDispatch = (dispatch, ownProps) => ({});

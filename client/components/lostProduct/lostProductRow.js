@@ -48,20 +48,20 @@ class LostProductRow extends Component{
 
 
     return ([
-      <Cell>
+      <Cell key="edit">
         <Button
           onClick={this.onButtonClick}
           color={editColor}
           content={editContent}
-          size='small'
+          size="small"
         />
       </Cell>,
-      <Cell>
+      <Cell key="delete">
         <Button
           onClick={this.onDelete}
-          color='red'
+          color="red"
           content={deleteText}
-          size='small'
+          size="small"
         />
       </Cell>
     ])
@@ -81,11 +81,14 @@ class LostProductRow extends Component{
           <Cell>${price}</Cell>
           <Cell>${total}</Cell>
            {
-              writePrivelege ? this.adminBox() : [<Cell />,<Cell />]
+              writePrivelege ? this.adminBox() : <Cell />
+           }
+           {
+            !writePrivelege && <Cell />
            }
          </Row>
          {
-          toggleEdit && <LostProductForm product={this.props} toggleView={this.onButtonClick}/>
+          toggleEdit && <LostProductForm product={this.props} toggleView={this.onButtonClick} />
          }
        </Body>
     )

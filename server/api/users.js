@@ -1,18 +1,21 @@
 const router = require('express').Router();
-const {User} = require('../db/models');
+const { User, Employee } = require('../db/models');
 const { isLoggedIn, isAdmin, isAuthorized, adminOrSelf } = require('./utilFuncs');
 
 router.get('/', isAdmin, async (req, res, next) => {
   const users = await User.findAll({
-    attributes: ['id', 'email', 'name', 'adminLevel', 'employeeId']
+    attributes: ['id', 'email', 'name', 'adminLevel', 'employeeId'],
+    include: [{ model: Employee, attributes: ['firstName', 'lastName']}]
   }).catch(next);
   res.json(users);
 })
 
 router.get('/:userId', async(req, res, next) => {
-  const user = await User.findById(req.params.userId, { attributes: ['id', 'email', 'name', 'adminLevel', 'employeeId'] }).catch(next);
+  const user = await User.findById(req.params.userId, {
+    attributes: ['id', 'email', 'name', 'adminLevel', 'employeeId'],
+    include: [{ model: Employee, attributes: ['firstName', 'lastName']}]
+  }).catch(next);
   if (!user) {
-    console.log('Hello hi');
     const err = Error('User not found');
     err.status = 404;
     next(err);

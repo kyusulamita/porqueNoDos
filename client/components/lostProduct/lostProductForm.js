@@ -15,7 +15,7 @@ class LostProductForm extends Component{
       amount: '',
       price: '',
     };
-    this.handleOnSubmit= this.handleOnSubmit.bind(this);
+    this.handleOnSubmit = this.handleOnSubmit.bind(this);
     this.handleOnChange = this.handleOnChange.bind(this);
   }
 
@@ -55,55 +55,55 @@ class LostProductForm extends Component{
     const total = Number(newAmount * newPrice).toFixed(2);
 
     return (
-      <Row><Cell colSpan='9'><div className='Aligner'>
-        <div className='Aligner-item--top' />
-        <Form onSubmit={handleOnSubmit} className='Aligner-item'>
-        <Group widths='equal'>
+      <Row><Cell colSpan="9"><div className="Aligner">
+        <div className="Aligner-item--top" />
+        <Form onSubmit={handleOnSubmit} className="Aligner-item">
+        <Group widths="equal">
           <Input
-            label='Date'
+            label="Date"
             placeholder={placeholder.date}
-            name='date'
+            name="date"
             value={date}
             required={newForm}
             onChange={handleOnChange}
           />
           <Input
-            label='Product'
+            label="Product"
             placeholder={placeholder.product}
-            name='product'
+            name="product"
             value={product}
             required={newForm}
             onChange={handleOnChange}
           />
           <Input
-            label='Amount'
+            label="Amount"
             placeholder={placeholder.amount}
-            name='amount'
+            name="amount"
             value={amount}
             required={newForm}
             onChange={handleOnChange}
           />
           <Input
-            label='Price'
+            label="Price"
             placeholder={placeholder.price}
-            name='price'
+            name="price"
             value={price}
             required={newForm}
             onChange={handleOnChange}
           />
           <Input
-            label='Total'
+            label="Total"
             placeholder={placeholder.total}
             value={total}
           />
           <Button
-            color='green'
-            type='submit'
+            color="green"
+            type="submit"
             content={buttonText}
           />
         </Group>
         </Form>
-        <div className='Aligner-item--bottom'/>
+        <div className="Aligner-item--bottom" />
       </div></Cell></Row>
     );
   }

@@ -19,20 +19,20 @@ export const UserHome = (props) => {
       <h4>Aqui esta su informacion de empleado</h4>
 
       <div>
-        <Header as='h2' className='adminBox' textalign='center'>
-          <Image circular src="https://placebear.com/200/200"/>
+        <Header as="h2" className="adminBox" textalign="center">
+          <Image circular src="https://placebear.com/200/200" />
           {'  '}{firstName} {lastName}
           <Header.Subheader>
             {' '} Trabaja en el departamento
           </Header.Subheader>
         </Header>
         <div >
-            <div textalign='left'>{address}</div>
-            <div textalign='left'>{city}, {state} {zipcode}</div>
-            <div textalign='left'>{phoneNumber}</div>
+            <div textalign="left">{address}</div>
+            <div textalign="left">{city}, {state} {zipcode}</div>
+            <div textalign="left">{phoneNumber}</div>
         </div>
         <Comment.Group>
-          <Header as='h3' dividing> Paystubs </Header>
+          <Header as="h3" dividing> Paystubs </Header>
           {
             stubs && stubs.map(stub => <PaystubRow key={stub.id} {...stub} {...stubExtra} personal />)
           }

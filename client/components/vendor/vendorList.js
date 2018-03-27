@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Header, Icon, Button, Card, Image } from 'semantic-ui-react'
-// import EmployeeForm from './employeeForm'
 import { VendorTile, VendorForm } from '../index'
 
 
@@ -14,6 +13,8 @@ class VendorList extends Component{
     this.onButtonClick = this.onButtonClick.bind(this);
     this.adminBox = this.adminBox.bind(this);
   }
+
+
   adminBox(){
     const { editBool } = this.state;
     const [ color, content ] = editBool ? ['red', 'Cancelar'] : ['teal', 'Crear Nuevo'];
@@ -34,11 +35,17 @@ class VendorList extends Component{
       </div>
     )
   }
+
+
   onButtonClick(){
     this.setState(({editBool}) => ({ editBool: !editBool}));
   }
+
+
   render(){
+
     const {vendors, isAdmin} = this.props;
+
     return (
       <div className="Aligner">
         <div className="Aligner-item--top" />
