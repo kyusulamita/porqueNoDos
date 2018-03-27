@@ -54507,12 +54507,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var UserRow = function UserRow(_ref) {
   var employees = _ref.employees,
       user = _ref.user,
-      descriptionDetails = _ref.descriptionDetails;
+      descriptionDetail = _ref.descriptionDetail;
   var employee = user.employee,
       adminLevel = user.adminLevel;
 
   var fullName = employee ? employee.firstName + ' ' + employee.lastName : '';
-  var description = descriptionDetails[adminLevel];
+  var description = descriptionDetail[adminLevel];
 
   return _react2.default.createElement(
     'div',
@@ -54545,7 +54545,7 @@ var UserRow = function UserRow(_ref) {
         { extra: true },
         _react2.default.createElement(
           _semanticUiReact.Button,
-          { size: 'tiny' },
+          { size: 'tiny', color: 'green' },
           'Editar'
         )
       )

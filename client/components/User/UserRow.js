@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 
 import { Dropdown, Card, Icon, Image, Button } from 'semantic-ui-react';
 
-const UserRow = ({employees, user, descriptionDetails }) => {
+const UserRow = ({employees, user, descriptionDetail }) => {
+
 
   const { employee, adminLevel } = user;
   const fullName = (employee) ? `${employee.firstName} ${employee.lastName}` : ``;
-  const description = descriptionDetails[adminLevel];
+  const description = descriptionDetail[adminLevel];
 
   return (
   <div key={user.id}>
@@ -19,7 +20,7 @@ const UserRow = ({employees, user, descriptionDetails }) => {
         <Card.Description>{description}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-        <Button size="tiny">Editar</Button>
+        <Button size="tiny" color="green">Editar</Button>
       </Card.Content>
     </Card>
   </div>
