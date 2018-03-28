@@ -7,7 +7,8 @@ class UserForm extends Component{
   constructor(){
     super();
     this.state = {
-
+      adminLevel : null,
+      employeeId: null,
     }
   }
 
