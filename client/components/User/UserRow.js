@@ -33,7 +33,7 @@ class UserRow extends Component{
           </Card.Content>
           <Card.Content extra>
             <Button size="tiny" color="green" onClick={this.toggleEdit}>Editar</Button>
-            {this.state.editBool && <div>Hello hi!</div>}
+            {this.state.editBool && <UserForm adminLevel={adminLevel} employee={employee.id} />}
           </Card.Content>
         </Card>
       </div>
