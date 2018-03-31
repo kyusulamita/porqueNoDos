@@ -13,7 +13,7 @@ class UserList extends Component {
     return (
       <div>
         <Header as="h2">Usarios</Header>
-        {allUsers}
+        { allUsers }
       </div>
     )
 
