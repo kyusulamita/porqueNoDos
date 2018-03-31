@@ -10,16 +10,44 @@ class UserForm extends Component{
       adminLevel : '',
       employeeId: '',
     }
+    this.onChange = this.onChange.bind(this);
+    this.submitChange = this.submitChange.bind(this);
+  }
+
+  onChange(event){
+    const { target, value } = event;
+    this.setState({ [target]: value })
+  }
+
+  submitChange(event){
+    
   }
 
   render(){
 
+  const { onChange, submitChange } = this;
   const { employees, levels } = this.props;
 
   return(
     <div>
-      <Dropdown fluid selection options={employees} />
-      <Dropdown fluid selection options={levels} />
+      <Dropdown 
+        name='employeedId' 
+        fluid 
+        selection 
+        options={employees} 
+        onChange={onChange}
+      />
+      <Dropdown 
+        name='adminLevel' 
+        fluid 
+        selection 
+        options={levels}
+        onChange={onChange} 
+      />
+      <Button
+        content='Editar'
+        onClick={submitChange}
+      />
     </div>
     )
   }
