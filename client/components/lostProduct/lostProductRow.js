@@ -6,6 +6,14 @@ import { LostProductForm } from '../index';
 import { deleteProduct } from '../../store'
 const { Row, Cell, Body } = Table;
 
+
+
+const NonAdmin = ([
+  <Cell />,
+  <Cell />
+]);
+
+
 class LostProductRow extends Component{
   constructor(props){
     super(props);
@@ -68,6 +76,7 @@ class LostProductRow extends Component{
   }
 
 
+
   render(){
     const {total, date, product, amount, price, id, writePrivelege} = this.props;
     const {toggleEdit} = this.state;
@@ -81,10 +90,7 @@ class LostProductRow extends Component{
           <Cell>${price}</Cell>
           <Cell>${total}</Cell>
            {
-              writePrivelege ? this.adminBox() : <Cell />
-           }
-           {
-            !writePrivelege && <Cell />
+              writePrivelege ? this.adminBox() : <NonAdmin />
            }
          </Row>
          {

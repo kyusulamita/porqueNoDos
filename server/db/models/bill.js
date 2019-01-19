@@ -10,6 +10,7 @@ const Bill = db.define('bill', {
     allowNull: false,
 
   },
+  
 });
 
 module.exports = Bill;

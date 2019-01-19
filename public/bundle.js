@@ -53200,6 +53200,9 @@ var Row = _semanticUiReact.Table.Row,
     Cell = _semanticUiReact.Table.Cell,
     Body = _semanticUiReact.Table.Body;
 
+
+var NonAdmin = [_react2.default.createElement(Cell, null), _react2.default.createElement(Cell, null)];
+
 var LostProductRow = function (_Component) {
   _inherits(LostProductRow, _Component);
 
@@ -53333,8 +53336,7 @@ var LostProductRow = function (_Component) {
             '$',
             total
           ),
-          writePrivelege ? this.adminBox() : _react2.default.createElement(Cell, null),
-          !writePrivelege && _react2.default.createElement(Cell, null)
+          writePrivelege ? this.adminBox() : _react2.default.createElement(NonAdmin, null)
         ),
         toggleEdit && _react2.default.createElement(_index.LostProductForm, { product: this.props, toggleView: this.onButtonClick })
       );

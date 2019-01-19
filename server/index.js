@@ -7,7 +7,7 @@ const session = require('express-session')
 const passport = require('passport')
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 const db = require('./db')
-const sessionStore = new SequelizeStore({db})
+const sessionStore = new SequelizeStore({ db })
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
@@ -17,7 +17,29 @@ module.exports = app
 if (process.env.NODE_ENV !== 'production') require('../secrets')
 
 // passport registration
-passport.serializeUser((user, done) => done(null, user.id))
+passport.serializeUser((user, done) => done(null, user.id));
+
+/*
+req: {
+  ...,
+  session: {
+    sId: //
+    passport: {
+      user: userId
+    }
+  }
+}
+*/
+
+/*
+  const userId = req.session.passport.user;
+  const user = await user.findById(userId);
+
+  req.user = user;
+  
+*/
+
+
 passport.deserializeUser((id, done) =>
   db.models.user.findById(id)
     .then(user => done(null, user))
@@ -34,6 +56,16 @@ const createApp = () => {
   // compression middleware
   app.use(compression())
 
+  app.use((req, res, next) => {
+    console.log("BEFORE SESSION");
+    console.log(req.sessionID);
+    console.log(req);
+    console.log(req.session);
+    console.log(req.user);
+    next();
+  })
+
+
   // session middleware with passport
   app.use(session({
     secret: process.env.SESSION_SECRET || 'my best friend is Cody',
@@ -41,8 +73,22 @@ const createApp = () => {
     resave: false,
     saveUninitialized: false
   }))
+  app.use((req, res, next) => {
+    console.log("AFTER SESSION SESSION");
+    console.log(req.sessionID);
+    console.log(req.session);
+    // console.log(req.user);
+    next();
+  })
   app.use(passport.initialize())
   app.use(passport.session())
+  app.use((req, res, next) => {
+    console.log("AFTER PASSPORT SESSION SESSION");
+    console.log(req.sessionID);
+    console.log(req.session);
+    // console.log(req.user);
+    next();
+  })
 
   // auth and api routes
   app.use('/auth', require('./auth'))
@@ -53,6 +99,8 @@ const createApp = () => {
 
   // sends index.html
   app.use('*', (req, res) => {
+    // console.log(req.sessionID, req.session);
+    // console.log(req.user);
     res.sendFile(path.join(__dirname, '..', 'public/index.html'))
   })
 
