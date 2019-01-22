@@ -54496,6 +54496,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
@@ -54506,54 +54508,91 @@ var _semanticUiReact = __webpack_require__(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var UserRow = function UserRow(_ref) {
-  var employees = _ref.employees,
-      user = _ref.user,
-      descriptionDetail = _ref.descriptionDetail;
-  var employee = user.employee,
-      adminLevel = user.adminLevel;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  var fullName = employee ? employee.firstName + ' ' + employee.lastName : '';
-  var description = descriptionDetail[adminLevel];
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  return _react2.default.createElement(
-    'div',
-    { key: user.id },
-    _react2.default.createElement(
-      _semanticUiReact.Card,
-      null,
-      _react2.default.createElement(_semanticUiReact.Image, { src: 'https://placeimg.com/360/360/people' }),
-      _react2.default.createElement(
-        _semanticUiReact.Card.Content,
-        null,
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UserRow = function (_Component) {
+  _inherits(UserRow, _Component);
+
+  function UserRow() {
+    _classCallCheck(this, UserRow);
+
+    var _this = _possibleConstructorReturn(this, (UserRow.__proto__ || Object.getPrototypeOf(UserRow)).call(this));
+
+    _this.state = {
+      editBool: false
+    };
+    _this.toggleEdit = _this.toggleEdit.bind(_this);
+    return _this;
+  }
+
+  _createClass(UserRow, [{
+    key: 'toggleEdit',
+    value: function toggleEdit() {
+      this.setState(function (_ref) {
+        var editBool = _ref.editBool;
+        editBool: !editBool;
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          employees = _props.employees,
+          user = _props.user,
+          descriptionDetail = _props.descriptionDetail;
+      var employee = user.employee,
+          adminLevel = user.adminLevel;
+
+      var fullName = employee ? employee.firstName + ' ' + employee.lastName : '';
+      var description = descriptionDetail[adminLevel];
+
+      return _react2.default.createElement(
+        'div',
+        { key: user.id },
         _react2.default.createElement(
-          _semanticUiReact.Card.Header,
+          _semanticUiReact.Card,
           null,
-          user.email
-        ),
-        _react2.default.createElement(
-          _semanticUiReact.Card.Meta,
-          null,
-          fullName
-        ),
-        _react2.default.createElement(
-          _semanticUiReact.Card.Description,
-          null,
-          description
+          _react2.default.createElement(_semanticUiReact.Image, { src: 'https://placeimg.com/360/360/people' }),
+          _react2.default.createElement(
+            _semanticUiReact.Card.Content,
+            null,
+            _react2.default.createElement(
+              _semanticUiReact.Card.Header,
+              null,
+              user.email
+            ),
+            _react2.default.createElement(
+              _semanticUiReact.Card.Meta,
+              null,
+              fullName
+            ),
+            _react2.default.createElement(
+              _semanticUiReact.Card.Description,
+              null,
+              description
+            )
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Card.Content,
+            { extra: true },
+            _react2.default.createElement(
+              _semanticUiReact.Button,
+              { size: 'tiny', color: 'green', onClick: this.toggleEdit },
+              'Editar'
+            ),
+            this.state.editBool && _react2.default.createElement(UserForm, { adminLevel: adminLevel, employee: employee.id })
+          )
         )
-      ),
-      _react2.default.createElement(
-        _semanticUiReact.Card.Content,
-        { extra: true },
-        _react2.default.createElement(
-          _semanticUiReact.Button,
-          { size: 'tiny', color: 'green' },
-          'Editar'
-        )
-      )
-    )
-  );
-};
+      );
+    }
+  }]);
+
+  return UserRow;
+}(_react.Component);
 
 exports.default = UserRow;
 
